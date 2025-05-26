@@ -23,3 +23,5 @@
 
 
 ## Links to Figma and Other Resources
+
+- [FigJam Board – CMD x Devine](https://www.figma.com/board/Ho9jYaGeywRhyirPmNP3ZI/CMD-x-Devine?node-id=0-1&t=ivjnfUwDxYrLwiRS-1)
