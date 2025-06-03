@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// import HelloWorld from './components/HelloWorld.vue'
+
+import LoginForm from './components/LoginForm.vue'
 </script>
 
 <template>
   <div>
-    <h1 class="text-3xl font-bold underline text-green-500">Hello world!</h1>
+    <LoginForm></LoginForm>
   </div>
 </template>
 
