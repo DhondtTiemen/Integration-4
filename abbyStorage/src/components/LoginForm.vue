@@ -2,7 +2,7 @@
   <section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center px-6 py-8">
     <div class="w-full max-w-md bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
       <div class="p-6 space-y-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Sign in to your account</h1>
+        <h1 class="text-2xl font-primary font-bold text-gray-900 dark:text-white">Sign in to your account</h1>
         <form @submit.prevent="handleLogin" class="space-y-4">
           <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
