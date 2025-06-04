@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import LoginForm from "./components/LoginForm.vue";
 import Account from "./screens/Account.vue";
+import EditAccount from "./screens/EditAccount.vue";
 </script>
 
 <template >
   <div >
     <!-- <LoginForm></LoginForm> -->
-    <Account></Account>
+    <!-- <Account></Account> -->
+     <EditAccount></EditAccount>
   </div>
 </template>
 

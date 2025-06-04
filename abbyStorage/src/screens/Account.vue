@@ -31,16 +31,16 @@
           View box
         </button>
       </div>
-      <div class="flex justify-center flex-wrap gap-4">
+      <div class="grid grid-cols-2 gap-4 w-full max-w-md mx-auto">
         <div
-          class="bg-gray-300 w-36 h-36 flex justify-center items-center rounded-lg shadow-sm"
+          class="aspect-square bg-gray-300 flex justify-center items-center rounded-lg shadow-sm"
         >
           <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
 
         <div
-          class="bg-gray-100 w-36 h-36 flex justify-center items-center rounded-lg shadow-sm"
+          class="aspect-square bg-gray-100 flex justify-center items-center rounded-lg shadow-sm"
         >
           <p class="text-gray-500">All photos</p>
           <!-- <Image class="w-16 h-16 m-10 text-gray-400" /> -->
@@ -103,42 +103,36 @@
         <Image class="w-6 h-6 mr-2" />
         <h2 class="text-lg font-semibold mb-4">My creations</h2>
       </div>
-      <div class="flex justify-center flex-wrap gap-4">
+      <div class="grid grid-cols-3 grid-rows-2 gap-4 justify-center">
         <div
           class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
         <div
           class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
         <div
           class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
         <div
           class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
         <div
           class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <!-- <p class="text-gray-700">No items in your box yet.</p> -->
           <Image class="w-16 h-16 text-gray-400" />
         </div>
         <div
           class="bg-gray-100 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
         >
-          <p class="text-gray-500">All photos</p>
-          <!-- <Image class="w-16 h-16 m-10 text-gray-400" /> -->
+          <p class="text-gray-500 text-xs text-center">All photos</p>
         </div>
       </div>
     </div>
