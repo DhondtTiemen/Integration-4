@@ -1,11 +1,12 @@
 <script setup lang="ts">
-
-import LoginForm from './components/LoginForm.vue'
+import LoginForm from "./components/LoginForm.vue";
+import Account from "./screens/Account.vue";
 </script>
 
-<template>
-  <div>
-    <LoginForm></LoginForm>
+<template >
+  <div >
+    <!-- <LoginForm></LoginForm> -->
+    <Account></Account>
   </div>
 </template>
 
