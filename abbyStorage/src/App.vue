@@ -2,13 +2,15 @@
 import LoginForm from "./components/LoginForm.vue";
 import Account from "./screens/Account.vue";
 import EditAccount from "./screens/EditAccount.vue";
+import CreationDetail from "./screens/CreationDetail.vue";
 </script>
 
 <template >
   <div >
     <!-- <LoginForm></LoginForm> -->
     <!-- <Account></Account> -->
-     <EditAccount></EditAccount>
+     <!-- <EditAccount></EditAccount> -->
+      <CreationDetail></CreationDetail>
   </div>
 </template>
 
