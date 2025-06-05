@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import LoginForm from "./components/LoginForm.vue";
 import Overview from "./components/Overview.vue";
+import Messages from "./components/Messages.vue";
 import Account from "./screens/Account.vue";
 import EditAccount from "./screens/EditAccount.vue";
 import CreationDetail from "./screens/CreationDetail.vue";
@@ -12,7 +13,8 @@ import CreationDetail from "./screens/CreationDetail.vue";
     <!-- <Account></Account> -->
      <!-- <EditAccount></EditAccount> -->
       <!-- <CreationDetail></CreationDetail> -->
-       <Overview></Overview>
+       <!-- <Overview></Overview> -->
+       <Messages></Messages>
   </div>
 </template>
 
