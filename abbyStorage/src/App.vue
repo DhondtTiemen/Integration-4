@@ -7,6 +7,7 @@ import EditAccount from "./screens/EditAccount.vue";
 import CreationDetail from "./screens/CreationDetail.vue";
 import EventDetail from "./screens/EventDetail.vue";
 import CreateEvent from "./screens/CreateEvent.vue";
+import BoxDetail from "./screens/BoxDetail.vue";
 </script>
 
 <template >
@@ -15,7 +16,10 @@ import CreateEvent from "./screens/CreateEvent.vue";
     <!-- <Account></Account> -->
      <!-- <EditAccount></EditAccount> -->
       <!-- <CreationDetail></CreationDetail> -->
-      <EventDetail></EventDetail>
+      <!-- <EventDetail></EventDetail> -->
+    <!-- <Overview></Overview> -->
+     <BoxDetail></BoxDetail>
+
   </div>
 </template>
 
