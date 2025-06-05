@@ -5,6 +5,7 @@ import Messages from "./components/Messages.vue";
 import Account from "./screens/Account.vue";
 import EditAccount from "./screens/EditAccount.vue";
 import CreationDetail from "./screens/CreationDetail.vue";
+import EventDetail from "./screens/EventDetail.vue";
 </script>
 
 <template >
@@ -12,9 +13,7 @@ import CreationDetail from "./screens/CreationDetail.vue";
     <!-- <LoginForm></LoginForm> -->
     <!-- <Account></Account> -->
      <!-- <EditAccount></EditAccount> -->
-      <!-- <CreationDetail></CreationDetail> -->
-       <!-- <Overview></Overview> -->
-       <Messages></Messages>
+      <CreationDetail></CreationDetail>
   </div>
 </template>
 
