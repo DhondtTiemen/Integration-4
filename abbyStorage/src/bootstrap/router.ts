@@ -25,6 +25,10 @@ const routes = [
         path: "box/:id",
         component: () => import("../screens/BoxDetail.vue"),
       },
+      {
+        path: "post/:id",
+        component: () => import("../screens/PostDetail.vue"),
+      },
     ],
   },
 ];

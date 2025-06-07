@@ -11,9 +11,14 @@
         "Paper or Sketchbook",
         "Set of graphite pencils (2H to 6B)"
       ],
-      "images": ["event1-main.jpg"],
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
       "createdBy": 1,
-      "participants": [2, 3],
+      "participants": [
+        2,
+        3
+      ],
       "status": "approved"
     },
     {
@@ -24,9 +29,14 @@
       "time": "20:00",
       "place": "Salon, ABBY Creative Space",
       "materials": [],
-      "images": ["event2-main.jpg"],
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
       "createdBy": 3,
-      "participants": [1, 4],
+      "participants": [
+        1,
+        4
+      ],
       "status": "approved"
     }
   ]

@@ -1,6 +1,8 @@
 <template>
   <div v-bind="$attrs">
-    <nav class="p-2 bg-white shadow-md border-b border-gray-200 flex items-center">
+    <nav
+      class="p-2 bg-white shadow-md border-b border-gray-200 flex items-center"
+    >
       <button @click="goBack">
         <ArrowLeft class="w-6 h-6 text-gray-600 m-2" />
       </button>
@@ -91,7 +93,8 @@
           <CalendarDays class="w-6 h-6 mr-2" />
           <h2 class="text-lg font-semibold mb-4">Events</h2>
         </div>
-        <div class="space-y-4">
+
+        <div v-if="events.length" class="space-y-4">
           <div
             v-for="event in events"
             :key="event.id"
@@ -99,13 +102,13 @@
           >
             <img
               v-if="event.images?.length"
-              :src="`/src/assets/images/${event.images[0]}`"
+              :src="`${event.images[0]}`"
               alt="Event"
-              class="w-16 h-16 object-cover rounded-lg"
+              class="w-12 h-12 object-cover rounded-lg"
             />
-            <div>
-              <p class="text-sm">{{ event.title }}</p>
-              <p class="text-gray-600 text-xs">
+            <div class="flex flex-col">
+              <p class="text-sm font-medium text-gray-900">{{ event.title }}</p>
+              <p class="text-gray-600 text-xs italic">
                 {{ event.type }} –
                 {{
                   new Date(event.date).toLocaleDateString("en-GB", {
@@ -118,23 +121,33 @@
             </div>
           </div>
         </div>
+
+        <div v-else class="text-sm text-gray-500">No events to display.</div>
       </div>
 
       <div class="bg-white mx-4 mt-8 rounded-xl p-4">
         <div class="flex">
           <Image class="w-6 h-6 mr-2" />
-          <h2 class="text-lg font-semibold mb-4">My creations</h2>
+          <h2 class="text-lg font-semibold mb-4">My posts</h2>
         </div>
+
         <div class="grid grid-cols-3 grid-rows-2 gap-4 justify-center">
           <div
-            v-for="n in 5"
-            :key="n"
-            class="bg-gray-300 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
+            v-for="post in posts.slice(0, 5)"
+            :key="post.id"
+            class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm overflow-hidden"
           >
-            <Image class="w-16 h-16 text-gray-400" />
+            <img
+              v-if="post.images?.length"
+              :src="post.images[0]"
+              alt="Post image"
+              class="w-full h-full object-cover"
+            />
+            <Image v-else class="w-10 h-10 text-gray-400" />
           </div>
+
           <div
-            class="bg-gray-100 w-20 h-20 flex justify-center items-center rounded-lg shadow-sm"
+            class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm"
           >
             <p class="text-gray-500 text-xs text-center">All photos</p>
           </div>
@@ -159,8 +172,11 @@ import {
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type User from "../interfaces/interface.user";
+import type Event from "../interfaces/interface.event";
+import type Post from "../interfaces/interface.post";
 const user = ref<User | null>(null);
-const events = ref<any[]>([]);
+const events = ref<Event[]>([]);
+const posts = ref<Post[]>([]);
 const loading = ref(true);
 
 const route = useRoute();
@@ -170,34 +186,37 @@ const router = useRouter();
 function goBack() {
   router.back();
 }
+
 async function fetchData() {
   try {
     const usersResponse = await fetch("/src/assets/data/users.json");
     const eventsResponse = await fetch("/src/assets/data/events.json");
+    const postsResponse = await fetch("/src/assets/data/posts.json");
 
-    if (!usersResponse.ok || !eventsResponse.ok) {
-      throw new Error("Failed to fetch users or events");
+    if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
+      throw new Error("Failed to fetch users, events, or posts");
     }
 
     const usersData = await usersResponse.json();
     const eventsData = await eventsResponse.json();
+    const postsData = await postsResponse.json();
+
     user.value =
       usersData.users.find((u: User) => u.id === currentUserId) || null;
+
     const created = eventsData.events
       .filter((event: any) => event.createdBy === currentUserId)
-      .map((event: any) => ({
-        ...event,
-        type: "Organised",
-      }));
+      .map((event: any) => ({ ...event, type: "Organised" }));
 
     const attended = eventsData.events
       .filter((event: any) => event.participants.includes(currentUserId))
-      .map((event: any) => ({
-        ...event,
-        type: "Attended",
-      }));
+      .map((event: any) => ({ ...event, type: "Attended" }));
 
     events.value = [...created, ...attended];
+
+    posts.value = postsData.posts.filter(
+      (post: any) => post.userId === currentUserId
+    );
   } catch (error) {
     console.error(error);
   } finally {
