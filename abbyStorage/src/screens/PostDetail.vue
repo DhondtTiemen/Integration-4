@@ -61,7 +61,7 @@
 
     <div class="p-4 border-b border-gray-300">
       <p class="">{{ post?.content }}</p>
-      <p class="text-gray-400 mt-2">{{ timeAgo(post?.timestamp) }}</p>
+      <p class="text-gray-400 mt-2">{{ timeAgo(post?.timestamp ?? "") }}</p>
     </div>
     <div
       class="p-4 border-b-2 border-gray-200 bg-white"
