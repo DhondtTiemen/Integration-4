@@ -1,0 +1,136 @@
+{
+  "posts": [
+    {
+      "id": 5001,
+      "userId": 1,
+      "timestamp": "2025-06-06T10:30:00Z",
+      "content": "Morning crochet session at the Atelier!",
+      "images": ["post1.jpg"],
+      "location": "Atelier",
+      "eventDate": "2025-06-15",
+      "likes": [2, 3],
+      "comments": [
+        { "userId": 2, "text": "Nice!", "timestamp": "2025-06-06T11:00:00Z" }
+      ],
+      "bookmarks": [2],
+      "views": 80
+    },
+    {
+      "id": 5002,
+      "userId": 1,
+      "timestamp": "2025-06-05T14:15:00Z",
+      "content": "Painting with coffee again ☕️🎨",
+      "images": ["post2.jpg"],
+      "location": "Atelier",
+      "eventDate": null,
+      "likes": [3],
+      "comments": [],
+      "bookmarks": [],
+      "views": 50
+    },
+    {
+      "id": 5003,
+      "userId": 1,
+      "timestamp": "2025-06-04T09:00:00Z",
+      "content": "Experimenting with textures today.",
+      "images": ["post3.jpg"],
+      "location": "Atelier",
+      "eventDate": null,
+      "likes": [],
+      "comments": [],
+      "bookmarks": [],
+      "views": 15
+    },
+    {
+      "id": 5004,
+      "userId": 2,
+      "timestamp": "2025-06-03T10:00:00Z",
+      "content": "New crochet pattern, who wants to learn?",
+      "images": ["post4.jpg"],
+      "location": "Atelier",
+      "eventDate": null,
+      "likes": [1, 3, 4],
+      "comments": [],
+      "bookmarks": [],
+      "views": 90
+    },
+    {
+      "id": 5005,
+      "userId": 2,
+      "timestamp": "2025-06-02T17:00:00Z",
+      "content": "Collaborative art project in progress!",
+      "images": ["post5.jpg"],
+      "location": "Salon",
+      "eventDate": null,
+      "likes": [],
+      "comments": [],
+      "bookmarks": [],
+      "views": 60
+    },
+    {
+      "id": 5006,
+      "userId": 3,
+      "timestamp": "2025-06-01T12:00:00Z",
+      "content": "Creating soundscapes 🎶",
+      "images": ["post6.jpg"],
+      "location": "Salon",
+      "eventDate": null,
+      "likes": [1, 2],
+      "comments": [],
+      "bookmarks": [],
+      "views": 100
+    },
+    {
+      "id": 5007,
+      "userId": 3,
+      "timestamp": "2025-05-30T15:00:00Z",
+      "content": "Brainstorming new ideas...",
+      "images": ["post7.jpg"],
+      "location": "Atelier",
+      "eventDate": null,
+      "likes": [],
+      "comments": [],
+      "bookmarks": [],
+      "views": 25
+    },
+    {
+      "id": 5008,
+      "userId": 4,
+      "timestamp": "2025-05-29T16:00:00Z",
+      "content": "Music workshop coming soon!",
+      "images": ["post8.jpg"],
+      "location": "Salon",
+      "eventDate": "2025-06-20",
+      "likes": [1, 3],
+      "comments": [],
+      "bookmarks": [],
+      "views": 130
+    },
+    {
+      "id": 5009,
+      "userId": 4,
+      "timestamp": "2025-05-28T11:00:00Z",
+      "content": "Gear setup day 🎛️🎚️",
+      "images": ["post9.jpg"],
+      "location": "Studio",
+      "eventDate": null,
+      "likes": [],
+      "comments": [],
+      "bookmarks": [],
+      "views": 40
+    },
+    {
+      "id": 5010,
+      "userId": 4,
+      "timestamp": "2025-05-27T14:30:00Z",
+      "content": "Mixing session 🎧",
+      "images": ["post10.jpg"],
+      "location": "Studio",
+      "eventDate": null,
+      "likes": [],
+      "comments": [],
+      "bookmarks": [],
+      "views": 70
+    }
+  ]
+}

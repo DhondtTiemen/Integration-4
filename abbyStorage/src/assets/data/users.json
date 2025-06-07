@@ -1,0 +1,62 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Jamie Parker",
+      "bio": "Dreamer, painter, coffee lover. Here to create and connect.",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+      "followers": 221,
+      "following": 15,
+      "achievements": ["badge1.png", "badge2.png"],
+      "box": {
+        "mainImage": "box-jamie.jpg",
+        "items": [
+          { "name": "Origami Crane", "image": "item1.jpg" },
+          { "name": "Paintbrush", "image": "item2.jpg" }
+        ]
+      },
+      "createdEvents": [1001],
+      "attendedEvents": [1002],
+      "posts": [5001, 5002, 5003]
+    },
+    {
+      "id": 2,
+      "name": "Emily Peterson",
+      "bio": "Crochet artist & community builder.",
+      "avatar": "https://randomuser.me/api/portraits/women/45.jpg",
+      "followers": 180,
+      "following": 30,
+      "achievements": [],
+      "box": { "mainImage": "box-emily.jpg", "items": [] },
+      "createdEvents": [],
+      "attendedEvents": [1001],
+      "posts": [5004, 5005]
+    },
+    {
+      "id": 3,
+      "name": "Iris Vale",
+      "bio": "Creative mind, passionate about art and sound.",
+      "avatar": "https://randomuser.me/api/portraits/women/33.jpg",
+      "followers": 340,
+      "following": 50,
+      "achievements": ["badge3.png"],
+      "box": { "mainImage": "box-iris.jpg", "items": [] },
+      "createdEvents": [1002],
+      "attendedEvents": [],
+      "posts": [5006, 5007]
+    },
+    {
+      "id": 4,
+      "name": "Alex Smith",
+      "bio": "Music producer & workshop host.",
+      "avatar": "https://randomuser.me/api/portraits/men/22.jpg",
+      "followers": 95,
+      "following": 10,
+      "achievements": [],
+      "box": { "mainImage": "box-alex.jpg", "items": [] },
+      "createdEvents": [],
+      "attendedEvents": [],
+      "posts": [5008, 5009, 5010]
+    }
+  ]
+}

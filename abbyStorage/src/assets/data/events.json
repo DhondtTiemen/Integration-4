@@ -1,0 +1,33 @@
+{
+  "events": [
+    {
+      "id": 1001,
+      "title": "Morning painting & Coffee",
+      "about": "Relaxed morning workshop to paint and connect over coffee.",
+      "date": "2025-05-31",
+      "time": "10:00",
+      "place": "Atelier, ABBY Creative Space",
+      "materials": [
+        "Paper or Sketchbook",
+        "Set of graphite pencils (2H to 6B)"
+      ],
+      "images": ["event1-main.jpg"],
+      "createdBy": 1,
+      "participants": [2, 3],
+      "status": "approved"
+    },
+    {
+      "id": 1002,
+      "title": "Open Mic Night",
+      "about": "An open night for poetry, music and spoken word.",
+      "date": "2025-06-15",
+      "time": "20:00",
+      "place": "Salon, ABBY Creative Space",
+      "materials": [],
+      "images": ["event2-main.jpg"],
+      "createdBy": 3,
+      "participants": [1, 4],
+      "status": "approved"
+    }
+  ]
+}
