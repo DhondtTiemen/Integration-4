@@ -23,8 +23,8 @@ import BoxDetail from "./screens/BoxDetail.vue";
   </div>
 </template> -->
 <template>
-  <router-view class="min-h-screen overflow-x-hidden bg-neutral-50"></router-view>
-  <appNavigation class="fixed bottom-0 w-full bg-gray-100 z-50 shadow-md" />
+  <router-view class="min-h-screen overflow-x-hidden mb-12 bg-neutral-50"></router-view>
+  <appNavigation class="fixed bottom-0 w-full bg-gray-100 pt-2 z-50 shadow-md" />
 
 </template>
 

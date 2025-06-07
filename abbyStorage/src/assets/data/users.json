@@ -2,61 +2,140 @@
   "users": [
     {
       "id": 1,
+      "mail":"jamie@mail.be",
+      "password":"jamie123",
       "name": "Jamie Parker",
       "bio": "Dreamer, painter, coffee lover. Here to create and connect.",
       "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
       "followers": 221,
       "following": 15,
-      "achievements": ["badge1.png", "badge2.png"],
+      "achievements": [
+        "badge1.png",
+        "badge2.png"
+      ],
       "box": {
+        "boxNumber": 241,
+        "createdAt": "2025-05-01",
+        "likes": 12,
+        "comments": 5,
+        "views": 150,
         "mainImage": "box-jamie.jpg",
         "items": [
-          { "name": "Origami Crane", "image": "item1.jpg" },
-          { "name": "Paintbrush", "image": "item2.jpg" }
+          {
+            "name": "Origami Crane",
+            "image": "item1.jpg"
+          },
+          {
+            "name": "Paintbrush",
+            "image": "item2.jpg"
+          }
         ]
       },
-      "createdEvents": [1001],
-      "attendedEvents": [1002],
-      "posts": [5001, 5002, 5003]
+      "createdEvents": [
+        1001
+      ],
+      "attendedEvents": [
+        1002
+      ],
+      "posts": [
+        5001,
+        5002,
+        5003
+      ]
     },
     {
       "id": 2,
+      "mail": "emily@mail.be",
+      "password": "emily123",
       "name": "Emily Peterson",
       "bio": "Crochet artist & community builder.",
       "avatar": "https://randomuser.me/api/portraits/women/45.jpg",
       "followers": 180,
       "following": 30,
       "achievements": [],
-      "box": { "mainImage": "box-emily.jpg", "items": [] },
+      "box": {
+        "boxNumber": 231,
+        "createdAt": "2025-05-01",
+        "likes": 12,
+        "comments": 5,
+        "views": 150,
+        "mainImage": "box-emily.jpg",
+        "items": [
+          {
+            "name": "Origami Crane",
+            "image": "item1.jpg"
+          },
+          {
+            "name": "Paintbrush",
+            "image": "item2.jpg"
+          }
+        ]
+      },
       "createdEvents": [],
-      "attendedEvents": [1001],
-      "posts": [5004, 5005]
+      "attendedEvents": [
+        1001
+      ],
+      "posts": [
+        5004,
+        5005
+      ]
     },
     {
       "id": 3,
+      "mail": "iris@mail.be",
+      "password": "iris123",
       "name": "Iris Vale",
       "bio": "Creative mind, passionate about art and sound.",
       "avatar": "https://randomuser.me/api/portraits/women/33.jpg",
       "followers": 340,
       "following": 50,
-      "achievements": ["badge3.png"],
-      "box": { "mainImage": "box-iris.jpg", "items": [] },
-      "createdEvents": [1002],
+      "achievements": [
+        "badge3.png"
+      ],
+      "box": {
+        "boxNumber": 221,
+        "createdAt": "2025-05-01",
+        "likes": 12,
+        "comments": 5,
+        "views": 150,
+        "mainImage": "box-iris.jpg",
+        "items": []
+      },
+      "createdEvents": [
+        1002
+      ],
       "attendedEvents": [],
-      "posts": [5006, 5007]
+      "posts": [
+        5006,
+        5007
+      ]
     },
     {
       "id": 4,
+      "mail": "alex@mail.be",
+      "password": "alex123",
       "name": "Alex Smith",
       "bio": "Music producer & workshop host.",
       "avatar": "https://randomuser.me/api/portraits/men/22.jpg",
       "followers": 95,
       "following": 10,
       "achievements": [],
-      "box": { "mainImage": "box-alex.jpg", "items": [] },
+      "box": {
+        "boxNumber": 658,
+        "createdAt": "2025-05-01",
+        "likes": 12,
+        "comments": 5,
+        "views": 150,
+        "mainImage": "box-alex.jpg",
+        "items": []
+      },
       "createdEvents": [],
       "attendedEvents": [],
-      "posts": [5008, 5009, 5010]
+      "posts": [
+        5008,
+        5009,
+        5010
+      ]
     }
   ]
 }

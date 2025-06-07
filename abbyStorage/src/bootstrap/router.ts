@@ -1,25 +1,37 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: '/',
-    component: () => import('../components/holders/AppHolder.vue'),
+    path: "/",
+    component: () => import("../components/holders/AppHolder.vue"),
     children: [
       {
-        path: '',
-        component: () => import('../components/Overview.vue'),
+        path: "",
+        component: () => import("../components/Overview.vue"),
       },
       {
-        path: 'account',
-        component: () => import('../screens/Account.vue'),
+        path: "account/:id",
+        component: () => import("../screens/Account.vue"),
+      },
+      {
+        path: "login",
+        component: () => import("../components/LoginForm.vue"),
+      },
+      {
+        path: "register",
+        component: () => import("../components/RegisterForm.vue"),
+      },
+      {
+        path: "box/:id",
+        component: () => import("../screens/BoxDetail.vue"),
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
-export default router
+export default router;
