@@ -29,6 +29,7 @@ const routes = [
         path: "post/:id",
         component: () => import("../screens/PostDetail.vue"),
       },
+
     ],
   },
 ];

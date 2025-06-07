@@ -11,6 +11,7 @@ export default interface Post {
     userId: number;
     text: string;
     timestamp: string;
+    likes: number[];
   }[];
   bookmarks: number[];
   views: number;

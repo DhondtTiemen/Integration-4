@@ -132,19 +132,18 @@
         </div>
 
         <div class="grid grid-cols-3 grid-rows-2 gap-4 justify-center">
-          <div
-            v-for="post in posts.slice(0, 5)"
-            :key="post.id"
-            class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm overflow-hidden"
-          >
-            <img
-              v-if="post.images?.length"
-              :src="post.images[0]"
-              alt="Post image"
-              class="w-full h-full object-cover"
-            />
-            <Image v-else class="w-10 h-10 text-gray-400" />
-          </div>
+          <router-link :to="`/post/${post?.id}`" v-for="post in posts.slice(0, 5)"
+              :key="post.id"
+              class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm overflow-hidden">
+
+              <img
+                v-if="post.images?.length"
+                :src="post.images[0]"
+                alt="Post image"
+                class="w-full h-full object-cover"
+              />
+              <Image v-else class="w-10 h-10 text-gray-400" />
+          </router-link>
 
           <div
             class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm"
