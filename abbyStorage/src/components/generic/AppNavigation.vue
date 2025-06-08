@@ -1,6 +1,6 @@
 <template>
   <ul
-    class="grid w-full grid-cols-4 bg-gray-100 items-center text-center text-xs font-medium sm:w-auto sm:space-x-3 sm:text-left sm:text-sm"
+    class="grid w-full grid-cols-4 items-center text-center text-xs font-medium sm:w-auto sm:space-x-3 sm:text-left sm:text-sm"
   >
     <li>
       <router-link
