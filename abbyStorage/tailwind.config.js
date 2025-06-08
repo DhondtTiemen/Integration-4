@@ -17,7 +17,7 @@ export default {
       },
       fontFamily: {
         primary: ['"GT Walsheim"', 'sans-serif']
-      },
+      }
     }
   },
   plugins: []

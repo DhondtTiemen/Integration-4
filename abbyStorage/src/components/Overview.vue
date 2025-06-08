@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-md mx-auto min-h-screen">
+  <section class="min-h-screen">
     <!-- Header -->
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">
