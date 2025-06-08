@@ -137,6 +137,7 @@ import {
   Heart,
   MessageSquare,
   Eye,
+  SendHorizonal
 } from "lucide-vue-next";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";

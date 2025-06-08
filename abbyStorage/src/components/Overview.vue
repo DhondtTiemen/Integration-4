@@ -70,13 +70,13 @@
       </div>
 
       <!-- Event box if eventId exists -->
-    <div v-if="post.eventId" class="mb-2 relative">
+    <router-link :to="`/post/${post.id}`" v-if="post.eventId" class="mb-2 relative">
       <span class="absolute top-4 right-4 border border-black text-black text-xs px-2 py-1">Event</span>
-  
       <template v-if="getEventById(post.eventId)">
         <img :src="'https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg'" alt="post image" class="h-44 w-full object-cover" />
         
         <div class="bg-purple-300 p-4">
+          
           <p class="font-bold mb-1">{{ getEventById(post.eventId).title }}</p>
 
           <div class="my-2">
@@ -97,7 +97,7 @@
           <button class="mt-3 bg-amber-300 text-black font-medium w-full py-1.5 rounded">Learn more</button>
         </div>
       </template>
-    </div>
+    </router-link>
 
       <!-- Actions -->
       <div class="flex items-center justify-between mt-2 text-sm">
