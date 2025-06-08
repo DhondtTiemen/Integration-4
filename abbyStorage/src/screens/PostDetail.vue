@@ -195,7 +195,7 @@ async function fetchData() {
     const postsResponse = await fetch("/src/assets/data/posts.json");
 
     if (!usersResponse.ok || !postsResponse.ok) {
-      throw new Error("Failed to fetch users, events, or posts");
+      throw new Error("Failed to fetch users or events");
     }
 
     const usersData = await usersResponse.json();

@@ -29,6 +29,10 @@ const routes = [
         path: "post/:id",
         component: () => import("../screens/PostDetail.vue"),
       },
+      {
+        path: "event/:id",
+        component: () => import("../screens/event/EventDetail.vue"),
+      },
 
     ],
   },

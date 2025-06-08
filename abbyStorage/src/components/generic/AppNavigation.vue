@@ -50,6 +50,7 @@ const userId = ref<number | null>(null);
 
 if (typeof window !== "undefined") {
   const storedId = localStorage.getItem("userId");
+  console.log("Stored userId:", storedId);
   if (storedId) {
     userId.value = Number(storedId);
   }

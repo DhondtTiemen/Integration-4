@@ -20,7 +20,7 @@
         <h1 class="text-xl font-bold text-center text-gray-900">
           {{ user?.name }}
         </h1>
-        <p class="text-center text-sm text-gray-600 mb-4 w-48">
+        <p class="text-center text-sm text-gray-600 mb-4 w-52">
           {{ user?.bio }}
         </p>
         <button
@@ -81,10 +81,10 @@
             {{ user?.achievements.length }} badges
           </p>
         </div>
-        <div class="flex justify-center gap-2">
-          <template v-for="(badge, index) in user?.achievements" :key="index">
+        <div class="flex gap-2">
+          <div v-for="(badge, index) in user?.achievements" :key="index">
             <img :src="badge" alt="badge" class="w-10 h-10 object-contain" />
-          </template>
+          </div>
         </div>
       </div>
 
@@ -95,7 +95,7 @@
         </div>
 
         <div v-if="events.length" class="space-y-4">
-          <div
+          <router-link :to="`/event/${event.id}`"
             v-for="event in events"
             :key="event.id"
             class="flex items-center gap-4"
@@ -119,7 +119,7 @@
                 }}
               </p>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <div v-else class="text-sm text-gray-500">No events to display.</div>
@@ -132,17 +132,19 @@
         </div>
 
         <div class="grid grid-cols-3 grid-rows-2 gap-4 justify-center">
-          <router-link :to="`/post/${post?.id}`" v-for="post in posts.slice(0, 5)"
-              :key="post.id"
-              class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm overflow-hidden">
-
-              <img
-                v-if="post.images?.length"
-                :src="post.images[0]"
-                alt="Post image"
-                class="w-full h-full object-cover"
-              />
-              <Image v-else class="w-10 h-10 text-gray-400" />
+          <router-link
+            :to="`/post/${post?.id}`"
+            v-for="post in posts.slice(0, 5)"
+            :key="post.id"
+            class="bg-gray-100 w-24 h-24 flex justify-center items-center rounded-lg shadow-sm overflow-hidden"
+          >
+            <img
+              v-if="post.images?.length"
+              :src="post.images[0]"
+              alt="Post image"
+              class="w-full h-full object-cover"
+            />
+            <Image v-else class="w-10 h-10 text-gray-400" />
           </router-link>
 
           <div
@@ -180,7 +182,6 @@ const loading = ref(true);
 
 const route = useRoute();
 const currentUserId = Number(route.params.id);
-
 const router = useRouter();
 function goBack() {
   router.back();
