@@ -24,5 +24,4 @@ export default interface User {
   };
   createdEvents: number[];
   attendedEvents: number[];
-  posts: number[];
 }
