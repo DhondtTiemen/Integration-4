@@ -1,7 +1,20 @@
 
 @import "tailwindcss";
-@tailwind utilities;
 
+@theme {
+  --font-primary: "GT Walsheim", "Arial", "sans-serif";
+
+  --color-alphaPurple: #BB7CD2;
+  --color-alphaYellow: #FEBE4F;
+  --color-alphaGreen: #05A368;
+  --color-alphaBlue: #5F90FF;
+  --color-alphaRed: #691F13;
+
+  --color-alphaDark: #222222;
+  --color-alphaLight: #FFFFFF;
+}
+
+/* 
 @font-face {
   font-family: 'GT Walsheim';
   src: url('@/assets/fonts/GT-Walsheim-Regular.woff2') format('woff2'),
@@ -48,10 +61,4 @@
        url('@/assets/fonts/GT-Walsheim-Bold-Oblique.woff') format('woff');
   font-weight: 700;
   font-style: italic;
-}
-
-body {
-  font-family: 'GT Walsheim', sans-serif;
-  background-color: #F3F3F3;
-}
-
+} */
