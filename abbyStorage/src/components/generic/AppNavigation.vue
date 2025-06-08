@@ -1,6 +1,6 @@
 <template>
   <ul
-    class="grid w-full grid-cols-4 items-center text-center text-xs font-medium sm:w-auto sm:space-x-3 sm:text-left sm:text-sm"
+    class="grid w-full grid-cols-5 items-center text-center text-xs font-medium sm:w-auto sm:space-x-3 sm:text-left sm:text-sm"
   >
     <li>
       <router-link
@@ -33,6 +33,15 @@
       <router-link
         exact-active-class="opacity-40"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
+        to="/messages"
+      >
+        <MessageCircle class="mx-auto mb-2 h-8 sm:hidden" />
+      </router-link>
+    </li>
+    <li>
+      <router-link
+        exact-active-class="opacity-40"
+        class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         :to="`/account/${userId}`"
       >
         <CircleUser class="mx-auto mb-2 h-8 sm:hidden" />
@@ -42,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { Home, Search, PlusCircle, CircleUser } from "lucide-vue-next";
+import { Home, Search, PlusCircle, CircleUser, MessageCircle } from "lucide-vue-next";
 import { ref } from "vue";
 
 // Haal userId op uit localStorage

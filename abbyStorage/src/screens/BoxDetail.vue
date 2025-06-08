@@ -38,7 +38,7 @@
     </header>
 
     <!-- TODO: Check if logged in -->
-    <!--     
+<!--         
     <nav
       class="flex items-center justify-between bg-white shadow-md p-4 border-b border-gray-200"
     >
@@ -85,7 +85,7 @@
       <div class="flex items-center gap-2">
         <p class="text-right">
           <!-- Last changed: <br /> -->
-          {{ formatTimeAgo(user?.box.createdAt) }}
+          {{ formatTimeAgo(user?.box.createdAt ?? "") }}
           <!-- {{ new Date(user?.box.createdAt ?? "").toLocaleDateString() }} -->
         </p>
       </div>
@@ -157,6 +157,8 @@
       class="p-4 border-b-2 border-gray-200"
       v-if="user && !loading"
     >
+    
+        <!-- TODO: Comments are separated from the box image where you can see how many comments there are. -->
       <!-- TODO: Do we need another page for comments only??? -->
       <div class="flex justify-between items-center">
         <p>{{ commentsCount }} comment{{ commentsCount !== 1 ? "s" : "" }}</p>
@@ -273,10 +275,10 @@ function timeAgo(dateString: string) {
   return "just now";
 }
 
-function formatTimeAgo(timestamp) {
+function formatTimeAgo(timestamp: string | number | Date) {
   const postDate = new Date(timestamp)
   const now = new Date()
-  const diffMs = now - postDate
+  const diffMs = now.getTime() - postDate.getTime()
   const diffMinutes = Math.floor(diffMs / (1000 * 60))
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))

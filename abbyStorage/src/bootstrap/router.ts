@@ -18,6 +18,10 @@ const routes = [
         component: () => import("../components/LoginForm.vue"),
       },
       {
+        path: "messages",
+        component: () => import("../components/Messages.vue"),
+      },
+      {
         path: "register",
         component: () => import("../components/RegisterForm.vue"),
       },
@@ -33,7 +37,6 @@ const routes = [
         path: "event/:id",
         component: () => import("../screens/event/EventDetail.vue"),
       },
-
     ],
   },
 ];
