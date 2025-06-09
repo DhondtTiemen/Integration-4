@@ -142,8 +142,8 @@ import {
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import type User from "../interfaces/interface.user";
-import type Post from "../interfaces/interface.post";
+import type User from "../../interfaces/interface.user";
+import type Post from "../../interfaces/interface.post";
 
 const route = useRoute();
 const router = useRouter();

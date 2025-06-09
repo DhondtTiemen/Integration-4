@@ -333,9 +333,9 @@ import {
 } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type User from "../interfaces/interface.user";
-import type Event from "../interfaces/interface.event";
-import type Post from "../interfaces/interface.post";
+import type User from "../../interfaces/interface.user";
+import type Event from "../../interfaces/interface.event";
+import type Post from "../../interfaces/interface.post";
 const user = ref<User | null>(null);
 const events = ref<Event[]>([]);
 const posts = ref<Post[]>([]);

@@ -241,7 +241,7 @@ import { ref, onMounted, computed } from "vue";
 
 const route = useRoute();
 const userID = Number(route.params.id);
-import type User from "../interfaces/interface.user";
+import type User from "../../interfaces/interface.user";
 
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen

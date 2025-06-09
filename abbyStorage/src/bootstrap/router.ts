@@ -5,33 +5,64 @@ const routes = [
     path: "/",
     component: () => import("../components/holders/AppHolder.vue"),
     children: [
+      // --- HOME ---
       {
         path: "",
-        component: () => import("../components/Overview.vue"),
+        component: () => import("../screens/Overview.vue"),
       },
+
+      // --- USER ---
       {
         path: "account/:id",
-        component: () => import("../screens/Account.vue"),
+        component: () => import("../screens/user/Account.vue"),
       },
+      // TODO
+      // {
+      //   path: "account/:id/edit",
+      //   component: () => import("../screens/EditAccount.vue"),
+      // },
       {
         path: "login",
-        component: () => import("../components/LoginForm.vue"),
-      },
-      {
-        path: "messages",
-        component: () => import("../components/Messages.vue"),
+        component: () => import("../screens/user/LoginForm.vue"),
       },
       {
         path: "register",
-        component: () => import("../components/RegisterForm.vue"),
+        component: () => import("../screens/user/RegisterForm.vue"),
       },
+
+      // --- BOX ---
+      // TODO
+      // {
+      //   path: "box/create",
+      //   component: () => import("../screens/box/CreateBox.vue"),
+      // },
       {
         path: "box/:id",
-        component: () => import("../screens/BoxDetail.vue"),
+        component: () => import("../screens/box/BoxDetail.vue"),
       },
+      // {
+      //   path: "box/:id/edit",
+      //   component: () => import("../screens/box/EditBox.vue"),
+      // },
+
+      // --- POST ---
+      // {
+      //   path: "post/create",
+      //   component: () => import("../screens/CreatePost.vue"),
+      // },
       {
         path: "post/:id",
-        component: () => import("../screens/PostDetail.vue"),
+        component: () => import("../screens/post/PostDetail.vue"),
+      },
+      // {
+      //   path: "post/:id/edit",
+      //   component: () => import("../screens/EditPost.vue"),
+      // },
+
+      // --- EVENT ---
+      {
+        path: "event/create",
+        component: () => import("../screens/event/CreateEvent.vue"),
       },
       {
         path: "events",
@@ -41,9 +72,15 @@ const routes = [
         path: "event/:id",
         component: () => import("../screens/event/EventDetail.vue"),
       },
+      // {
+      //   path: "event/:id/edit",
+      //   component: () => import("../screens/event/EditEvent.vue"),
+      // },
+
+      // --- SKIP ---
       {
-        path: "event/create",
-        component: () => import("../screens/event/CreateEvent.vue"),
+        path: "messages",
+        component: () => import("../components/Messages.vue"),
       },
     ],
   },
