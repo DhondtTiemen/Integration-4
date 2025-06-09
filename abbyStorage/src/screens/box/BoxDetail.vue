@@ -38,7 +38,7 @@
     </header>
 
     <!-- TODO: Check if logged in -->
-<!--         
+    <!--         
     <nav
       class="flex items-center justify-between bg-white shadow-md p-4 border-b border-gray-200"
     >
@@ -228,15 +228,12 @@
 
 <script lang="ts" setup>
 import {
-  ArrowLeft,
-  Share2,
   Heart,
   MessageSquare,
   Eye,
-  CircleUserRound,
   SendHorizonal,
 } from "lucide-vue-next";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref, onMounted, computed } from "vue";
 
 const route = useRoute();
@@ -246,11 +243,6 @@ import type User from "../../interfaces/interface.user";
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const loading = ref(true);
-const router = useRouter();
-
-function goBack() {
-  router.back();
-}
 
 function timeAgo(dateString: string) {
   const now = new Date();
