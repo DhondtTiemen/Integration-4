@@ -139,7 +139,7 @@
     </div>
 
     <div class="p-4">
-        <button class="bg-alphaGreen p-4 w-full text-sm font-medium">Save Changes</button>
+        <button @click="saveChanges" class="bg-alphaGreen p-4 w-full text-sm font-medium">Save Changes</button>
     </div>
     
 </div>
@@ -188,6 +188,54 @@ async function fetchUser() {
 onMounted(() => {
   fetchUser();
 });
+
+const boxDescription = ref("");
+
+function saveChanges() {
+  if (!user.value) return;
+
+  // Bouw het box object dat je wil opslaan
+  const updatedBox = {
+    mainImage: mainImagePreview.value || user.value.box.mainImage,
+    items: editableItems.value.map(item => ({
+      name: item.name,
+      image: item.imagePreview || item.image, // als nieuwe preview → gebruik die
+    })),
+    description: boxDescription.value
+  };
+
+  // Save to localStorage (key bv. 'box_user_1')
+  const localStorageKey = `box_user_${user.value.id}`;
+  localStorage.setItem(localStorageKey, JSON.stringify(updatedBox));
+
+  // (optioneel) Log in console → dit is wat je bv. naar backend of naar JSON zou sturen
+  console.log("Updated box:", updatedBox);
+
+  alert("Changes saved to localStorage!");
+}
+
+// Load possible localStorage override
+const localStorageKey = `box_user_${user.value?.id}`;
+const localBoxData = JSON.parse(localStorage.getItem(localStorageKey) || "null");
+
+if (localBoxData) {
+  console.log("Loaded localStorage box data:", localBoxData);
+  // override main image
+  mainImagePreview.value = localBoxData.mainImage !== user.value?.box.mainImage ? localBoxData.mainImage : null;
+
+  // override items
+  editableItems.value = localBoxData.items.map((item: any) => ({
+    name: item.name,
+    image: item.image,
+    imagePreview: null
+  }));
+
+  // override description
+  boxDescription.value = localBoxData.description || "";
+} else {
+  // fallback → standaard JSON data
+  boxDescription.value = user.value?.box?.description || "";
+}
 
 function onMainImageChange(event: Event) {
   const target = event.target as HTMLInputElement;

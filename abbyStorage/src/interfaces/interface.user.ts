@@ -15,6 +15,7 @@ export default interface User {
     views: number;
     mainImage: string;
     items: { name: string; image: string }[];
+    description: string;
     comments: {
       userId: number;
       text: string;
