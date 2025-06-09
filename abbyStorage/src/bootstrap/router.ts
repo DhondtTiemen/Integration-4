@@ -37,6 +37,10 @@ const routes = [
         path: "event/:id",
         component: () => import("../screens/event/EventDetail.vue"),
       },
+      {
+        path: "event/create",
+        component: () => import("../screens/event/CreateEvent.vue"),
+      },
     ],
   },
 ];
