@@ -40,10 +40,10 @@ const routes = [
         path: "box/:id",
         component: () => import("../screens/box/BoxDetail.vue"),
       },
-      // {
-      //   path: "box/:id/edit",
-      //   component: () => import("../screens/box/EditBox.vue"),
-      // },
+      {
+        path: "box/:id/edit",
+        component: () => import("../screens/box/EditBox.vue"),
+      },
 
       // --- POST ---
       // {
