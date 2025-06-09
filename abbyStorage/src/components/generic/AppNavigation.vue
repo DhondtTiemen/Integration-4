@@ -24,7 +24,7 @@
       <router-link
         exact-active-class="opacity-40"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
-        to="/"
+        to="/event/create"
       >
         <PlusCircle class="mx-auto mb-2 h-8 sm:hidden" />
       </router-link>
@@ -33,7 +33,7 @@
       <router-link
         exact-active-class="opacity-40"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
-        to="/messages"
+        to="/events"
       >
         <MessageCircle class="mx-auto mb-2 h-8 sm:hidden" />
       </router-link>
