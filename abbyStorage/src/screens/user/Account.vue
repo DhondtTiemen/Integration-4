@@ -348,6 +348,17 @@ function goBack() {
   router.back();
 }
 
+const storedIdRaw = localStorage.getItem("userId");
+if (storedIdRaw == null) {
+  const storedId = Number(storedIdRaw);
+  if (storedId !== currentUserId) {
+    console.warn("User ID in localStorage does not match the route parameter.");
+    router.push(`/login`);
+  }
+} else {
+  console.warn("No user ID found in localStorage.");
+  router.push(`/login`);
+}
 async function fetchData() {
   try {
     const usersResponse = await fetch("/src/assets/data/users.json");
@@ -377,13 +388,13 @@ async function fetchData() {
 
     const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
 
-    const allPosts = [
-      ...postsData.posts,
-      ...localPosts
-    ].filter((post: any) => post.userId === currentUserId);
+    const allPosts = [...postsData.posts, ...localPosts].filter(
+      (post: any) => post.userId === currentUserId
+    );
 
     posts.value = allPosts.sort(
-      (a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      (a: any, b: any) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   } catch (error) {
     console.error(error);
