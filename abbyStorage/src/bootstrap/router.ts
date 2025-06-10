@@ -31,11 +31,10 @@ const routes = [
       },
 
       // --- BOX ---
-      // TODO
-      // {
-      //   path: "box/create",
-      //   component: () => import("../screens/box/CreateBox.vue"),
-      // },
+      {
+        path: "box/create",
+        component: () => import("../screens/box/CreateBox.vue"),
+      },
       {
         path: "box/:id",
         component: () => import("../screens/box/BoxDetail.vue"),
@@ -46,10 +45,10 @@ const routes = [
       },
 
       // --- POST ---
-      // {
-      //   path: "post/create",
-      //   component: () => import("../screens/CreatePost.vue"),
-      // },
+      {
+        path: "post/create",
+        component: () => import("../screens/post/CreatePost.vue"),
+      },
       {
         path: "post/:id",
         component: () => import("../screens/post/PostDetail.vue"),

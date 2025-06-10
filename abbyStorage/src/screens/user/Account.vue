@@ -375,8 +375,15 @@ async function fetchData() {
 
     events.value = [...created, ...attended];
 
-    posts.value = postsData.posts.filter(
-      (post: any) => post.userId === currentUserId
+    const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
+
+    const allPosts = [
+      ...postsData.posts,
+      ...localPosts
+    ].filter((post: any) => post.userId === currentUserId);
+
+    posts.value = allPosts.sort(
+      (a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   } catch (error) {
     console.error(error);

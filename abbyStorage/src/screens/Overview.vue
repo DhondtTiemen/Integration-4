@@ -145,15 +145,21 @@ async function fetchPosts() {
   const response = await fetch('/src/assets/data/posts.json')
   const data = await response.json()
 
-  // Add mock user data + event flag → voorbeeld
-  posts.value = data.posts.map(post => {
+  const localPosts = JSON.parse(localStorage.getItem('posts') || '[]')
+
+  const combinedPosts = [...data.posts, ...localPosts]
+
+  // Sort by timestamp descending
+  combinedPosts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+
+  posts.value = combinedPosts.map(post => {
     return {
       ...post,
       user: mockUsers.find(u => u.id === post.userId) || { name: 'Unknown', avatar: '' },
       isEvent: !!post.eventDate,
       eventTitle: post.isEvent ? 'Morning crocheting with Emily' : '',
       eventDate: post.eventDate || '',
-      eventTime: '5:00 PM' // mock (je kan dit uitbreiden!)
+      eventTime: '5:00 PM'
     }
   })
 }

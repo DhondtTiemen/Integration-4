@@ -1,262 +1,152 @@
 <template>
-  <div v-bind="$attrs" :key="eventId">
-    <nav class="flex items-center justify-between bg-white shadow-md p-4">
-      <ArrowLeft @click="goBack" class="cursor-pointer" />
-      <p>Event</p>
-      <Share2 />
+  <div class="min-h-screen bg-white flex flex-col">
+
+     <!-- Header -->
+    <nav class="relative flex items-center p-4 bg-alphaYellow">
+        <ArrowLeft class="z-10" />
+        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
+            Event
+        </p>
     </nav>
 
-    <div class="w-full">
-      <img
-        v-if="event?.images?.[0]"
-        :src="event.images[0]"
-        class="w-full object-cover"
-        alt="Event image"
-      />
-    </div>
+    <section v-if="event" class="p-4 space-y-6">
+      <!-- Cover image -->
+      <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
+        <Image class="w-16 h-16 text-gray-400" />
+      </div>
 
-    <div
-      class="flex flex-col justify-between mt-4 px-4 border-b-2 border-gray-200 pb-4"
-    >
-      <h1 class="font-bold text-2xl">{{ event?.title }}</h1>
-      <div class="flex text-sm text-gray-600 gap-2 items-center mt-4">
-        <CalendarDays />
-        <p>{{ formattedDate }}</p>
-      </div>
-      <div class="flex text-sm text-gray-600 gap-2 items-center mt-2">
-        <MapPin />
-        <p>{{ event?.place }}</p>
-      </div>
-      <div class="flex text-sm text-gray-600 gap-2 items-center mt-4">
-        <p>
-          Hosted by
-          <a class="underline text-black" href="#">
-            {{ getUserInfo(event?.createdBy ?? -1)?.name || "Unknown" }}
-          </a>
+      <!-- Event info -->
+      <div>
+        <h2 class="text-xl font-bold mb-2">{{ event.title }}</h2>
+        <p class="text-sm text-gray-600 flex items-center gap-1">
+          <CalendarDays class="w-4 h-4" />
+          {{ formatDate(event.date) }} • {{ event.time }}
         </p>
-      </div>
-
-      <button
-        class="w-full bg-gray-600 text-white py-2 mt-4 rounded-full hover:bg-primary-700 transition-colors duration-200"
-      >
-        Join event
-      </button>
-    </div>
-
-    <div class="px-4 border-b-2 border-gray-200 pb-4">
-      <div class="flex justify-between items-center mt-4">
-        <p class="text-lg font-bold">
-          Participants ({{ event?.participants?.length || 0 }})
+        <p class="text-sm text-gray-600 flex items-center gap-1 mt-1">
+          <MapPin class="w-4 h-4" />
+          {{ event.place }}
         </p>
-        <p class="text-gray-600 cursor-pointer">See all</p>
+        <p class="text-sm text-gray-500 mt-1">Hosted by <strong>{{ event.host }}</strong></p>
+        <button
+          class="mt-3 px-5 py-2.5 w-full text-sm font-medium"
+          :class="isPast ? 'bg-gray-400 cursor-not-allowed' : 'bg-alphaGreen hover:bg-green-700'"
+          :disabled="isPast"
+        >
+          {{ isPast ? 'Event finished' : 'Join event' }}
+        </button>
       </div>
 
-      <div class="flex items-center mt-2">
-        <div
-          v-for="(id, index) in event?.participants.slice(0, 5)"
-          :key="id"
-          :class="[
-            'w-12 h-12 rounded-full border-2 border-white overflow-hidden z-20 flex items-center justify-center',
-            index > 0 ? '-ml-4' : '',
-          ]"
-        >
-          <img
-            v-if="getUserInfo(id)?.avatar"
-            :src="getUserInfo(id).avatar"
-            alt="User avatar"
-            class="w-full h-full object-cover"
-          />
-          <CircleUserRound v-else class="text-gray-600 w-full h-full" />
+      <!-- Participants -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="font-medium text-base">Participants ({{ participants.length }})</h3>
+          <button class="text-sm text-gray-500">See all</button>
         </div>
-
-        <div
-          v-if="event?.participants?.length > 5"
-          class="bg-gray-300 w-12 h-12 z-20 flex items-center justify-center rounded-full -ml-4 text-sm font-semibold"
-        >
-          +{{ event.participants.length - 5 }}
+        <div class="flex -space-x-3">
+          <img v-for="(p, i) in participants.slice(0, 6)" :key="i" :src="p.avatar" class="w-10 h-10 rounded-full border-2 border-white" />
+          <div v-if="participants.length > 6" class="w-10 h-10 rounded-full bg-alphaGreen text-white flex items-center justify-center text-sm font-medium">+{{ participants.length - 6 }}</div>
         </div>
       </div>
-    </div>
 
-    <div
-      class="p-4 border-b-2 border-gray-200"
-      v-if="event?.achievements?.length"
-    >
-      <p class="text-lg font-bold">Event rewards</p>
-      <div class="grid grid-cols-2 gap-4 mt-2">
-        <div
-          v-for="(badge, index) in event.achievements"
-          :key="index"
-          class="border-2 border-gray-200 gap-3 rounded-lg flex flex-col items-center py-8"
-        >
-          <img
-            :src="badge"
-            alt="Achievement badge"
-            class="w-16 h-16 object-contain"
-          />
-          <p class="text-xs text-gray-600 text-center">
-            Complete this event <br />to collect the reward
-          </p>
+      <!-- Achievements -->
+      <div>
+        <h3 class="font-medium mb-2">Event Achievements</h3>
+        <div class="flex items-center gap-4 bg-gray-100 p-3">
+          <Image class="w-10 h-10 text-gray-400" />
+          <p class="text-sm">Expressive drawing<br /><span class="text-xs text-gray-500">Complete this workshop</span></p>
         </div>
       </div>
-    </div>
 
-    <div class="p-4 border-b-2 border-gray-200" v-if="event?.about">
-      <p class="text-lg font-bold">About</p>
-      <p class="mt-4 text-gray-600">{{ event.about }}</p>
-    </div>
+      <!-- About -->
+      <div>
+        <h3 class="font-medium mb-2">About</h3>
+        <p class="text-sm text-gray-700">{{ event.description }}</p>
+      </div>
 
-    <div class="p-4 border-b-2 border-gray-200" v-if="event?.materials?.length">
-      <p class="text-lg font-bold">Material to bring</p>
-      <ul>
-        <li
-          v-for="(material, index) in event.materials"
-          :key="index"
-          class="flex items-center gap-2 mt-4"
-        >
-          <Check class="text-gray-600 inline-block mr-2" />
-          <p>{{ material }}</p>
-        </li>
-      </ul>
-    </div>
-
-    <div class="p-4 border-b-2 border-gray-200" v-if="suggestedEvents.length">
-      <p class="text-lg font-bold">You might also like</p>
-      <router-link
-        :to="`/event/${suggestedEvent.id}`"
-        v-for="suggestedEvent in suggestedEvents"
-        :key="suggestedEvent.id"
-        class="border-2 border-gray-300 mt-4 block rounded-lg"
-      >
-        <img
-          v-if="suggestedEvent.images?.[0]"
-          :src="suggestedEvent.images[0]"
-          alt="Suggested event image"
-          class="w-full h-36 object-cover"
-        />
-        <div class="p-4">
-          <p class="font-semibold">{{ suggestedEvent.title }}</p>
-          <p class="text-xs text-gray-600 mt-1">
-            {{
-              new Date(suggestedEvent.date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })
-            }}
-            - {{ suggestedEvent.place }}
-          </p>
+      <!-- Gallery -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="font-medium">Event gallery</h3>
+          <button class="text-sm text-gray-500">See all</button>
         </div>
-      </router-link>
-    </div>
+        <div class="grid grid-cols-4 gap-2">
+          <div v-for="(img, i) in gallery.slice(0, 3)" :key="i" class="aspect-square bg-gray-200"></div>
+          <div class="aspect-square bg-alphaGreen text-white flex items-center justify-center font-medium">+{{ gallery.length - 3 }}</div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div>
+        <h3 class="font-medium mb-2">You might also like</h3>
+        <div class="space-y-4">
+          <div
+            v-for="related in relatedEvents"
+            :key="related.id"
+            class="bg-gray-100 p-3 rounded flex flex-col"
+          >
+            <div class="aspect-[4/2] bg-gray-300 mb-2"></div>
+            <p class="text-sm font-semibold">{{ related.title }}</p>
+            <p class="text-xs text-gray-600">{{ formatDate(related.date) }} • {{ related.place }}</p>
+            <button class="bg-alphaYellow w-fit px-4 py-1 mt-2 text-sm font-medium">Learn more</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <p v-else class="p-4 text-gray-500 text-sm">Loading event details...</p>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Image, Bell, CalendarDays, MapPin } from 'lucide-vue-next'
 import {
-  CircleUserRound,
-  ArrowLeft,
-  Share2,
-  CalendarDays,
-  MapPin,
-  Check,
+    ArrowLeft,
 } from "lucide-vue-next";
-import { ref, onMounted, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
-import type Event from "../../interfaces/interface.event";
-import type { User as IUser } from "../../interfaces/interface.user";
-
-const route = useRoute();
-const router = useRouter();
-
-const userId = ref<number | null>(null); // logged in user id
-const event = ref<Event | null>(null);
-const users = ref<IUser[]>([]);
-const events = ref<Event[]>([]); // all events loaded
-const loading = ref(true);
-
-// Get dynamic event ID as computed so it updates when route changes
-const eventId = computed(() => Number(route.params.id));
-
-const formattedDate = computed(() => {
-  if (!event.value) return "";
-  const date = new Date(`${event.value.date}T${event.value.time}`);
-  return date.toLocaleString("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-});
-
-function getUserInfo(userId: number) {
-  const foundUser = users.value.find((u: IUser) => u.id === userId);
-  if (!foundUser) {
-    return {
-      name: "Unknown",
-      avatar: "default-avatar.jpg", // fallback avatar
-    };
-  }
-  return {
-    name: foundUser.name,
-    avatar: foundUser.avatar,
-  };
-}
-
-async function fetchData() {
-  try {
-    loading.value = true;
-
-    const usersResponse = await fetch("/src/assets/data/users.json");
-    const eventsResponse = await fetch("/src/assets/data/events.json");
-
-    if (!usersResponse.ok || !eventsResponse.ok) {
-      throw new Error("Failed to fetch users or events");
-    }
-
-    const usersData = await usersResponse.json();
-    const eventsData = await eventsResponse.json();
-
-    users.value = usersData.users;
-    events.value = Array.isArray(eventsData) ? eventsData : eventsData.events;
-
-    const foundEvent = events.value.find((e: Event) => e.id === eventId.value);
-    event.value = foundEvent ?? null;
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
-    console.log("Event data loaded:", event.value);
-  }
-}
-
-// Get logged-in user ID from localStorage
-const storedId = localStorage.getItem("userId");
-if (storedId) {
-  userId.value = Number(storedId);
-}
-
-// Suggested events (exclude current and ones user is already in)
-const suggestedEvents = computed(() => {
-  if (!events.value.length || !userId.value) return [];
-
-  return events.value.filter(
-    (e) => e.id !== event.value?.id && !e.participants.includes(userId.value!)
-  );
-});
-
+const route = useRoute()
+const router = useRouter()
 function goBack() {
-  router.back();
+  router.back()
 }
 
-onMounted(() => {
-  fetchData();
-});
+const event = ref(null)
+const relatedEvents = ref([])
 
-// Re-fetch data when the route changes
-watch(
-  () => route.params.id,
-  () => {
-    fetchData();
-  }
-);
+async function fetchEvents() {
+  const res = await fetch('/src/assets/data/events.json')
+  const data = await res.json()
+  const allEvents = data.events
+
+  event.value = allEvents.find(e => String(e.id) === String(route.params.id))
+  console.log(event.value.id);
+
+  // Suggestions: upcoming events in ABBY
+  relatedEvents.value = allEvents.filter(e =>
+    e.id !== event.value.id &&
+    new Date(e.date) >= new Date() &&
+    e.place?.toLowerCase().includes('abby')
+  )
+}
+
+fetchEvents()
+
+const participants = ref([
+  { avatar: '/avatars/a1.jpg' }, { avatar: '/avatars/a2.jpg' },
+  { avatar: '/avatars/a3.jpg' }, { avatar: '/avatars/a4.jpg' },
+  { avatar: '/avatars/a5.jpg' }, { avatar: '/avatars/a6.jpg' },
+  { avatar: '/avatars/a7.jpg' }
+])
+
+const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}])
+
+const isPast = new Date(event.value?.date) < new Date()
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
 </script>
