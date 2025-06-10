@@ -311,6 +311,7 @@ const router = useRouter();
 const currentUserId = Number(route.params.id);
 import type User from "../../interfaces/interface.user";
 
+let accountVisit:Boolean = false;
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const loading = ref(true);
@@ -322,7 +323,7 @@ if (!storedIdRaw) {
   const storedId = Number(storedIdRaw);
   if (storedId !== currentUserId) {
     console.warn("User ID in localStorage does not match the route parameter.");
-    router.push(`/login`);
+    accountVisit = true
   }
 }
 
