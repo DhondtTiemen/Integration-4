@@ -61,7 +61,7 @@
               <img
                 :src="item.avatar"
                 alt="avatar"
-                class="w-12 h-12 object-cover"
+                class="w-12 h-12 rounded-full object-cover"
               />
               <div>
                 <div class="font-semibold">{{ item.name }}</div>
@@ -162,14 +162,16 @@ onMounted(async () => {
 const filteredResults = computed(() => {
   let results: any[] = [];
   const q = query.value.trim().toLowerCase();
+  const loggedInId = Number(localStorage.getItem("userId"));
 
   if (filter.value === "all" || filter.value === "people") {
     results.push(
       ...users.value
         .filter(
           (u) =>
-            u.name?.toLowerCase().includes(q) ||
-            u.bio?.toLowerCase().includes(q)
+            u.id !== loggedInId && 
+            (u.name?.toLowerCase().includes(q) ||
+              u.bio?.toLowerCase().includes(q))
         )
         .map((u) => ({ ...u, type: "user" }))
     );
