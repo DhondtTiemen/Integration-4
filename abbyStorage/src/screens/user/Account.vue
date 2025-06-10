@@ -96,7 +96,7 @@
         <div class="bg-alphaLight p-4">
           <div class="pb-6 border-b-2 border-gray-200">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-medium">
+              <h2 class="flex items-center text-lg font-medium">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-auto inline mr-2"
@@ -148,7 +148,7 @@
           </div>
 
           <div class="py-6 border-b-2 border-gray-200">
-            <h2 class="text-lg font-medium mb-4">
+            <h2 class=" flex text-lg items-center font-medium mb-4">
               <svg
                 class="h-5 w-auto inline mr-2"
                 xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +169,7 @@
 
           <div class="py-6 border-b-2 border-gray-200">
             <div class="flex justify-between">
-              <h2 class="text-lg font-medium mb-4">
+              <h2 class="flex items-center text-lg font-medium mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-auto inline mr-2"
@@ -208,7 +208,7 @@
           </div>
 
           <div class="py-6 border-b-2 border-gray-200">
-            <h2 class="text-lg font-medium mb-4">
+            <h2 class="flex items-center text-lg font-medium mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-auto inline mr-2"
@@ -268,8 +268,8 @@
             </div>
           </div>
 
-          <div class="py-6 border-b-2 border-gray-200">
-            <h2 class="text-lg font-medium mb-4">
+          <div class="py-6">
+            <h2 class="flex items-center text-lg font-medium mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-auto inline mr-2"

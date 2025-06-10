@@ -106,10 +106,14 @@
       </div>
     </header>
 
-    <div v-if="storedIdRaw != currentUserId.toString()"
+    <div
+      v-if="storedIdRaw != currentUserId.toString()"
       class="flex items-center justify-between px-4 border-b border-gray-200"
     >
-      <router-link :to="`/account/${user?.id}`" class="flex gap-4 items-center py-4">
+      <router-link
+        :to="`/account/${user?.id}`"
+        class="flex gap-4 items-center py-4"
+      >
         <img
           :src="user?.avatar"
           alt="Avatar"
@@ -120,7 +124,6 @@
         </div>
       </router-link>
       <router-link
-      
         :to="`/account/${user?.id}`"
         class="bg-alphaGreen font-medium text-sm py-2.5 px-5"
       >
@@ -192,48 +195,7 @@
         <p>{{ user?.box.views }}</p>
       </div>
     </div>
-
     <div class="p-4 border-b-2 border-gray-200">
-      <h2 class="text-lg font-medium mb-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-auto inline mr-2"
-          viewBox="0 0 23 23"
-          fill="none"
-        >
-          <rect width="23" height="23" fill="#222222" />
-          <path
-            d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
-            fill="white"
-          />
-          <path
-            d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
-            fill="white"
-          />
-          <path
-            d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
-            fill="white"
-          />
-        </svg>
-        Items inside
-      </h2>
-
-      <div class="flex items-center justify-start overflow-y-auto gap-2">
-        <div v-for="(item, index) in user?.box.items" :key="index">
-          <div class="bg-gray-300 p-4">
-            <img
-              :src="item.image"
-              :alt="item.name"
-              class="w-60 h-60 object-cover"
-            />
-          </div>
-          <div class="p-4 bg-alphaBlue font-medium">
-            <p>{{ item.name }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="p-4 border-b-2 border-gray-200" v-if="user && !loading">
       <!-- TODO: Comments are separated from the box image where you can see how many comments there are. -->
       <!-- TODO: Do we need another page for comments only??? -->
       <div class="flex justify-between items-center">
@@ -294,8 +256,46 @@
         </div>
       </div>
     </div>
+    <div class="p-4 border-b-2 border-gray-200">
+      <h2 class="text-lg font-medium mb-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-auto inline mr-2"
+          viewBox="0 0 23 23"
+          fill="none"
+        >
+          <rect width="23" height="23" fill="#222222" />
+          <path
+            d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
+            fill="white"
+          />
+          <path
+            d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
+            fill="white"
+          />
+          <path
+            d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
+            fill="white"
+          />
+        </svg>
+        Items inside
+      </h2>
 
-    <p v-else>Loading...</p>
+      <div class="flex items-center justify-start overflow-y-auto gap-2">
+        <div v-for="(item, index) in user?.box.items" :key="index">
+          <div class="bg-gray-300 p-4">
+            <img
+              :src="item.image"
+              :alt="item.name"
+              class="w-60 h-60 object-cover"
+            />
+          </div>
+          <div class="p-4 bg-alphaBlue font-medium">
+            <p>{{ item.name }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- <div v-else class="p-4 text-center text-red-600">User not found.</div> -->
@@ -311,7 +311,7 @@ const router = useRouter();
 const currentUserId = Number(route.params.id);
 import type User from "../../interfaces/interface.user";
 
-let accountVisit:Boolean = false;
+let accountVisit: Boolean = false;
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const loading = ref(true);
@@ -323,7 +323,7 @@ if (!storedIdRaw) {
   const storedId = Number(storedIdRaw);
   if (storedId !== currentUserId) {
     console.warn("User ID in localStorage does not match the route parameter.");
-    accountVisit = true
+    accountVisit = true;
   }
 }
 
