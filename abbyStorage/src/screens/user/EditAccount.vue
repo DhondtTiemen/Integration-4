@@ -1,6 +1,18 @@
 <template>
   <nav class="flex items-center justify-between bg-white shadow-md p-4 mb-4">
-    <ArrowLeft></ArrowLeft>
+    <svg
+      @click="goBack"
+      xmlns="http://www.w3.org/2000/svg"
+      width="21"
+      height="18"
+      viewBox="0 0 21 18"
+      fill="none"
+    >
+      <path
+        d="M21 6.07521L4.34696 9.11281L21 12.1504L21 18L0.0393824 11.9026L-2.8975e-07 6.62871L21 0L21 6.07521Z"
+        fill="#222222"
+      />
+    </svg>
     <p>Edit Profile</p>
     <p class="font-bold">Save</p>
   </nav>
@@ -80,7 +92,9 @@ import {
   Award,
   CalendarDays,
 } from "lucide-vue-next";
-
+function goBack() {
+  history.back();
+}
 export default {
   components: {
     CircleUserRound,
@@ -93,7 +107,9 @@ export default {
   },
 
   setup() {
-    return {};
+    return {
+      goBack,
+    };
   },
 };
 </script>

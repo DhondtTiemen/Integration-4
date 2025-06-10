@@ -301,9 +301,6 @@ const loading = ref(true);
 const route = useRoute();
 const currentUserId = Number(route.params.id);
 const router = useRouter();
-function goBack() {
-  router.back();
-}
 
 const storedIdRaw = localStorage.getItem("userId");
 if (storedIdRaw == "") {
