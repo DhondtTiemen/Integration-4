@@ -78,13 +78,13 @@
             <p class="text-center text-sm mb-4 px-6">
               {{ user?.bio }}
             </p>
-            <button
+            <router-link :to="`/account/${user?.id}/edit`" 
               v-if="!accountVisit"
               class="flex items-center justify-center py-2.5 px-5 mb-4 bg-alphaGreen"
             >
               <Pencil class="w-5 h-5 mr-2 inline-block" />
               <p class="font-medium text-sm">Edit profile</p>
-            </button>
+            </router-link>
             <div class="flex gap-4 text-sm font-medium">
               <p>{{ user?.following }} following</p>
               <p>|</p>
@@ -94,61 +94,68 @@
         </div>
 
         <div class="bg-alphaLight p-4">
+          <!-- ...bestaande code... -->
           <div class="pb-6 border-b-2 border-gray-200">
             <div class="flex justify-between items-center mb-4">
               <h2 class="flex items-center text-lg font-medium">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-auto inline mr-2"
-                  viewBox="0 0 23 23"
-                  fill="none"
-                >
-                  <rect width="23" height="23" fill="#222222" />
-                  <path
-                    d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
-                    fill="white"
-                  />
-                </svg>
+                <!-- ...icon... -->
                 My box
               </h2>
-
-              <router-link v-if="accountVisit"
+              <template v-if="user?.box">
+                <router-link
+                  v-if="accountVisit"
+                  :to="`/box/${user?.id}`"
+                  class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
+                >
+                  View box
+                </router-link>
+                <router-link
+                  v-else
+                  :to="`/box/${user?.id}/edit`"
+                  class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
+                >
+                  Edit box
+                </router-link>
+              </template>
+              <template v-else>
+                <router-link :to="`/box/create`"
+                  v-if="!accountVisit"
+                  class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
+                >
+                  Add box
+                </router-link>
+                
+              </template>
+            </div>
+            <div v-if="user?.box">
+              <router-link
                 :to="`/box/${user?.id}`"
-                class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
+                class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto"
               >
-                View box
-              </router-link>
-              <router-link v-else
-                :to="`/box/${user?.id}`"
-                class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
-              >
-                Edit box
+                <div
+                  class="aspect-square bg-gray-300 flex justify-center items-center"
+                >
+                  <Image class="w-16 h-16 text-gray-400" />
+                </div>
+                <div
+                  class="aspect-square bg-gray-100 flex justify-center items-center"
+                >
+                  <p class="text-gray-500">All photos</p>
+                </div>
               </router-link>
             </div>
-            <router-link :to="`/box/${user?.id}`" class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto">
-              <div
-                class="aspect-square bg-gray-300 flex justify-center items-center"
-              >
-                <Image class="w-16 h-16 text-gray-400" />
-              </div>
-              <div
-                class="aspect-square bg-gray-100 flex justify-center items-center"
-              >
-                <p class="text-gray-500">All photos</p>
-              </div>
-            </router-link>
+            <div v-else>
+              <p class="text-gray-500 text-center py-8">
+                <span v-if="!accountVisit"
+                  >You have not created a box yet.</span
+                >
+                <span v-else>This user has not created a box yet.</span>
+              </p>
+            </div>
           </div>
 
           <div class="py-6 border-b-2 border-gray-200">
-            <h2 class=" flex text-lg items-center font-medium mb-4">
+            <h2 class="flex text-lg items-center font-medium mb-4">
               <svg
                 class="h-5 w-auto inline mr-2"
                 xmlns="http://www.w3.org/2000/svg"

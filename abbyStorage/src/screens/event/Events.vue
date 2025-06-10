@@ -4,9 +4,9 @@
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">Events</h1>
       <div class="flex items-center px-6 gap-6">
-        <button>
+        <router-link :to="`/event/create`">
           <PlusIcon class="w-6 h-6 mr-2 inline-block" />
-        </button>
+        </router-link>
       </div>
     </header>
 
