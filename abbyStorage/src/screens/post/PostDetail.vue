@@ -1,20 +1,13 @@
 <template>
   <div v-bind="$attrs">
-    <nav
-      class="flex items-center justify-between bg-white shadow-md p-4 border-b border-gray-200"
-    >
-      <!-- Linkerzijde: Terugknop -->
-      <div class="" @click="goBack" style="cursor: pointer">
-        <ArrowLeft class="w-8 h-auto text-gray-700" />
-      </div>
-
-      <!-- Midden: Titel gecentreerd -->
-      <p class="text-lg font-medium text-center flex-1">Post</p>
-
-      <!-- Rechterzijde: Iconen -->
-      <div class="flex gap-2 justify-end">
-        <Share2 class="w-6 h-6 text-gray-600" />
-      </div>
+    <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
+        <ArrowLeft class="z-10" />
+        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
+            Post
+        </p>
+        <button @click="sharePost">
+          <Share class="z-10" />
+        </button>
     </nav>
 
     <div class="flex gap-4 items-center bg-white px-4 py-2">
@@ -82,6 +75,7 @@
         </div>
         <div class="relative w-full">
           <textarea
+            v-model="newCommentText"
             class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
             name="comment"
             id="comment"
@@ -91,6 +85,7 @@
 
           <SendHorizonal
             class="w-6 h-6 text-gray-600 absolute right-3 top-5 transform -translate-y-1/2 cursor-pointer"
+            @click="submitComment"
           />
         </div>
       </div>
@@ -135,6 +130,7 @@ import {
   Share2,
   Star,
   Heart,
+  Share,
   MessageSquare,
   Eye,
   SendHorizonal
@@ -153,6 +149,8 @@ const loading = ref(true);
 const post = ref<Post | null>(null);
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
+const newCommentText = ref("");
+
 function timeAgo(dateString: string) {
   const now = new Date();
   const date = new Date(dateString);
@@ -220,17 +218,36 @@ async function fetchData() {
   }
 }
 
-// const formattedTimestamp = computed(() => {
-//   if (!post.value) return "";
-//   const date = new Date(post.value.timestamp);
-//   return date.toLocaleString(undefined, {
-//     dateStyle: "medium",
-//     timeStyle: "short",
-//   });
-// });
+function submitComment() {
+  if (!newCommentText.value.trim() || !post.value) return;
+
+  const newComment = {
+    userId: user.value?.id || 0,
+    text: newCommentText.value.trim(),
+    timestamp: new Date().toISOString(),
+    likes: []
+  };
+
+  post.value.comments.push(newComment);
+  newCommentText.value = "";
+}
 
 function goBack() {
   router.back();
+}
+
+function sharePost() {
+  if (navigator.share && post.value) {
+    navigator.share({
+      title: 'Check out this post',
+      text: post.value.content,
+      url: window.location.href
+    }).catch(err => {
+      console.warn('Share canceled or failed:', err);
+    });
+  } else {
+    alert('Sharing not supported in this browser.');
+  }
 }
 
 onMounted(() => {
