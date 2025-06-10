@@ -303,14 +303,15 @@ const currentUserId = Number(route.params.id);
 const router = useRouter();
 
 const storedIdRaw = localStorage.getItem("userId");
-if (storedIdRaw == "") {
+if (!storedIdRaw) {
+  console.warn("No user ID found in localStorage.");
+  router.push(`/login`);
+} else {
   const storedId = Number(storedIdRaw);
   if (storedId !== currentUserId) {
     console.warn("User ID in localStorage does not match the route parameter.");
     router.push(`/login`);
   }
-  console.warn("No user ID found in localStorage.");
-  router.push(`/login`);
 }
 async function fetchData() {
   try {

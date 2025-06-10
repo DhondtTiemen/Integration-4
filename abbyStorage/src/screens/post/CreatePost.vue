@@ -136,10 +136,11 @@ const postContentError = ref("");
 const posts = ref([]);
 
 const storedIdRaw = localStorage.getItem("userId");
-if (storedIdRaw == "") {
+if (!storedIdRaw) {
   console.warn("No user ID found in localStorage.");
   router.push(`/login`);
 }
+
 
 function submitPost() {
   if (!postContent.value.trim()) {
