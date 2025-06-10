@@ -2,11 +2,14 @@
   <div class="min-h-screen bg-white flex flex-col">
 
      <!-- Header -->
-    <nav class="relative flex items-center p-4 bg-alphaYellow">
+    <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
         <ArrowLeft class="z-10" />
         <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
             Event
         </p>
+        <button @click="shareEvent">
+          <Share class="z-10" />
+        </button>
     </nav>
 
     <section v-if="event" class="p-4 space-y-6">
@@ -99,7 +102,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Image, Bell, CalendarDays, MapPin } from 'lucide-vue-next'
+import { Image, Bell, CalendarDays, MapPin, Share } from 'lucide-vue-next'
 import {
     ArrowLeft,
 } from "lucide-vue-next";
@@ -148,5 +151,19 @@ function formatDate(dateStr) {
     month: 'short',
     year: 'numeric',
   })
+}
+
+function shareEvent() {
+  if (navigator.share && event.value) {
+    navigator.share({
+      title: 'Check out this event',
+      text: event.value.title,
+      url: window.location.href
+    }).catch(err => {
+      console.warn('Share canceled or failed:', err);
+    });
+  } else {
+    alert('Sharing not supported in this browser.');
+  }
 }
 </script>

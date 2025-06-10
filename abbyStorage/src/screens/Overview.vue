@@ -47,13 +47,18 @@
             <p class="text-base font-medium text-gray-500">{{ formatTimeAgo(post.timestamp) }} <span v-if="post.location"> • {{ post.location }}</span></p>
           </div>
         </div>
-        <button class="text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
-            <path d="M15 17.8125C16.5533 17.8125 17.8125 16.5533 17.8125 15C17.8125 13.4467 16.5533 12.1875 15 12.1875C13.4467 12.1875 12.1875 13.4467 12.1875 15C12.1875 16.5533 13.4467 17.8125 15 17.8125Z" fill="#222222"/>
-            <path d="M24.375 17.8125C25.9283 17.8125 27.1875 16.5533 27.1875 15C27.1875 13.4467 25.9283 12.1875 24.375 12.1875C22.8217 12.1875 21.5625 13.4467 21.5625 15C21.5625 16.5533 22.8217 17.8125 24.375 17.8125Z" fill="#222222"/>
-            <path d="M5.625 17.8125C7.1783 17.8125 8.4375 16.5533 8.4375 15C8.4375 13.4467 7.1783 12.1875 5.625 12.1875C4.0717 12.1875 2.8125 13.4467 2.8125 15C2.8125 16.5533 4.0717 17.8125 5.625 17.8125Z" fill="#222222"/>
-          </svg>
-        </button>
+        <div class="relative">
+          <button @click="toggleOptions(post.id)" class="text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+              <path d="M15 17.8125C16.5533 17.8125 17.8125 16.5533 17.8125 15C17.8125 13.4467 16.5533 12.1875 15 12.1875C13.4467 12.1875 12.1875 13.4467 12.1875 15C12.1875 16.5533 13.4467 17.8125 15 17.8125Z" fill="#222222"/>
+              <path d="M24.375 17.8125C25.9283 17.8125 27.1875 16.5533 27.1875 15C27.1875 13.4467 25.9283 12.1875 24.375 12.1875C22.8217 12.1875 21.5625 13.4467 21.5625 15C21.5625 16.5533 22.8217 17.8125 24.375 17.8125Z" fill="#222222"/>
+              <path d="M5.625 17.8125C7.1783 17.8125 8.4375 16.5533 8.4375 15C8.4375 13.4467 7.1783 12.1875 5.625 12.1875C4.0717 12.1875 2.8125 13.4467 2.8125 15C2.8125 16.5533 4.0717 17.8125 5.625 17.8125Z" fill="#222222"/>
+            </svg>
+          </button>
+          <div v-if="showOptionsId === post.id" class="absolute top-6 right-0 bg-white border shadow-md z-10">
+            <button @click="reportPost(post.id)" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Report Post</button>
+          </div>
+        </div>
       </div>
 
       <!-- Content -->
@@ -137,6 +142,22 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+
+const showOptionsId = ref(null)
+
+function toggleOptions(id) {
+  showOptionsId.value = showOptionsId.value === id ? null : id
+}
+
+function reportPost(id) {
+  posts.value = posts.value.filter(post => post.id !== id)
+
+  const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]')
+  const updatedPosts = storedPosts.filter(post => post.id !== id)
+  localStorage.setItem('posts', JSON.stringify(updatedPosts))
+
+  showOptionsId.value = null
+}
 
 const posts = ref([])
 const events = ref([])
