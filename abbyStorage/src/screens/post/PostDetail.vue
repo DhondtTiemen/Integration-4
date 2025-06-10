@@ -1,13 +1,27 @@
 <template>
   <div v-bind="$attrs">
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
-        <ArrowLeft class="z-10" />
-        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
-            Post
-        </p>
-        <button @click="sharePost">
-          <Share class="z-10" />
-        </button>
+      <svg
+        @click="goBack"
+        xmlns="http://www.w3.org/2000/svg"
+        width="21"
+        height="18"
+        viewBox="0 0 21 18"
+        fill="none"
+      >
+        <path
+          d="M21 6.07521L4.34696 9.11281L21 12.1504L21 18L0.0393824 11.9026L-2.8975e-07 6.62871L21 0L21 6.07521Z"
+          fill="#222222"
+        />
+      </svg>
+      <p
+        class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium"
+      >
+        Post
+      </p>
+      <button @click="sharePost">
+        <Share class="z-10" />
+      </button>
     </nav>
 
     <div class="flex gap-4 items-center bg-white px-4 py-2">
@@ -133,7 +147,7 @@ import {
   Share,
   MessageSquare,
   Eye,
-  SendHorizonal
+  SendHorizonal,
 } from "lucide-vue-next";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -225,7 +239,7 @@ function submitComment() {
     userId: user.value?.id || 0,
     text: newCommentText.value.trim(),
     timestamp: new Date().toISOString(),
-    likes: []
+    likes: [],
   };
 
   post.value.comments.push(newComment);
@@ -238,15 +252,17 @@ function goBack() {
 
 function sharePost() {
   if (navigator.share && post.value) {
-    navigator.share({
-      title: 'Check out this post',
-      text: post.value.content,
-      url: window.location.href
-    }).catch(err => {
-      console.warn('Share canceled or failed:', err);
-    });
+    navigator
+      .share({
+        title: "Check out this post",
+        text: post.value.content,
+        url: window.location.href,
+      })
+      .catch((err) => {
+        console.warn("Share canceled or failed:", err);
+      });
   } else {
-    alert('Sharing not supported in this browser.');
+    alert("Sharing not supported in this browser.");
   }
 }
 

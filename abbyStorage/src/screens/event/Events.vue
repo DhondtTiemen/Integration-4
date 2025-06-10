@@ -11,7 +11,9 @@
         </button>
     </nav>
 
-    <div v-if="loading" class="text-center text-gray-500">Loading events...</div>
+    <div v-if="loading" class="text-center text-gray-500">
+      Loading events...
+    </div>
 
     <div v-else class="space-y-4">
       <div
@@ -46,32 +48,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { PlusIcon } from 'lucide-vue-next'
+import { ref, onMounted } from "vue";
+import { PlusIcon } from "lucide-vue-next";
 
-const events = ref([])
-const loading = ref(true)
+const events = ref([]);
+const loading = ref(true);
 
 async function fetchEvents() {
-    try {
-        // 1️⃣ fetch standaard events.json
-        const response = await fetch('/src/assets/data/events.json')
-        const data = await response.json()
-        const jsonEvents = data.events || []
+  try {
+    // 1️⃣ fetch standaard events.json
+    const response = await fetch("/src/assets/data/events.json");
+    const data = await response.json();
+    const jsonEvents = data.events || [];
 
-        // 2️⃣ fetch localStorage events
-        const storedEvents = JSON.parse(localStorage.getItem('events') || '[]')
+    // 2️⃣ fetch localStorage events
+    const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
 
-        // 3️⃣ combineer beide
-        events.value = [...jsonEvents, ...storedEvents]
-    } catch (error) {
-        console.error('Error loading events:', error)
-    } finally {
-        loading.value = false
-    }
+    // 3️⃣ combineer beide
+    events.value = [...jsonEvents, ...storedEvents];
+  } catch (error) {
+    console.error("Error loading events:", error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 onMounted(() => {
-    fetchEvents()
-})
+  fetchEvents();
+});
 </script>

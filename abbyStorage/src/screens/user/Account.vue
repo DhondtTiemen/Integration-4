@@ -2,23 +2,60 @@
   <section class="min-h-screen">
     <!-- Header -->
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
-      <h1 class="text-xl font-bold h-6 px-6">
-        Profile
-      </h1>
+      <h1 class="text-xl font-bold h-6 px-6">Profile</h1>
       <div class="flex items-center px-6 gap-6">
         <button>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M20.5714 16.2859H16.2856V20.5716H20.5714V16.2859Z" fill="#21272A"/>
-            <path d="M16.2857 12.8572H12.8572V16.2857H16.2857V12.8572Z" fill="#21272A"/>
-            <path d="M24.0001 20.5713H20.5715V23.9999H24.0001V20.5713Z" fill="#21272A"/>
-            <path d="M23.9999 12.8572H21.4285V15.4286H23.9999V12.8572Z" fill="#21272A"/>
-            <path d="M15.4286 21.4287H12.8572V24.0001H15.4286V21.4287Z" fill="#21272A"/>
-            <path d="M20.5714 3.42871H16.2856V7.71443H20.5714V3.42871Z" fill="#21272A"/>
-            <path d="M24 11.1429H12.8572V0H24V11.1429ZM15.2143 8.78571H21.6429V2.35714H15.2143V8.78571Z" fill="#21272A"/>
-            <path d="M7.71418 3.42871H3.42847V7.71443H7.71418V3.42871Z" fill="#21272A"/>
-            <path d="M11.1429 11.1429H0V0H11.1429V11.1429ZM2.35714 8.78571H8.78571V2.35714H2.35714V8.78571Z" fill="#21272A"/>
-            <path d="M7.71418 16.2859H3.42847V20.5716H7.71418V16.2859Z" fill="#21272A"/>
-            <path d="M11.1429 24H0V12.8572H11.1429V24ZM2.35714 21.6429H8.78571V15.2143H2.35714V21.6429Z" fill="#21272A"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20.5714 16.2859H16.2856V20.5716H20.5714V16.2859Z"
+              fill="#21272A"
+            />
+            <path
+              d="M16.2857 12.8572H12.8572V16.2857H16.2857V12.8572Z"
+              fill="#21272A"
+            />
+            <path
+              d="M24.0001 20.5713H20.5715V23.9999H24.0001V20.5713Z"
+              fill="#21272A"
+            />
+            <path
+              d="M23.9999 12.8572H21.4285V15.4286H23.9999V12.8572Z"
+              fill="#21272A"
+            />
+            <path
+              d="M15.4286 21.4287H12.8572V24.0001H15.4286V21.4287Z"
+              fill="#21272A"
+            />
+            <path
+              d="M20.5714 3.42871H16.2856V7.71443H20.5714V3.42871Z"
+              fill="#21272A"
+            />
+            <path
+              d="M24 11.1429H12.8572V0H24V11.1429ZM15.2143 8.78571H21.6429V2.35714H15.2143V8.78571Z"
+              fill="#21272A"
+            />
+            <path
+              d="M7.71418 3.42871H3.42847V7.71443H7.71418V3.42871Z"
+              fill="#21272A"
+            />
+            <path
+              d="M11.1429 11.1429H0V0H11.1429V11.1429ZM2.35714 8.78571H8.78571V2.35714H2.35714V8.78571Z"
+              fill="#21272A"
+            />
+            <path
+              d="M7.71418 16.2859H3.42847V20.5716H7.71418V16.2859Z"
+              fill="#21272A"
+            />
+            <path
+              d="M11.1429 24H0V12.8572H11.1429V24ZM2.35714 21.6429H8.78571V15.2143H2.35714V21.6429Z"
+              fill="#21272A"
+            />
           </svg>
         </button>
       </div>
@@ -26,9 +63,8 @@
 
     <div v-bind="$attrs">
       <div class="bg-alphaYellow">
-  
         <div v-if="loading" class="text-center text-gray-500">Loading...</div>
-  
+
         <div v-else class="mb-8">
           <div class="flex flex-col items-center justify-center">
             <img
@@ -43,6 +79,7 @@
               {{ user?.bio }}
             </p>
             <button
+              v-if="!accountVisit"
               class="flex items-center justify-center py-2.5 px-5 mb-4 bg-alphaGreen"
             >
               <Pencil class="w-5 h-5 mr-2 inline-block" />
@@ -55,7 +92,7 @@
             </div>
           </div>
         </div>
-  
+
         <div class="bg-alphaLight p-4">
           <div class="pb-6 border-b-2 border-gray-200">
             <div class="flex justify-between items-center mb-4">
@@ -82,15 +119,21 @@
                 </svg>
                 My box
               </h2>
-  
-              <router-link
+
+              <router-link v-if="accountVisit"
                 :to="`/box/${user?.id}`"
                 class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
               >
                 View box
               </router-link>
+              <router-link v-else
+                :to="`/box/${user?.id}`"
+                class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
+              >
+                Edit box
+              </router-link>
             </div>
-            <div class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto">
+            <router-link :to="`/box/${user?.id}`" class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto">
               <div
                 class="aspect-square bg-gray-300 flex justify-center items-center"
               >
@@ -101,9 +144,9 @@
               >
                 <p class="text-gray-500">All photos</p>
               </div>
-            </div>
+            </router-link>
           </div>
-  
+
           <div class="py-6 border-b-2 border-gray-200">
             <h2 class="text-lg font-medium mb-4">
               <svg
@@ -123,7 +166,7 @@
               {{ user?.bio }}
             </p>
           </div>
-  
+
           <div class="py-6 border-b-2 border-gray-200">
             <div class="flex justify-between">
               <h2 class="text-lg font-medium mb-4">
@@ -155,11 +198,15 @@
             </div>
             <div class="flex gap-2">
               <div v-for="(badge, index) in user?.achievements" :key="index">
-                <img :src="badge" alt="badge" class="w-10 h-10 object-contain" />
+                <img
+                  :src="badge"
+                  alt="badge"
+                  class="w-10 h-10 object-contain"
+                />
               </div>
             </div>
           </div>
-  
+
           <div class="py-6 border-b-2 border-gray-200">
             <h2 class="text-lg font-medium mb-4">
               <svg
@@ -184,7 +231,7 @@
               </svg>
               Upcoming events
             </h2>
-  
+
             <div v-if="events.length" class="space-y-4">
               <router-link
                 :to="`/event/${event.id}`"
@@ -215,10 +262,12 @@
                 </div>
               </router-link>
             </div>
-  
-            <div v-else class="text-sm text-gray-500">No events to display.</div>
+
+            <div v-else class="text-sm text-gray-500">
+              No events to display.
+            </div>
           </div>
-  
+
           <div class="py-6 border-b-2 border-gray-200">
             <h2 class="text-lg font-medium mb-4">
               <svg
@@ -243,7 +292,7 @@
               </svg>
               My posts
             </h2>
-  
+
             <div class="grid grid-cols-3 gap-2 justify-center">
               <router-link
                 :to="`/post/${post?.id}`"
@@ -259,7 +308,7 @@
                 />
                 <Image v-else class="w-10 h-10 text-gray-400" />
               </router-link>
-  
+
               <div
                 v-if="posts.length > 5"
                 class="bg-gray-100 h-28 w-28 flex justify-center items-center"
@@ -272,7 +321,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- <div v-else class="text-center text-red-500 mt-4">User not found.</div> -->
     </div>
   </section>
@@ -288,7 +337,7 @@ import {
   User as UserIcon,
   CalendarDays,
 } from "lucide-vue-next";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
@@ -297,13 +346,10 @@ const user = ref<User | null>(null);
 const events = ref<Event[]>([]);
 const posts = ref<Post[]>([]);
 const loading = ref(true);
-
+const accountVisit = ref(false);
 const route = useRoute();
-const currentUserId = Number(route.params.id);
+const currentUserId = computed(() => Number(route.params.id));
 const router = useRouter();
-function goBack() {
-  router.back();
-}
 
 async function fetchData() {
   try {
@@ -314,33 +360,43 @@ async function fetchData() {
     if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
       throw new Error("Failed to fetch users, events, or posts");
     }
-
+    const storedIdRaw = localStorage.getItem("userId");
+    console.log("Stored user ID from localStorage:", storedIdRaw);
+    console.log("Current user ID from route:", currentUserId.value);
+    if (!storedIdRaw) {
+      console.warn("No user ID found in localStorage.");
+      router.push(`/login`);
+    } else {
+      const storedId = Number(storedIdRaw);
+      accountVisit.value = storedId !== currentUserId.value;
+      console.log("Account visit status:", accountVisit.value);
+    }
     const usersData = await usersResponse.json();
     const eventsData = await eventsResponse.json();
     const postsData = await postsResponse.json();
 
     user.value =
-      usersData.users.find((u: User) => u.id === currentUserId) || null;
+      usersData.users.find((u: User) => u.id === currentUserId.value) || null;
 
     const created = eventsData.events
-      .filter((event: any) => event.createdBy === currentUserId)
+      .filter((event: any) => event.createdBy === currentUserId.value)
       .map((event: any) => ({ ...event, type: "Organised" }));
 
     const attended = eventsData.events
-      .filter((event: any) => event.participants.includes(currentUserId))
+      .filter((event: any) => event.participants.includes(currentUserId.value))
       .map((event: any) => ({ ...event, type: "Attended" }));
 
     events.value = [...created, ...attended];
 
     const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
 
-    const allPosts = [
-      ...postsData.posts,
-      ...localPosts
-    ].filter((post: any) => post.userId === currentUserId);
+    const allPosts = [...postsData.posts, ...localPosts].filter(
+      (post: any) => post.userId === currentUserId.value
+    );
 
     posts.value = allPosts.sort(
-      (a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      (a: any, b: any) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   } catch (error) {
     console.error(error);
@@ -352,4 +408,12 @@ async function fetchData() {
 onMounted(() => {
   fetchData();
 });
+watch(
+  () => route.params.id,
+  () => {
+    const storedId = Number(localStorage.getItem("userId"));
+    accountVisit.value = storedId !== currentUserId.value;
+    fetchData();
+  }
+);
 </script>
