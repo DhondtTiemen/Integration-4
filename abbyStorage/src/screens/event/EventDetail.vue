@@ -1,14 +1,15 @@
 <template>
   <div class="min-h-screen bg-white flex flex-col">
 
-    <!-- Header -->
-    <header class="flex justify-between items-center bg-alphaYellow px-4 py-3">
-      <button @click="goBack">←</button>
-      <h1 class="font-semibold">Event</h1>
-      <Bell class="w-5 h-5" />
-    </header>
+     <!-- Header -->
+    <nav class="relative flex items-center p-4 bg-alphaYellow">
+        <ArrowLeft class="z-10" />
+        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
+            Event
+        </p>
+    </nav>
 
-    <section class="p-4 space-y-6">
+    <section v-if="event" class="p-4 space-y-6">
       <!-- Cover image -->
       <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
         <Image class="w-16 h-16 text-gray-400" />
@@ -25,9 +26,14 @@
           <MapPin class="w-4 h-4" />
           {{ event.place }}
         </p>
-        <p class="text-xs text-red-500 mt-2" v-if="isPast">This event already finished</p>
-        <p class="text-xs text-green-600 mt-2" v-else>Upcoming</p>
         <p class="text-sm text-gray-500 mt-1">Hosted by <strong>{{ event.host }}</strong></p>
+        <button
+          class="mt-3 px-5 py-2.5 w-full text-sm font-medium"
+          :class="isPast ? 'bg-gray-400 cursor-not-allowed' : 'bg-alphaGreen hover:bg-green-700'"
+          :disabled="isPast"
+        >
+          {{ isPast ? 'Event finished' : 'Join event' }}
+        </button>
       </div>
 
       <!-- Participants -->
@@ -45,7 +51,7 @@
       <!-- Achievements -->
       <div>
         <h3 class="font-medium mb-2">Event Achievements</h3>
-        <div class="flex items-center gap-4 bg-gray-100 p-3 rounded">
+        <div class="flex items-center gap-4 bg-gray-100 p-3">
           <Image class="w-10 h-10 text-gray-400" />
           <p class="text-sm">Expressive drawing<br /><span class="text-xs text-gray-500">Complete this workshop</span></p>
         </div>
@@ -86,6 +92,7 @@
         </div>
       </div>
     </section>
+    <p v-else class="p-4 text-gray-500 text-sm">Loading event details...</p>
   </div>
 </template>
 
@@ -93,6 +100,9 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Image, Bell, CalendarDays, MapPin } from 'lucide-vue-next'
+import {
+    ArrowLeft,
+} from "lucide-vue-next";
 
 const route = useRoute()
 const router = useRouter()
@@ -100,16 +110,26 @@ function goBack() {
   router.back()
 }
 
-const event = ref({
-  id: route.params.id,
-  title: "Expressive Portrait Drawing Workshop",
-  date: "2025-05-27",
-  time: "5:00 PM",
-  place: "Atelier, ABBY Creative Space",
-  host: "Jana Vermeulen",
-  description:
-    "Join us for an immersive portrait drawing workshop where you’ll learn how to capture emotion and personality in your artwork...",
-})
+const event = ref(null)
+const relatedEvents = ref([])
+
+async function fetchEvents() {
+  const res = await fetch('/src/assets/data/events.json')
+  const data = await res.json()
+  const allEvents = data.events
+
+  event.value = allEvents.find(e => String(e.id) === String(route.params.id))
+  console.log(event.value.id);
+
+  // Suggestions: upcoming events in ABBY
+  relatedEvents.value = allEvents.filter(e =>
+    e.id !== event.value.id &&
+    new Date(e.date) >= new Date() &&
+    e.place?.toLowerCase().includes('abby')
+  )
+}
+
+fetchEvents()
 
 const participants = ref([
   { avatar: '/avatars/a1.jpg' }, { avatar: '/avatars/a2.jpg' },
@@ -119,22 +139,8 @@ const participants = ref([
 ])
 
 const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}])
-const relatedEvents = ref([
-  {
-    id: 101,
-    title: 'Morning crocheting with Emily',
-    date: '2025-06-12',
-    place: 'Atelier, ABBY Creative Space',
-  },
-  {
-    id: 102,
-    title: 'Yoga for beginners',
-    date: '2025-07-03',
-    place: 'Atelier, ABBY Creative Space',
-  },
-])
 
-const isPast = new Date(event.value.date) < new Date()
+const isPast = new Date(event.value?.date) < new Date()
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-GB', {
