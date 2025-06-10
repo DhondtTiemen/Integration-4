@@ -306,13 +306,12 @@ function goBack() {
 }
 
 const storedIdRaw = localStorage.getItem("userId");
-if (storedIdRaw == null) {
+if (storedIdRaw == "") {
   const storedId = Number(storedIdRaw);
   if (storedId !== currentUserId) {
     console.warn("User ID in localStorage does not match the route parameter.");
     router.push(`/login`);
   }
-} else {
   console.warn("No user ID found in localStorage.");
   router.push(`/login`);
 }

@@ -153,7 +153,6 @@ import { ArrowLeft, Image, Plus, Trash2 } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
-const router = useRouter();
 const eventName = ref("");
 const description = ref("");
 const eventDate = ref("");
@@ -172,12 +171,6 @@ const errors = ref({
   location: "",
 });
 
-// localStorage.setItem("userId", "");
-// const storedIdRaw = localStorage.getItem("userId");
-// if (storedIdRaw=="") {
-//   console.warn("No user ID found in localStorage.");
-//   router.push(`/login`);
-// }
 
 function addMaterial() {
   const trimmed = newMaterial.value.trim();
