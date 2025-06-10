@@ -1,14 +1,15 @@
 <template>
   <section class="min-h-screen">
     <!-- Header -->
-    <header class="flex items-center justify-between h-16 bg-alphaYellow">
-      <h1 class="text-xl font-bold h-6 px-6">Events</h1>
-      <div class="flex items-center px-6 gap-6">
-        <router-link :to="`/event/create`">
+    <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
+        <ArrowLeft class="z-10" />
+        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
+            Events
+        </p>
+        <button @click="shareEvent">
           <PlusIcon class="w-6 h-6 mr-2 inline-block" />
-        </router-link>
-      </div>
-    </header>
+        </button>
+    </nav>
 
     <div v-if="loading" class="text-center text-gray-500">
       Loading events...
@@ -18,40 +19,29 @@
       <div
         v-for="event in events"
         :key="event.id"
-        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-4"
+        class="rounded-xl overflow-hidden border border-gray-200 shadow-sm"
       >
-        <router-link :to="`/event/${event.id}`">
-          <p class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-            {{ event.title }}
-          </p>
-          <div
-            class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 mb-1"
-          >
+        <!-- Image placeholder + Event label -->
+        <div class="relative aspect-[4/3] bg-gray-200 flex items-center justify-center">
+          <span class="absolute top-2 right-2 border text-xs px-2 py-0.5 text-black bg-white">Event</span>
+          <svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14l4-4h12c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+
+        <!-- Purple info section -->
+        <div class="bg-[#BB7CD2] p-4">
+          <p class="text-base font-semibold text-black mb-2">{{ event.title }}</p>
+          <div class="text-sm text-black flex items-center gap-1 mb-1">
             <span>📅</span>
             <span>{{ event.date }} • {{ event.time }}</span>
           </div>
-          <div
-            class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 mb-2"
-          >
+          <div class="text-sm text-black flex items-center gap-1 mb-3">
             <span>📍</span>
             <span>{{ event.place }}</span>
           </div>
-          <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">
-            {{ event.about }}
-          </p>
-
-          <div
-            v-if="event.materials && event.materials.length > 0"
-            class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded p-3"
-          >
-            <p class="font-medium mb-1">Materials to bring:</p>
-            <ul class="list-disc list-inside space-y-1">
-              <li v-for="(material, index) in event.materials" :key="index">
-                {{ material }}
-              </li>
-            </ul>
-          </div>
-        </router-link>
+          <button class="bg-[#FEBE4F] w-full text-black font-medium py-1.5 rounded">Learn more</button>
+        </div>
       </div>
     </div>
   </section>
