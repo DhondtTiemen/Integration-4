@@ -23,6 +23,7 @@
         class="w-full border border-gray-300 rounded px-3 py-2 resize-none text-sm text-gray-700"
         rows="4"
       ></textarea>
+        <p v-if="postContentError" class="text-red-500 text-sm">{{ postContentError }}</p>
 
       <!-- Action buttons -->
       <div class="flex flex-col gap-3">
@@ -63,15 +64,42 @@ const user = {
 }
 
 const postContent = ref('')
+const postContentError = ref('')
+const posts = ref([])
 
 function submitPost() {
   if (!postContent.value.trim()) {
-    alert('Please write something before posting.')
+    // alert('Please write something before posting.')
+    postContentError.value = 'Please write something before posting.'
     return
   }
 
   // hier zou je bv. verder kunnen posten naar een API of localStorage
-  alert(`Posting: ${postContent.value}`)
+//   alert(`Posting: ${postContent.value}`)
+      postContentError.value = ''
+
+  // Load existing posts
+  const existingPosts = JSON.parse(localStorage.getItem('posts') || '[]')
+
+  const newPost = {
+    id: Date.now(),
+    userId: 1,
+    timestamp: new Date().toISOString(),
+    content: postContent.value,
+    images: [],
+    location: null,
+    likes: [],
+    comments: [],
+    bookmarks: [],
+    views: 0
+  }
+
+  existingPosts.push(newPost)
+  localStorage.setItem('posts', JSON.stringify(existingPosts))
+
+  // Optional: reset post content and go back
+  postContent.value = ''
+  history.back()
 }
 
 function goBack() {
