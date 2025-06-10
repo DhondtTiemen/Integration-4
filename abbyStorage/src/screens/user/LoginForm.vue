@@ -66,6 +66,7 @@ const remember = ref(false);
 const error = ref("");
 const router = useRouter();
 
+localStorage.setItem("userId", null);
 async function handleLogin() {
   try {
     const res = await fetch("/src/assets/data/users.json");
@@ -79,7 +80,7 @@ async function handleLogin() {
     if (matchedUser) {
       console.log("Login success:", matchedUser);
       router.push(`/box/${matchedUser.id}`);
-      localStorage.setItem("userId", matchedUser.id.toString());
+      localStorage.setItem("userId", matchedUser.id);
     } else {
       error.value = "Invalid email or password";
     }

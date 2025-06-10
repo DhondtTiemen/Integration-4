@@ -1,50 +1,26 @@
-<!-- <script setup lang="ts">
-import LoginForm from "./components/LoginForm.vue";
-import Overview from "./components/Overview.vue";
-import Messages from "./components/Messages.vue";
-import Account from "./screens/Account.vue";
-import EditAccount from "./screens/EditAccount.vue";
-import CreationDetail from "./screens/CreationDetail.vue";
-import EventDetail from "./screens/event/EventDetail.vue";
-import CreateEvent from "./screens/event/CreateEvent.vue";
-import BoxDetail from "./screens/BoxDetail.vue";
-</script>
-
-<template >
-  <div >
-    <LoginForm></LoginForm>
-    <Account></Account>
-     <EditAccount></EditAccount>
-      <CreationDetail></CreationDetail>
-      <EventDetail></EventDetail>
-    <Overview></Overview>
-     <BoxDetail></BoxDetail>
-
-  </div>
-</template> -->
-
-
-
 <template>
   <router-view class="min-h-screen overflow-x-hidden mb-12 bg-alphaWhite"></router-view>
-  <appNavigation class="fixed bottom-0 w-full bg-alphaYellow pt-2 z-50 shadow-md" />
+  <appNavigation
+    v-if="showNavigation"
+    class="fixed bottom-0 w-full bg-alphaYellow pt-2 z-50 shadow-md"
+  />
 </template>
 
 <script lang="ts">
-// import AppHeader from '../generic/AppHeader.vue'
-// import AppFooter from '../generic/AppFooter.vue'
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import appNavigation from './components/generic/AppNavigation.vue';
 
 export default {
   components: {
-    // AppHeader,
-    // AppFooter,
     appNavigation,
   },
-
   setup() {
-    return {}
+    const route = useRoute();
+    // Pas de array hieronder aan met alle routes waar je géén navigatie wilt
+    const hideOnRoutes = ['/login', '/register'];
+    const showNavigation = computed(() => !hideOnRoutes.includes(route.path));
+    return { showNavigation };
   },
-}
-
+};
 </script>
