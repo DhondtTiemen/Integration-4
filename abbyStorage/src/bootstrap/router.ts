@@ -45,10 +45,10 @@ const routes = [
       },
 
       // --- POST ---
-      // {
-      //   path: "post/create",
-      //   component: () => import("../screens/CreatePost.vue"),
-      // },
+      {
+        path: "post/create",
+        component: () => import("../screens/post/CreatePost.vue"),
+      },
       {
         path: "post/:id",
         component: () => import("../screens/post/PostDetail.vue"),
