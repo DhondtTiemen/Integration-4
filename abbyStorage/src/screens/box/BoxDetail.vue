@@ -106,7 +106,7 @@
       </div>
     </header>
 
-    <div
+    <div v-if="storedIdRaw != currentUserId.toString()"
       class="flex items-center justify-between px-4 border-b border-gray-200"
     >
       <router-link :to="`/account/${user?.id}`" class="flex gap-4 items-center py-4">
@@ -120,7 +120,7 @@
         </div>
       </router-link>
       <router-link
-      v-if="storedIdRaw != currentUserId.toString()"
+      
         :to="`/account/${user?.id}`"
         class="bg-alphaGreen font-medium text-sm py-2.5 px-5"
       >

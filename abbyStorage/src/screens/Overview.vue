@@ -168,32 +168,33 @@
 
       <!-- Content -->
       <p class="mb-6">{{ post.content }}</p>
-
-      <!-- Images -->
-      <div v-if="post.images.length === 1" class="mb-6">
-        <!-- TODO: Images -->
-        <!-- <img :src="'/assets/posts/' + post.images[0]" alt="post image" class="w-full rounded-lg" /> -->
-        <img
-          :src="'https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg'"
-          alt="post image"
-          class="h-40 w-44 object-cover"
-        />
-      </div>
-      <div
-        v-else-if="post.images.length > 1"
-        class="grid grid-cols-2 gap-2 mb-2"
-      >
-        <img
-          v-for="img in post.images"
-          :key="img"
-          :src="'/assets/images/' + img"
-          class="rounded-lg"
-        />
-      </div>
+      <router-link :to="`/post/${post.id}`">
+        <!-- Images -->
+        <div v-if="post.images.length === 1" class="mb-6">
+          <!-- TODO: Images -->
+          <!-- <img :src="'/assets/posts/' + post.images[0]" alt="post image" class="w-full rounded-lg" /> -->
+          <img
+            :src="'https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg'"
+            alt="post image"
+            class="h-40 w-44 object-cover"
+          />
+        </div>
+        <div
+          v-else-if="post.images.length > 1"
+          class="grid grid-cols-2 gap-2 mb-2"
+        >
+          <img
+            v-for="img in post.images"
+            :key="img"
+            :src="'/assets/images/' + img"
+            class="rounded-lg"
+          />
+        </div>
+      </router-link>
 
       <!-- Event box if eventId exists -->
       <router-link
-        :to="`/post/${post.id}`"
+        :to="`/event/${post.eventId}`"
         v-if="post.eventId"
         class="mb-2 relative"
       >

@@ -71,6 +71,10 @@ const routes = [
         path: "event/:id",
         component: () => import("../screens/event/EventDetail.vue"),
       },
+      {
+        path: "search",
+        component: () => import("../screens/search/Search.vue"),
+      },
       // {
       //   path: "event/:id/edit",
       //   component: () => import("../screens/event/EditEvent.vue"),

@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-white flex flex-col">
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
-      <svg
+      <svg @click="goBack"
         xmlns="http://www.w3.org/2000/svg"
         width="21"
         height="18"
@@ -124,7 +124,8 @@
       <div>
         <h3 class="font-medium mb-2">You might also like</h3>
         <div class="space-y-4">
-          <div
+          <router-link
+            :to="`/event/${related.id}`"
             v-for="related in relatedEvents"
             :key="related.id"
             class="bg-gray-100 p-3 rounded flex flex-col"
@@ -139,7 +140,7 @@
             >
               Learn more
             </button>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>
@@ -148,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Image, Bell, CalendarDays, MapPin, Share } from "lucide-vue-next";
 import { ArrowLeft } from "lucide-vue-next";
@@ -218,4 +219,10 @@ function shareEvent() {
     alert("Sharing not supported in this browser.");
   }
 }
+watch(
+  () => route.params.id,
+  () => {
+    fetchEvents();
+  }
+);
 </script>
