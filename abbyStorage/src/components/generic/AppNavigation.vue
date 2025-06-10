@@ -62,6 +62,7 @@ if (typeof window !== "undefined") {
   console.log("Stored userId:", storedId);
   if (storedId) {
     userId.value = Number(storedId);
+    console.log("Stored userIddd:", storedId);
   }
 }
 </script>
