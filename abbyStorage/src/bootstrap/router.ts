@@ -31,11 +31,10 @@ const routes = [
       },
 
       // --- BOX ---
-      // TODO
-      // {
-      //   path: "box/create",
-      //   component: () => import("../screens/box/CreateBox.vue"),
-      // },
+      {
+        path: "box/create",
+        component: () => import("../screens/box/CreateBox.vue"),
+      },
       {
         path: "box/:id",
         component: () => import("../screens/box/BoxDetail.vue"),
