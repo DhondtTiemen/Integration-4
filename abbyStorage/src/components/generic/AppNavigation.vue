@@ -4,7 +4,7 @@
   >
     <li>
       <router-link
-        exact-active-class="opacity-40"
+        exact-active-class="text-alphaGreen"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         to="/"
       >
@@ -13,7 +13,7 @@
     </li>
     <li>
       <router-link
-        exact-active-class="opacity-40"
+        exact-active-class="text-alphaGreen"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         to="/search"
       >
@@ -22,7 +22,7 @@
     </li>
     <li>
       <router-link
-        exact-active-class="opacity-40"
+        exact-active-class="text-alphaGreen"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         to="/post/create"
       >
@@ -31,7 +31,7 @@
     </li>
     <li>
       <router-link
-        exact-active-class="opacity-40"
+        exact-active-class="text-alphaGreen"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         to="/events"
       >
@@ -40,7 +40,7 @@
     </li>
     <li>
       <router-link
-        exact-active-class="opacity-40"
+        exact-active-class="text-alphaGreen"
         class="inline-block rounded-md px-3 outline-none focus-visible:ring-2"
         :to="`/account/${userId}`"
       >
