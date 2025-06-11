@@ -2,7 +2,7 @@
   "posts": [
     {
       "id": 5001,
-      "userId": 1,
+      "userId": "zx5Eek9om8SCCAMCaUYc",
       "timestamp": "2025-06-06T10:30:00Z",
       "content": "Morning crochet session at the Atelier!",
       "images": [
@@ -10,35 +10,35 @@
       ],
       "location": "Atelier",
       "likes": [
-        2,
-        3
+        "fw8hnstzmLObKHi2iwHR",
+        "C26VRDdoWgeyzOxvy81P"
       ],
       "eventId": 1001,
       "comments": [
         {
-          "userId": 2,
+          "userId": "fw8hnstzmLObKHi2iwHR",
           "text": "Nice!",
           "timestamp": "2025-06-06T11:00:00Z",
           "likes": [
-            1,
-            3
+            "zx5Eek9om8SCCAMCaUYc",
+            "C26VRDdoWgeyzOxvy81P"
           ]
         },
         {
-          "userId": 3,
+          "userId": "C26VRDdoWgeyzOxvy81P",
           "text": "Love this!",
           "timestamp": "2025-06-06T12:30:00Z",
-          "likes": [2]
+          "likes": [
+            "fw8hnstzmLObKHi2iwHR"
+          ]
         }
       ],
-      "bookmarks": [
-        2
-      ],
+      
       "views": 80
     },
     {
       "id": 5002,
-      "userId": 2,
+      "userId": "fw8hnstzmLObKHi2iwHR",
       "timestamp": "2025-06-05T14:15:00Z",
       "content": "Painting with coffee again ☕️🎨",
       "images": [
@@ -46,23 +46,23 @@
       ],
       "location": "Salon",
       "likes": [
-        3
+        "C26VRDdoWgeyzOxvy81P"
       ],
       "eventId": "",
       "comments": [
         {
-          "userId": 1,
+          "userId": "zx5Eek9om8SCCAMCaUYc",
           "text": "Looks great!",
           "timestamp": "2025-06-05T15:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 50
+      "views": 80
+      
     },
     {
       "id": 5003,
-      "userId": 1,
+      "userId": "zx5Eek9om8SCCAMCaUYc",
       "timestamp": "2025-06-04T09:00:00Z",
       "content": "Experimenting with textures today.",
       "images": [
@@ -73,18 +73,18 @@
       "eventId": "",
       "comments": [
         {
-          "userId": 4,
+          "userId": "53AHqRY8ndtitJbs5fAb",
           "text": "Interesting approach!",
           "timestamp": "2025-06-04T10:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 15
+      "views": 80
+      
     },
     {
       "id": 5004,
-      "userId": 2,
+      "userId": "fw8hnstzmLObKHi2iwHR",
       "timestamp": "2025-06-03T10:00:00Z",
       "content": "New crochet pattern, who wants to learn?",
       "images": [
@@ -92,25 +92,24 @@
       ],
       "location": "Atelier",
       "likes": [
-        1,
-        3,
-        4
+        "zx5Eek9om8SCCAMCaUYc",
+        "C26VRDdoWgeyzOxvy81P",
+        "53AHqRY8ndtitJbs5fAb"
       ],
       "eventId": "",
       "comments": [
         {
-          "userId": 4,
+          "userId": "53AHqRY8ndtitJbs5fAb",
           "text": "I'm interested!",
           "timestamp": "2025-06-03T11:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 90
+      "views": 80
     },
     {
       "id": 5005,
-      "userId": 2,
+      "userId": "fw8hnstzmLObKHi2iwHR",
       "timestamp": "2025-06-02T17:00:00Z",
       "content": "Collaborative art project in progress!",
       "images": [
@@ -121,18 +120,17 @@
       "eventId": "",
       "comments": [
         {
-          "userId": 3,
+          "userId": "C26VRDdoWgeyzOxvy81P",
           "text": "Can't wait to see the results!",
           "timestamp": "2025-06-02T18:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 60
+      "views": 80
     },
     {
       "id": 5006,
-      "userId": 3,
+      "userId": "C26VRDdoWgeyzOxvy81P",
       "timestamp": "2025-06-01T12:00:00Z",
       "content": "Creating soundscapes 🎶",
       "images": [
@@ -140,24 +138,23 @@
       ],
       "location": "Salon",
       "likes": [
-        1,
+        "zx5Eek9om8SCCAMCaUYc",
         2
       ],
       "eventId": "",
       "comments": [
         {
-          "userId": 2,
+          "userId": "fw8hnstzmLObKHi2iwHR",
           "text": "Soothing!",
           "timestamp": "2025-06-01T13:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 100
+      "views": 80
     },
     {
       "id": 5007,
-      "userId": 3,
+      "userId": "C26VRDdoWgeyzOxvy81P",
       "timestamp": "2025-05-30T15:00:00Z",
       "content": "Brainstorming new ideas...",
       "images": [
@@ -168,18 +165,17 @@
       "eventId": "",
       "comments": [
         {
-          "userId": 1,
+          "userId": "zx5Eek9om8SCCAMCaUYc",
           "text": "Sounds exciting!",
           "timestamp": "2025-05-30T16:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 25
+      "views": 80
     },
     {
       "id": 5008,
-      "userId": 4,
+      "userId": "53AHqRY8ndtitJbs5fAb",
       "timestamp": "2025-05-29T16:00:00Z",
       "content": "Music workshop coming soon!",
       "images": [
@@ -187,24 +183,23 @@
       ],
       "location": "Salon",
       "likes": [
-        1,
-        3
+        "zx5Eek9om8SCCAMCaUYc",
+        "C26VRDdoWgeyzOxvy81P"
       ],
       "eventId": "",
       "comments": [
         {
-          "userId": 1,
+          "userId": "zx5Eek9om8SCCAMCaUYc",
           "text": "Can't wait!",
           "timestamp": "2025-05-29T17:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 130
+      "views": 80
     },
     {
       "id": 5009,
-      "userId": 4,
+      "userId": "53AHqRY8ndtitJbs5fAb",
       "timestamp": "2025-05-28T11:00:00Z",
       "content": "Gear setup day 🎛️🎚️",
       "images": [
@@ -215,18 +210,17 @@
       "eventId": "",
       "comments": [
         {
-          "userId": 2,
+          "userId": "fw8hnstzmLObKHi2iwHR",
           "text": "Ready to rock!",
           "timestamp": "2025-05-28T12:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 40
+      "views": 80
     },
     {
       "id": 5010,
-      "userId": 4,
+      "userId": "53AHqRY8ndtitJbs5fAb",
       "timestamp": "2025-05-27T14:30:00Z",
       "content": "Mixing session 🎧",
       "images": [
@@ -237,14 +231,13 @@
       "eventId": "",
       "comments": [
         {
-          "userId": 1,
+          "userId": "zx5Eek9om8SCCAMCaUYc",
           "text": "Sounds great!",
           "timestamp": "2025-05-27T15:00:00Z",
           "likes": []
         }
       ],
-      "bookmarks": [],
-      "views": 70
+      "views": 80
     }
   ]
 }
