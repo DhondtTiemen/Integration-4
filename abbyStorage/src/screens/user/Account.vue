@@ -90,8 +90,11 @@
               v-else
               :class="[
                 'flex items-center justify-center py-2.5 px-5 mb-4 font-medium text-sm transition',
-                isFollowing ? 'border-1 ' : 'bg-alphaGreen ',
+                isFollowing
+                  ? 'border-1 '
+                  : 'bg-alphaGreen ',
               ]"
+              @click="toggleFollow"
             >
               <p>
                 {{ isFollowing ? "Unfollow" : "Follow" }}
@@ -440,7 +443,31 @@ async function fetchData() {
     loading.value = false;
   }
 }
+function toggleFollow() {
+  if (!loggedInUser.value || !user.value) return;
 
+  const following = loggedInUser.value.following || [];
+  const idx = following.indexOf(user.value.id);
+
+  if (idx === -1) {
+    following.push(user.value.id);
+  } else {
+    following.splice(idx, 1);
+  }
+
+  // Update in usersData
+  const loggedInUserInDb = usersData.users.find(
+    (u) => u.id === loggedInUser.value?.id
+  );
+  if (loggedInUserInDb) {
+    loggedInUserInDb.following = [...following];
+  }
+
+  // TODO: sla op in database
+  // localStorage.setItem("users", JSON.stringify(usersData.users));
+  // Update ref zodat UI direct reageert
+  loggedInUser.value = { ...loggedInUser.value, following: [...following] };
+}
 onMounted(() => {
   fetchData();
 });
