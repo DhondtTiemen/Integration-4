@@ -95,7 +95,7 @@
     class="mb-2 relative"
   >
     <span
-      class="absolute top-7 right-4 border border-black text-black text-xs px-2 py-1"
+      class="absolute top-2 right-4 border border-black text-black text-xs px-2 py-1"
       >Event</span
     >
     <template v-if="event">

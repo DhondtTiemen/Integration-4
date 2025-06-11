@@ -380,11 +380,14 @@ import {
   getDocs,
   where,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
 const events = ref<Event[]>([]);
+const accountVisit = ref(false);
+const route = useRoute();
 
 async function getUserById(docId: string) {
   try {
@@ -435,35 +438,41 @@ async function getEventsById(userId: string) {
     const now = new Date();
 
     // Events die de user heeft aangemaakt
-    const createdQuery = query(collection(db, "events"), where("createdBy", "==", userId));
+    const createdQuery = query(
+      collection(db, "events"),
+      where("createdBy", "==", userId)
+    );
     const createdSnap = await getDocs(createdQuery);
-    const created = createdSnap.docs.map(doc => ({
+    const created = createdSnap.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-      type: "Organised"
+      type: "Organised",
     }));
 
     // Events waar de user deelnemer is
-    const attendedQuery = query(collection(db, "events"), where("participants", "array-contains", userId));
+    const attendedQuery = query(
+      collection(db, "events"),
+      where("participants", "array-contains", userId)
+    );
     const attendedSnap = await getDocs(attendedQuery);
 
     const attended = [];
     const attend = [];
 
-    attendedSnap.docs.forEach(doc => {
+    attendedSnap.docs.forEach((doc) => {
       const data = doc.data();
       const eventDate = new Date(data.date);
       if (eventDate < now) {
         attended.push({
           id: doc.id,
           ...data,
-          type: "Attended"
+          type: "Attended",
         });
       } else {
         attend.push({
           id: doc.id,
           ...data,
-          type: "Attend"
+          type: "Attend",
         });
       }
     });
@@ -481,87 +490,43 @@ async function getEventsById(userId: string) {
   }
 }
 
-
 let usersData: { users: User[] } = { users: [] };
 const loading = ref(true);
-const accountVisit = ref(false);
-const route = useRoute();
 
 const router = useRouter();
 
 // Make loggedInUser reactive and store the full user object
 const loggedInUser = ref<User | null>(null);
-
+async function getLoggedInUser() {
+  const storedId = localStorage.getItem("userId");
+  if (!storedId) return;
+  const userRef = doc(db, "users", storedId);
+  const docSnap = await getDoc(userRef);
+  if (docSnap.exists()) {
+    loggedInUser.value = { id: docSnap.id, ...docSnap.data() } as User;
+    // console.log("Logged in user fetched:", loggedInUser.value);
+  }
+}
 const isFollowing = computed(() => {
   if (!loggedInUser.value || !user.value) return false;
-  return loggedInUser.value.following?.includes(user.value.id);
+  // Zet alles naar string voor vergelijking
+  return (loggedInUser.value.following || [])
+    .map(String)
+    .includes(String(user.value.id));
 });
 
-// async function fetchData() {
-//   try {
-//     loading.value = true;
-//     const usersResponse = await fetch("/src/assets/data/users.json");
-//     const eventsResponse = await fetch("/src/assets/data/events.json");
-//     const postsResponse = await fetch("/src/assets/data/posts.json");
-
-//     if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
-//       throw new Error("Failed to fetch users, events, or posts");
-//     }
-//     usersData = await usersResponse.json();
-//     const eventsData = await eventsResponse.json();
-//     const postsData = await postsResponse.json();
-
-//     // Get current user from route
-//     user.value =
-//       usersData.users.find((u: User) => u.id === currentUserId.value) || null;
-
-//     // Get logged in user from localStorage
-//     const storedIdRaw = localStorage.getItem("userId");
-//     if (!storedIdRaw) {
-//       router.push(`/login`);
-//       return;
-//     }
-//     const storedId = Number(storedIdRaw);
-//     accountVisit.value = storedId !== currentUserId.value;
-//     loggedInUser.value =
-//       usersData.users.find((u: User) => u.id === storedId) || null;
-
-//     const created = eventsData.events
-//       .filter((event: any) => event.createdBy === currentUserId.value)
-//       .map((event: any) => ({ ...event, type: "Organised" }));
-
-//     const attended = eventsData.events
-//       .filter((event: any) => event.participants.includes(currentUserId.value))
-//       .map((event: any) => ({ ...event, type: "Attended" }));
-
-//     events.value = [...created, ...attended];
-
-//     const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
-
-//     const allPosts = [...postsData.posts, ...localPosts].filter(
-//       (post: any) => post.userId === currentUserId.value
-//     );
-
-//     posts.value = allPosts.sort(
-//       (a: any, b: any) =>
-//         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-//     );
-//   } catch (error) {
-//     console.error(error);
-//   } finally {
-//     loading.value = false;
-//   }
-// }
-function toggleFollow() {
+async function toggleFollow() {
   if (!loggedInUser.value || !user.value) return;
 
-  const following = loggedInUser.value.following || [];
-  const followers = user.value.followers || [];
-  const idx = following.indexOf(user.value.id);
-  const myId = loggedInUser.value.id;
+  const following = (loggedInUser.value.following || []).map(String);
+  const followers = (user.value.followers || []).map(String);
+  const profileId = String(user.value.id);
+  const myId = String(loggedInUser.value.id);
+
+  const idx = following.indexOf(profileId);
 
   if (idx === -1) {
-    following.push(user.value.id);
+    following.push(profileId);
     followers.push(myId);
   } else {
     following.splice(idx, 1);
@@ -570,13 +535,13 @@ function toggleFollow() {
   }
 
   // Update in usersData
-  const loggedInUserInDb = usersData.users.find(
-    (u) => u.id === loggedInUser.value?.id
-  );
+  const loggedInUserInDb = usersData.users.find((u) => String(u.id) === myId);
   if (loggedInUserInDb) {
     loggedInUserInDb.following = [...following];
   }
-  const profileUserInDb = usersData.users.find((u) => u.id === user.value?.id);
+  const profileUserInDb = usersData.users.find(
+    (u) => String(u.id) === profileId
+  );
   if (profileUserInDb) {
     profileUserInDb.followers = [...followers];
   }
@@ -584,14 +549,26 @@ function toggleFollow() {
   // Update refs zodat UI direct reageert
   loggedInUser.value = { ...loggedInUser.value, following: [...following] };
   user.value = { ...user.value, followers: [...followers] };
-  // TODO: sla op in database
-  // localStorage.setItem("users", JSON.stringify(usersData.users));
+
+  try {
+    const userRef = doc(db, "users", myId);
+    await updateDoc(userRef, {
+      following: following,
+    });
+    const profileRef = doc(db, "users", profileId);
+    await updateDoc(profileRef, {
+      followers: followers,
+    });
+  } catch (err) {
+    console.error("Failed to update likes in Firestore", err);
+  }
 }
 onMounted(() => {
   // fetchData();
-
-  console.log("currentUserId", route.params.id);
+  const storedId = localStorage.getItem("userId");
   const currentUserId = route.params.id as string;
+  accountVisit.value = storedId !== currentUserId;
+  getLoggedInUser();
   getUserById(currentUserId);
   getPostsById(currentUserId);
   getEventsById(currentUserId);
@@ -599,7 +576,13 @@ onMounted(() => {
 watch(
   () => route.params.id,
   () => {
-    // fetchData();
+    const userId = Array.isArray(route.params.id)
+      ? route.params.id[0]
+      : route.params.id;
+    getUserById(userId);
+    getPostsById(userId);
+    getEventsById(userId);
+    getLoggedInUser();
   }
 );
 </script>
