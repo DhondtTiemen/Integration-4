@@ -72,6 +72,10 @@ const routes = [
         component: () => import("../screens/event/EventDetail.vue"),
       },
       {
+        path: "event/:id/participants",
+        component: () => import("../screens/event/EventParticipants.vue"),
+      },
+      {
         path: "search",
         component: () => import("../screens/search/Search.vue"),
       },

@@ -62,7 +62,7 @@
       </div>
 
       <!-- Participants -->
-      <div>
+      <router-link :to="`/event/${event.id}/participants`">
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-medium text-base">
             Participants ({{ event.participants.length }})
@@ -93,7 +93,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </router-link>
 
       <!-- Achievements -->
       <div>
