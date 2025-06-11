@@ -275,4 +275,12 @@ onMounted(() => {
   fetchUser();
   route.params.id;
 });
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (newId) {
+      fetchEvents();
+    }
+  }
+);
 </script>
