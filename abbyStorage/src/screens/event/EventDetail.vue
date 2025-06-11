@@ -2,7 +2,8 @@
   <div class="min-h-screen bg-white flex flex-col">
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
-      <svg @click="goBack"
+      <svg
+        @click="goBack"
         xmlns="http://www.w3.org/2000/svg"
         width="21"
         height="18"
@@ -42,7 +43,10 @@
           {{ event.place }}
         </p>
         <p class="text-sm text-gray-500 mt-1">
-          Hosted by <strong>{{ event.host }}</strong>
+          Hosted by
+          <a class="underline text-black" href="#">
+            {{ getUserInfo(event?.createdBy ?? -1)?.name || "Unknown" }}
+          </a>
         </p>
         <button
           class="mt-3 px-5 py-2.5 w-full text-sm font-medium"
@@ -61,22 +65,32 @@
       <div>
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-medium text-base">
-            Participants ({{ participants.length }})
+            Participants ({{ event.participants.length }})
           </h3>
           <button class="text-sm text-gray-500">See all</button>
         </div>
         <div class="flex -space-x-3">
-          <img
-            v-for="(p, i) in participants.slice(0, 6)"
-            :key="i"
-            :src="p.avatar"
-            class="w-10 h-10 rounded-full border-2 border-white"
-          />
-          <div
-            v-if="participants.length > 6"
-            class="w-10 h-10 rounded-full bg-alphaGreen text-white flex items-center justify-center text-sm font-medium"
-          >
-            +{{ participants.length - 6 }}
+          <div class="flex -space-x-3">
+            <template v-for="(p, i) in event.participants.slice(0, 6)" :key="i">
+              <template v-if="getUserInfo(p)?.name === 'Unknown'">
+                <CircleUserRound
+                  class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 text-gray-400"
+                />
+              </template>
+              <template v-else>
+                <img
+                  :src="getUserInfo(p)?.avatar"
+                  class="w-10 h-10 rounded-full border-2 border-white"
+                  :alt="getUserInfo(p)?.name"
+                />
+              </template>
+            </template>
+            <div
+              v-if="event.participants.length > 6"
+              class="w-10 h-10 rounded-full bg-alphaGreen text-white flex items-center justify-center text-sm font-medium"
+            >
+              +{{ event.participants.length - 6 }}
+            </div>
           </div>
         </div>
       </div>
@@ -97,7 +111,7 @@
       <!-- About -->
       <div>
         <h3 class="font-medium mb-2">About</h3>
-        <p class="text-sm text-gray-700">{{ event.description }}</p>
+        <p class="text-sm text-gray-700">{{ event.about }}</p>
       </div>
 
       <!-- Gallery -->
@@ -148,55 +162,92 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch } from "vue";
+<script lang="ts" setup>
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Image, Bell, CalendarDays, MapPin, Share } from "lucide-vue-next";
-import { ArrowLeft } from "lucide-vue-next";
+import {
+  Image,
+  CalendarDays,
+  MapPin,
+  Share,
+  CircleUserRound,
+} from "lucide-vue-next";
 
+import type User from "../../interfaces/interface.user";
 const route = useRoute();
 const router = useRouter();
+const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
+
 function goBack() {
   router.back();
 }
 
-const event = ref(null);
-const relatedEvents = ref([]);
+import type Event from "../../interfaces/interface.event";
+const event = ref<Event | null>(null);
+const relatedEvents = ref<Event[]>([]);
 
+async function fetchUser() {
+  try {
+    const res = await fetch("/src/assets/data/users.json");
+    if (!res.ok) throw new Error("Failed to load users data");
+    const data = await res.json();
+    users.value = data.users;
+  } catch (error) {
+    console.error(error);
+  }
+}
+function getUserInfo(userId: number) {
+  const foundUser = users.value.find((u: User) => u.id === userId);
+  if (!foundUser) {
+    return {
+      name: "Unknown",
+      avatar: "default-avatar.jpg", // fallback avatar
+    };
+  } else {
+    return {
+      name: foundUser.name,
+      avatar: foundUser.avatar || "default-avatar.jpg", // fallback avatar
+    };
+  }
+}
 async function fetchEvents() {
   const res = await fetch("/src/assets/data/events.json");
   const data = await res.json();
   const allEvents = data.events;
 
-  event.value = allEvents.find((e) => String(e.id) === String(route.params.id));
-  console.log(event.value.id);
+  event.value = allEvents.find(
+    (e: Event) => String(e.id) === String(route.params.id)
+  );
 
   // Suggestions: upcoming events in ABBY
   relatedEvents.value = allEvents.filter(
-    (e) =>
+    (e: Event) =>
+      event.value &&
       e.id !== event.value.id &&
       new Date(e.date) >= new Date() &&
       e.place?.toLowerCase().includes("abby")
   );
 }
 
-fetchEvents();
+// fetchEvents();
 
-const participants = ref([
-  { avatar: "/avatars/a1.jpg" },
-  { avatar: "/avatars/a2.jpg" },
-  { avatar: "/avatars/a3.jpg" },
-  { avatar: "/avatars/a4.jpg" },
-  { avatar: "/avatars/a5.jpg" },
-  { avatar: "/avatars/a6.jpg" },
-  { avatar: "/avatars/a7.jpg" },
-]);
+// const participants = ref([
+//   { avatar: "/avatars/a1.jpg" },
+//   { avatar: "/avatars/a2.jpg" },
+//   { avatar: "/avatars/a3.jpg" },
+//   { avatar: "/avatars/a4.jpg" },
+//   { avatar: "/avatars/a5.jpg" },
+//   { avatar: "/avatars/a6.jpg" },
+//   { avatar: "/avatars/a7.jpg" },
+// ]);
 
 const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
 
-const isPast = new Date(event.value?.date) < new Date();
+const isPast = event.value?.date
+  ? new Date(event.value.date) < new Date()
+  : false;
 
-function formatDate(dateStr) {
+function formatDate(dateStr: any) {
   return new Date(dateStr).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -219,10 +270,9 @@ function shareEvent() {
     alert("Sharing not supported in this browser.");
   }
 }
-watch(
-  () => route.params.id,
-  () => {
-    fetchEvents();
-  }
-);
+onMounted(() => {
+  fetchEvents();
+  fetchUser();
+  route.params.id;
+});
 </script>
