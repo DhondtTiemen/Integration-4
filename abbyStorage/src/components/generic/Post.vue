@@ -173,7 +173,7 @@
             stroke-width="2"
           />
         </svg>
-        <p>{{ post?.likes.length }}</p>
+        <p>{{ likes.length }}</p>
       </button>
 
       <!-- comments -->
@@ -238,40 +238,51 @@ import {
   getDocs,
   where,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 // import users from "../../assets/data/users.json";
 // import events from "../../assets/data/events.json";
 
-const myUserId = Number(localStorage.getItem("userId"));
+const myUserId = localStorage.getItem("userId");
+console.log("myUserId", myUserId);
 const isLiking = ref(false);
-
-function hasLikedPost() {
-  return props.post?.likes && props.post.likes.includes(myUserId);
-}
-
-function togglePostLike() {
-  if (!props.post) return;
-  if (!props.post.likes) props.post.likes = [];
-  const idx = props.post.likes.indexOf(myUserId);
-  if (idx === -1) {
-    props.post.likes.push(myUserId);
-  } else {
-    props.post.likes.splice(idx, 1);
-  }
-  isLiking.value = true;
-  setTimeout(() => {
-    isLiking.value = false;
-  }, 400);
-}
-
 const props = defineProps({
   post: Object,
   showOptionsId: [String, Number],
   getEventById: Function,
 });
-
+const likes = ref<string[]>(
+  props.post?.likes ? props.post.likes.map(String) : []
+);
+const event = ref<Event | null>(null);
 const emit = defineEmits(["toggle-options", "report-post"]);
 const user = ref<User | null>(null);
+function hasLikedPost() {
+  return myUserId !== null && likes.value.includes(myUserId);
+}
+
+async function togglePostLike() {
+  if (!props.post || !myUserId) return;
+  const idx = likes.value.indexOf(myUserId);
+  if (idx === -1) {
+    likes.value.push(myUserId);
+  } else {
+    likes.value.splice(idx, 1);
+  }
+  isLiking.value = true;
+  setTimeout(() => {
+    isLiking.value = false;
+  }, 400);
+
+  // Update likes in Firestore als string-array
+  try {
+    const postRef = doc(db, "posts", String(props.post.id));
+    await updateDoc(postRef, { likes: [...likes.value] });
+  } catch (err) {
+    console.error("Failed to update likes in Firestore", err);
+  }
+}
+
 async function getUserById(docId: string) {
   try {
     const userRef = doc(db, "users", docId);
@@ -295,7 +306,6 @@ async function getUserById(docId: string) {
     // loading.value = false; // Uncomment if you have a loading state
   }
 }
-const event = ref<Event | null>(null);
 
 async function getEventById(eventId: string | number) {
   try {
@@ -350,6 +360,12 @@ watch(
     else event.value = null;
   },
   { immediate: true }
+);
+watch(
+  () => props.post?.likes,
+  (newLikes) => {
+    likes.value = newLikes ? newLikes.map(String) : [];
+  }
 );
 </script>
 
