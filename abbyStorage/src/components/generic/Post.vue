@@ -107,12 +107,12 @@
       </button>
 
       <!-- comments -->
-      <button class="flex items-center gap-2">
+      <router-link :to="`/post/${post?.id}`" class="flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 26" fill="none">
           <path d="M23 1.5H1V17.5507H5.3048V23.5L11.7703 17.5507H23V1.5Z" stroke="#222222" stroke-width="2" />
         </svg>
         <p v-if="post?.comments.length > 0">{{ post?.comments.length }}</p>
-      </button>
+      </router-link>
 
       <!-- saved TODO: Why do we want this-->
       <!-- <button>🔖 {{ post?.bookmarks }}</button> -->

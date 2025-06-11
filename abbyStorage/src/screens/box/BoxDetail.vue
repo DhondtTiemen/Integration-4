@@ -114,9 +114,7 @@
         <p>{{ user?.box.views }}</p>
       </div>
     </div>
-    <div class="p-4 border-b-2 border-gray-200">
-      <!-- TODO: Comments are separated from the box image where you can see how many comments there are. -->
-      <!-- TODO: Do we need another page for comments only??? -->
+    <div class="p-4 border-b-2 border-gray-200 bg-white" v-if="user && !loading">
       <div class="flex justify-between items-center">
         <p>{{ commentsCount }} comment{{ commentsCount !== 1 ? "s" : "" }}</p>
         <!-- <p class="text-primary-600 font-semibold">See all</p> -->
@@ -127,26 +125,22 @@
           <img :src="user?.avatar" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
         </div>
         <div class="relative w-full">
-          <textarea
+          <textarea v-model="newCommentText"
             class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
             name="comment" id="comment" rows="1" placeholder="Add a comment..."></textarea>
-
-          <!-- TOOD: Change icon -->
-          <SendHorizonal
-            class="w-6 h-6 text-gray-600 absolute right-3 top-5 transform -translate-y-1/2 cursor-pointer" />
+          <SendHorizonal class="w-6 h-6 text-gray-600 absolute right-3 top-5 transform -translate-y-1/2 cursor-pointer"
+            @click="submitComment" />
         </div>
       </div>
 
       <div class="flex gap-4 items-start mt-4" v-for="(comment, index) in comments" :key="index">
         <div>
-          <!-- Als je avatars van gebruikers beschikbaar hebt, kun je die hier dynamisch laden -->
           <img :src="getUserInfo(comment.userId).avatar" alt="User avatar"
             class="w-12 h-12 rounded-full object-cover" />
         </div>
         <div>
           <div class="flex items-baseline gap-2">
             <p class="font-bold">@{{ getUserInfo(comment.userId).name }}</p>
-            <!-- Usernaam kan je nog mappen als je wilt -->
             <p class="text-sm">{{ timeAgo(comment.timestamp) }}</p>
           </div>
           <p class="text-sm">{{ comment.text }}</p>
@@ -213,6 +207,7 @@ const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const loading = ref(true);
 const storedIdRaw = localStorage.getItem("userId");
 const commentLiking = ref<{ [key: number]: boolean }>({});
+const newCommentText = ref("");
 if (!storedIdRaw) {
   console.warn("No user ID found in localStorage.");
   router.push(`/login`);
@@ -222,6 +217,19 @@ if (!storedIdRaw) {
     console.warn("User ID in localStorage does not match the route parameter.");
     accountVisit = true;
   }
+}
+function submitComment() {
+  if (!newCommentText.value.trim() || !user.value) return;
+
+  const newComment = {
+    userId: user.value?.id || 0,
+    text: newCommentText.value.trim(),
+    timestamp: new Date().toISOString(),
+    likes: [],
+  };
+
+  user.value.box.comments.push(newComment);
+  newCommentText.value = "";
 }
 function hasLikedComment(comment: any) {
   const myUserId = Number(localStorage.getItem("userId"));
@@ -329,7 +337,12 @@ onMounted(() => {
 });
 
 // computed om comments van de box te krijgen
-const comments = computed(() => user.value?.box?.comments || []);
+const comments = computed(() => {
+  if (!user.value?.box.comments) return [];
+  return [...user.value.box.comments].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+});
 const commentsCount = computed(() => comments.value.length);
 </script>
 <style scoped>
