@@ -86,6 +86,17 @@
               <Pencil class="w-5 h-5 mr-2 inline-block" />
               <p class="font-medium text-sm">Edit profile</p>
             </router-link>
+            <button
+              v-else
+              :class="[
+                'flex items-center justify-center py-2.5 px-5 mb-4 font-medium text-sm transition',
+                isFollowing ? 'border-1 ' : 'bg-alphaGreen ',
+              ]"
+            >
+              <p>
+                {{ isFollowing ? "Unfollow" : "Follow" }}
+              </p>
+            </button>
             <div class="flex gap-4 text-sm font-medium">
               <router-link :to="`/account/${user?.id}/following`">
                 <p>{{ user?.following.length }} following</p>
@@ -354,7 +365,10 @@ import { useRoute, useRouter } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
+import Followers from "./Followers.vue";
+
 const user = ref<User | null>(null);
+let usersData: { users: User[] } = { users: [] };
 const events = ref<Event[]>([]);
 const posts = ref<Post[]>([]);
 const loading = ref(true);
@@ -363,8 +377,17 @@ const route = useRoute();
 const currentUserId = computed(() => Number(route.params.id));
 const router = useRouter();
 
+// Make loggedInUser reactive and store the full user object
+const loggedInUser = ref<User | null>(null);
+
+const isFollowing = computed(() => {
+  if (!loggedInUser.value || !user.value) return false;
+  return loggedInUser.value.following?.includes(user.value.id);
+});
+
 async function fetchData() {
   try {
+    loading.value = true;
     const usersResponse = await fetch("/src/assets/data/users.json");
     const eventsResponse = await fetch("/src/assets/data/events.json");
     const postsResponse = await fetch("/src/assets/data/posts.json");
@@ -372,23 +395,24 @@ async function fetchData() {
     if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
       throw new Error("Failed to fetch users, events, or posts");
     }
-    const storedIdRaw = localStorage.getItem("userId");
-    console.log("Stored user ID from localStorage:", storedIdRaw);
-    console.log("Current user ID from route:", currentUserId.value);
-    if (!storedIdRaw) {
-      console.warn("No user ID found in localStorage.");
-      router.push(`/login`);
-    } else {
-      const storedId = Number(storedIdRaw);
-      accountVisit.value = storedId !== currentUserId.value;
-      console.log("Account visit status:", accountVisit.value);
-    }
-    const usersData = await usersResponse.json();
+    usersData = await usersResponse.json();
     const eventsData = await eventsResponse.json();
     const postsData = await postsResponse.json();
 
+    // Get current user from route
     user.value =
       usersData.users.find((u: User) => u.id === currentUserId.value) || null;
+
+    // Get logged in user from localStorage
+    const storedIdRaw = localStorage.getItem("userId");
+    if (!storedIdRaw) {
+      router.push(`/login`);
+      return;
+    }
+    const storedId = Number(storedIdRaw);
+    accountVisit.value = storedId !== currentUserId.value;
+    loggedInUser.value =
+      usersData.users.find((u: User) => u.id === storedId) || null;
 
     const created = eventsData.events
       .filter((event: any) => event.createdBy === currentUserId.value)
@@ -423,8 +447,6 @@ onMounted(() => {
 watch(
   () => route.params.id,
   () => {
-    const storedId = Number(localStorage.getItem("userId"));
-    accountVisit.value = storedId !== currentUserId.value;
     fetchData();
   }
 );
