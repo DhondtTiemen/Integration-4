@@ -54,12 +54,11 @@
 import { Home, Search, PlusCircle, CircleUser, MessageCircle } from "lucide-vue-next";
 import { ref } from "vue";
  
-const userId = ref<number | null>(null);
-
+let userId: string = "";
 if (typeof window !== "undefined") {
   const storedId = localStorage.getItem("userId");
   if (storedId) {
-    userId.value = Number(storedId);
+    userId = storedId;
   }
 }
 </script>

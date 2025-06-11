@@ -12,26 +12,57 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
-    import Post from './Post.vue'
+import { ref, onMounted } from "vue";
+import Post from "./Post.vue";
+// import type Post from "../../interfaces/interface.post";
+import db from "../../firebase/init.ts";
 
-    const posts = ref([])
-    const showOptionsId = ref(null)
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  getDocs,
+  where,
+  getDoc,
+} from "firebase/firestore";
+const posts = ref([]);
+const showOptionsId = ref(null);
+async function getPosts() {
+  try {
+    // Haal ALLE posts op uit Firestore
+    const q = query(collection(db, "posts"));
+    const querySnapshot = await getDocs(q);
 
-    function toggleOptions(id) {
-        showOptionsId.value = showOptionsId.value === id ? null : id
-    }
+    // Verzamel alle posts in een array
+    const postList = [];
+    querySnapshot.forEach((doc) => {
+      postList.push({ id: doc.id, ...doc.data() });
+    });
 
-    function reportPost(id) {
-        posts.value = posts.value.filter(post => post.id !== id)
-    }
+    // Sorteer op nieuwste eerst
+    posts.value = postList.sort(
+      (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    );
+    console.log("Posts fetched:", posts.value);
+    return posts.value;
+  } catch (error) {
+    console.error("Error fetching posts data:", error);
+    posts.value = [];
+    return null;
+  } 
+}
+function toggleOptions(id) {
+  showOptionsId.value = showOptionsId.value === id ? null : id;
+}
 
-    onMounted(async () => {
-        const res = await fetch('/src/assets/data/posts.json')
-        const data = await res.json()
-        posts.value = data.posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        console.log(posts)
-    })
+function reportPost(id) {
+  posts.value = posts.value.filter((post) => post.id !== id);
+}
 
-    const emit = defineEmits(['toggle-options', 'report-post'])
+onMounted(async () => {
+  await getPosts();
+});
+const emit = defineEmits(["toggle-options", "report-post"]);
 </script>

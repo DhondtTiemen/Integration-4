@@ -377,31 +377,112 @@ import {
   setDoc,
   doc,
   query,
+  getDocs,
   where,
   getDoc,
 } from "firebase/firestore";
 
 const user = ref<User | null>(null);
+const posts = ref<Post[]>([]);
+const events = ref<Event[]>([]);
 
-async function getUserData(docId: string) {
-  const userRef = doc(db, "users", docId);
-  const docSnap = await getDoc(userRef);
+async function getUserById(docId: string) {
+  try {
+    const userRef = doc(db, "users", docId);
+    const docSnap = await getDoc(userRef);
 
-  if (!docSnap.exists()) {
-    console.warn("No user found with document ID:", docId);
-    user.value = null;
+    if (!docSnap.exists()) {
+      console.warn("No user found with document ID:", docId);
+      user.value = null;
+      return null;
+    }
+
+    const userData = { id: docSnap.id, ...docSnap.data() };
+    user.value = userData as User; // <-- sla op in ref
+    console.log("User data fetched:", userData);
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
     return null;
+  } finally {
+    loading.value = false; // Uncomment if you have a loading state
   }
+}
+async function getPostsById(userId: string) {
+  try {
+    const q = query(collection(db, "posts"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
 
-  const userData = { id: docSnap.id, ...docSnap.data() };
-  user.value = userData as User; // <-- sla op in ref
-  console.log("User data fetched:", userData);
-  return userData;
+    // Verzamel alle posts in een array
+    const postList: Post[] = [];
+    querySnapshot.forEach((doc) => {
+      postList.push({ id: doc.id, ...doc.data() } as Post);
+    });
+
+    posts.value = postList;
+    console.log("Posts fetched:", postList);
+    return postList;
+  } catch (error) {
+    console.error("Error fetching posts data:", error);
+    posts.value = [];
+    return null;
+  } finally {
+    loading.value = false;
+  }
+}
+async function getEventsById(userId: string) {
+  try {
+    const now = new Date();
+
+    // Events die de user heeft aangemaakt
+    const createdQuery = query(collection(db, "events"), where("createdBy", "==", userId));
+    const createdSnap = await getDocs(createdQuery);
+    const created = createdSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      type: "Organised"
+    }));
+
+    // Events waar de user deelnemer is
+    const attendedQuery = query(collection(db, "events"), where("participants", "array-contains", userId));
+    const attendedSnap = await getDocs(attendedQuery);
+
+    const attended = [];
+    const attend = [];
+
+    attendedSnap.docs.forEach(doc => {
+      const data = doc.data();
+      const eventDate = new Date(data.date);
+      if (eventDate < now) {
+        attended.push({
+          id: doc.id,
+          ...data,
+          type: "Attended"
+        });
+      } else {
+        attend.push({
+          id: doc.id,
+          ...data,
+          type: "Attend"
+        });
+      }
+    });
+
+    // Combineer en sla op: eerst upcoming (attend), dan organised, dan attended (verlopen)
+    events.value = [...attend, ...created, ...attended];
+    console.log("events fetched:", events.value);
+    return events.value;
+  } catch (error) {
+    console.error("Error fetching events data:", error);
+    events.value = [];
+    return null;
+  } finally {
+    loading.value = false;
+  }
 }
 
+
 let usersData: { users: User[] } = { users: [] };
-const events = ref<Event[]>([]);
-const posts = ref<Post[]>([]);
 const loading = ref(true);
 const accountVisit = ref(false);
 const route = useRoute();
@@ -511,7 +592,9 @@ onMounted(() => {
 
   console.log("currentUserId", route.params.id);
   const currentUserId = route.params.id as string;
-  getUserData(currentUserId);
+  getUserById(currentUserId);
+  getPostsById(currentUserId);
+  getEventsById(currentUserId);
 });
 watch(
   () => route.params.id,
