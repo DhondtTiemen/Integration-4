@@ -13,10 +13,10 @@
       </button>
     </nav>
 
-    <div class="flex gap-4 items-center bg-white px-4 py-2">
+    <router-link :to="`/account/${user?.id}`" class="flex gap-4 items-center bg-white px-4 py-2">
       <img :src="user?.avatar" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
       <p class="font-bold">{{ user?.name }}</p>
-    </div>
+    </router-link>
 
     <div class="w-full max-w-md mx-auto">
       <div class="aspect-square bg-gray-300 flex justify-center items-center rounded-lg shadow-sm">
@@ -80,14 +80,16 @@
       </div>
 
       <div class="flex gap-4 items-start mt-4" v-for="(comment, index) in comments" :key="index">
-        <div>
+        <router-link :to="`/account/${comment.userId}`">
           <!-- Als je avatars van gebruikers beschikbaar hebt, kun je die hier dynamisch laden -->
           <img :src="getUserInfo(comment.userId).avatar" alt="User avatar"
             class="w-12 h-12 rounded-full object-cover" />
-        </div>
+        </router-link>
         <div>
           <div class="flex items-baseline gap-2">
-            <p class="font-bold">@{{ getUserInfo(comment.userId).name }}</p>
+            <router-link :to="`/account/${comment.userId}`">
+              <p class="font-bold">@{{ getUserInfo(comment.userId).name }}</p>
+            </router-link>
             <!-- Usernaam kan je nog mappen als je wilt -->
             <p class="text-sm">{{ timeAgo(comment.timestamp) }}</p>
           </div>

@@ -138,13 +138,15 @@
       </div>
 
       <div class="flex gap-4 items-start mt-4" v-for="(comment, index) in comments" :key="index">
-        <div>
+        <router-link :to="`/account/${comment.userId}`">
           <img :src="getUserInfo(comment.userId).avatar" alt="User avatar"
             class="w-12 h-12 rounded-full object-cover" />
-        </div>
+        </router-link>
         <div>
           <div class="flex items-baseline gap-2">
-            <p class="font-bold">@{{ getUserInfo(comment.userId).name }}</p>
+            <router-link :to="`/account/${comment.userId}`">
+              <p class="font-bold">@{{ getUserInfo(comment.userId).name }}</p>
+            </router-link>
             <p class="text-sm">{{ timeAgo(comment.timestamp) }}</p>
           </div>
           <p class="text-sm">{{ comment.text }}</p>
