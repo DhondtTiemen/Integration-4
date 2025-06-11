@@ -92,7 +92,7 @@
                 'flex items-center justify-center py-2.5 px-5 mb-4 font-medium text-sm transition',
                 isFollowing
                   ? 'border-1 '
-                  : 'bg-alphaGreen ',
+                  : 'bg-alphaGreen border-1 border-alphaGreen',
               ]"
               @click="toggleFollow"
             >
@@ -447,12 +447,17 @@ function toggleFollow() {
   if (!loggedInUser.value || !user.value) return;
 
   const following = loggedInUser.value.following || [];
+  const followers = user.value.followers || [];
   const idx = following.indexOf(user.value.id);
+  const myId = loggedInUser.value.id;
 
   if (idx === -1) {
     following.push(user.value.id);
+    followers.push(myId);
   } else {
     following.splice(idx, 1);
+    const followerIdx = followers.indexOf(myId);
+    if (followerIdx !== -1) followers.splice(followerIdx, 1);
   }
 
   // Update in usersData
@@ -462,11 +467,19 @@ function toggleFollow() {
   if (loggedInUserInDb) {
     loggedInUserInDb.following = [...following];
   }
+  const profileUserInDb = usersData.users.find(
+    (u) => u.id === user.value?.id
+  );
+  if (profileUserInDb) {
+    profileUserInDb.followers = [...followers];
+  }
+
+  // Update refs zodat UI direct reageert
+  loggedInUser.value = { ...loggedInUser.value, following: [...following] };
+  user.value = { ...user.value, followers: [...followers] };
 
   // TODO: sla op in database
   // localStorage.setItem("users", JSON.stringify(usersData.users));
-  // Update ref zodat UI direct reageert
-  loggedInUser.value = { ...loggedInUser.value, following: [...following] };
 }
 onMounted(() => {
   fetchData();
