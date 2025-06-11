@@ -28,7 +28,7 @@
           "userId": 3,
           "text": "Love this!",
           "timestamp": "2025-06-06T12:30:00Z",
-          "likes": []
+          "likes": [2]
         }
       ],
       "bookmarks": [

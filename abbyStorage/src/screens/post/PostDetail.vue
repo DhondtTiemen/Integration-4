@@ -66,14 +66,17 @@
         <div class="w-fit flex-shrink-0">
           <img :src="user?.avatar" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
         </div>
-        <div class="relative w-full">
-          <textarea v-model="newCommentText"
-            class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full resize-none focus:outline-none focus:ring-2 focus:ring-primary-500"
-            name="comment" id="comment" rows="1" placeholder="Add a comment..."></textarea>
-
-          <SendHorizonal class="w-6 h-6 text-gray-600 absolute right-3 top-5 transform -translate-y-1/2 cursor-pointer"
-            @click="submitComment" />
-        </div>
+        <form @submit.prevent="submitComment" class="relative w-full">
+          <input v-model="newCommentText"
+            class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-primary-500"
+            name="comment" id="comment" type="text" placeholder="Add a comment..." enterkeyhint="send"
+            autocomplete="off" />
+          <button type="submit"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0"
+            :disabled="!newCommentText.trim()" aria-label="Submit comment">
+            <SendHorizonal class="w-6 h-6 text-gray-600" />
+          </button>
+        </form>
       </div>
 
       <div class="flex gap-4 items-start mt-4" v-for="(comment, index) in comments" :key="index">
@@ -91,8 +94,11 @@
           <p class="text-sm">{{ comment.text }}</p>
           <div class="flex items-center gap-2 mt-2 text-sm">
             <div class="flex items-center gap-1">
-              <Heart class="w-6 h-6 text-gray-600" />
-              <p>{{ comment.likes.length }}</p>
+              <Heart class="w-6 h-6 cursor-pointer transition-transform" :class="[
+                commentLiking[index] ? 'animate-like' : '',
+                hasLikedComment(comment) ? 'text-alphaPurple fill-alphaPurple' : 'text-gray-600'
+              ]" @click="toggleCommentLike(comment, index)" />
+              <p>{{ comment.likes ? comment.likes.length : 0 }}</p>
             </div>
           </div>
         </div>
@@ -130,6 +136,29 @@ const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const newCommentText = ref("");
 const myUserId = Number(localStorage.getItem("userId"));
 const isLiking = ref(false);
+
+const commentLiking = ref<{ [key: number]: boolean }>({});
+
+function hasLikedComment(comment: any) {
+  const myUserId = Number(localStorage.getItem("userId"));
+  return comment.likes && comment.likes.includes(myUserId);
+}
+function toggleCommentLike(comment: any, index: number) {
+  const myUserId = Number(localStorage.getItem("userId"));
+  if (!comment.likes) comment.likes = [];
+  const idx = comment.likes.indexOf(myUserId);
+  if (idx === -1) {
+    comment.likes.push(myUserId);
+  } else {
+    comment.likes.splice(idx, 1);
+  }
+  // Trigger animatie
+  commentLiking.value[index] = true;
+  setTimeout(() => {
+    commentLiking.value[index] = false;
+  }, 400);
+}
+
 function hasLikedPost() {
   return post.value?.likes && post.value.likes.includes(myUserId);
 }
@@ -264,11 +293,20 @@ const commentsCount = computed(() => comments.value.length);
 
 <style scoped>
 @keyframes pop {
-  0% { transform: scale(1);}
-  50% { transform: scale(1.4);}
-  100% { transform: scale(1);}
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
+
 .animate-like {
-  animation: pop 0.4s cubic-bezier(.36,1.64,.56,1) both;
+  animation: pop 0.4s cubic-bezier(.36, 1.64, .56, 1) both;
 }
 </style>
