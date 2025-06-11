@@ -368,16 +368,44 @@ import { useRoute, useRouter } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
-import Followers from "./Followers.vue";
+
+// DATABASE
+import db from "../../firebase/init.ts";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  getDoc,
+} from "firebase/firestore";
 
 const user = ref<User | null>(null);
+
+async function getUserData(docId: string) {
+  const userRef = doc(db, "users", docId);
+  const docSnap = await getDoc(userRef);
+
+  if (!docSnap.exists()) {
+    console.warn("No user found with document ID:", docId);
+    user.value = null;
+    return null;
+  }
+
+  const userData = { id: docSnap.id, ...docSnap.data() };
+  user.value = userData as User; // <-- sla op in ref
+  console.log("User data fetched:", userData);
+  return userData;
+}
+
 let usersData: { users: User[] } = { users: [] };
 const events = ref<Event[]>([]);
 const posts = ref<Post[]>([]);
 const loading = ref(true);
 const accountVisit = ref(false);
 const route = useRoute();
-const currentUserId = computed(() => Number(route.params.id));
+
 const router = useRouter();
 
 // Make loggedInUser reactive and store the full user object
@@ -388,61 +416,61 @@ const isFollowing = computed(() => {
   return loggedInUser.value.following?.includes(user.value.id);
 });
 
-async function fetchData() {
-  try {
-    loading.value = true;
-    const usersResponse = await fetch("/src/assets/data/users.json");
-    const eventsResponse = await fetch("/src/assets/data/events.json");
-    const postsResponse = await fetch("/src/assets/data/posts.json");
+// async function fetchData() {
+//   try {
+//     loading.value = true;
+//     const usersResponse = await fetch("/src/assets/data/users.json");
+//     const eventsResponse = await fetch("/src/assets/data/events.json");
+//     const postsResponse = await fetch("/src/assets/data/posts.json");
 
-    if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
-      throw new Error("Failed to fetch users, events, or posts");
-    }
-    usersData = await usersResponse.json();
-    const eventsData = await eventsResponse.json();
-    const postsData = await postsResponse.json();
+//     if (!usersResponse.ok || !eventsResponse.ok || !postsResponse.ok) {
+//       throw new Error("Failed to fetch users, events, or posts");
+//     }
+//     usersData = await usersResponse.json();
+//     const eventsData = await eventsResponse.json();
+//     const postsData = await postsResponse.json();
 
-    // Get current user from route
-    user.value =
-      usersData.users.find((u: User) => u.id === currentUserId.value) || null;
+//     // Get current user from route
+//     user.value =
+//       usersData.users.find((u: User) => u.id === currentUserId.value) || null;
 
-    // Get logged in user from localStorage
-    const storedIdRaw = localStorage.getItem("userId");
-    if (!storedIdRaw) {
-      router.push(`/login`);
-      return;
-    }
-    const storedId = Number(storedIdRaw);
-    accountVisit.value = storedId !== currentUserId.value;
-    loggedInUser.value =
-      usersData.users.find((u: User) => u.id === storedId) || null;
+//     // Get logged in user from localStorage
+//     const storedIdRaw = localStorage.getItem("userId");
+//     if (!storedIdRaw) {
+//       router.push(`/login`);
+//       return;
+//     }
+//     const storedId = Number(storedIdRaw);
+//     accountVisit.value = storedId !== currentUserId.value;
+//     loggedInUser.value =
+//       usersData.users.find((u: User) => u.id === storedId) || null;
 
-    const created = eventsData.events
-      .filter((event: any) => event.createdBy === currentUserId.value)
-      .map((event: any) => ({ ...event, type: "Organised" }));
+//     const created = eventsData.events
+//       .filter((event: any) => event.createdBy === currentUserId.value)
+//       .map((event: any) => ({ ...event, type: "Organised" }));
 
-    const attended = eventsData.events
-      .filter((event: any) => event.participants.includes(currentUserId.value))
-      .map((event: any) => ({ ...event, type: "Attended" }));
+//     const attended = eventsData.events
+//       .filter((event: any) => event.participants.includes(currentUserId.value))
+//       .map((event: any) => ({ ...event, type: "Attended" }));
 
-    events.value = [...created, ...attended];
+//     events.value = [...created, ...attended];
 
-    const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
+//     const localPosts = JSON.parse(localStorage.getItem("posts") || "[]");
 
-    const allPosts = [...postsData.posts, ...localPosts].filter(
-      (post: any) => post.userId === currentUserId.value
-    );
+//     const allPosts = [...postsData.posts, ...localPosts].filter(
+//       (post: any) => post.userId === currentUserId.value
+//     );
 
-    posts.value = allPosts.sort(
-      (a: any, b: any) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    );
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
-  }
-}
+//     posts.value = allPosts.sort(
+//       (a: any, b: any) =>
+//         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+//     );
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     loading.value = false;
+//   }
+// }
 function toggleFollow() {
   if (!loggedInUser.value || !user.value) return;
 
@@ -467,9 +495,7 @@ function toggleFollow() {
   if (loggedInUserInDb) {
     loggedInUserInDb.following = [...following];
   }
-  const profileUserInDb = usersData.users.find(
-    (u) => u.id === user.value?.id
-  );
+  const profileUserInDb = usersData.users.find((u) => u.id === user.value?.id);
   if (profileUserInDb) {
     profileUserInDb.followers = [...followers];
   }
@@ -477,17 +503,20 @@ function toggleFollow() {
   // Update refs zodat UI direct reageert
   loggedInUser.value = { ...loggedInUser.value, following: [...following] };
   user.value = { ...user.value, followers: [...followers] };
-
   // TODO: sla op in database
   // localStorage.setItem("users", JSON.stringify(usersData.users));
 }
 onMounted(() => {
-  fetchData();
+  // fetchData();
+
+  console.log("currentUserId", route.params.id);
+  const currentUserId = route.params.id as string;
+  getUserData(currentUserId);
 });
 watch(
   () => route.params.id,
   () => {
-    fetchData();
+    // fetchData();
   }
 );
 </script>

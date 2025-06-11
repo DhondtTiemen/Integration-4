@@ -1,18 +1,17 @@
 export default interface Post {
-  id: number;
-  userId: number;
+  id: string;
+  userId: string;
   timestamp: string;
   content: string;
   images: string[];
   location: string;
-  likes: number[];
-  eventId: number | string; // gebruik `string` als het soms leeg is: ""
+  likes: string[];
+  eventId: string; // gebruik `string` als het soms leeg is: ""
   comments: {
-    userId: number;
+    userId: string;
     text: string;
     timestamp: string;
-    likes: number[];
+    likes: string[];
   }[];
-  bookmarks: number[];
   views: number;
 }

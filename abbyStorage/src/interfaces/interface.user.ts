@@ -1,28 +1,26 @@
 export default interface User {
-  id: number;
+  id: string;
   mail: string;
   password: string;
   name: string;
   bio: string;
   avatar: string;
-  followers: number[];
-  following: number[];
+  followers: string[];
+  following: string[];
   achievements: string[];
   box: {
     boxNumber: number;
     createdAt: string;
-    likes: number[];
+    likes: string[];
     views: number;
     mainImage: string;
     items: { name: string; image: string }[];
     description: string;
     comments: {
-      userId: number;
+      userId: string;
       text: string;
       timestamp: string;
-      likes: number[];
+      likes: string[];
     }[];
   };
-  createdEvents: number[];
-  attendedEvents: number[];
 }
