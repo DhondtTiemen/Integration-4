@@ -11,7 +11,7 @@ export default interface User {
   box: {
     boxNumber: number;
     createdAt: string;
-    likes: number;
+    likes: number[];
     views: number;
     mainImage: string;
     items: { name: string; image: string }[];
