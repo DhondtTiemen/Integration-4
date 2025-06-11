@@ -6,9 +6,10 @@
         <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
             Events
         </p>
-        <button @click="shareEvent">
+        <router-link
+            to="/event/create">
           <PlusIcon class="w-6 h-6 mr-2 inline-block" />
-        </button>
+        </router-link>
     </nav>
 
     <div v-if="loading" class="text-center text-gray-500">
@@ -16,7 +17,8 @@
     </div>
 
     <div v-else class="space-y-4">
-      <div
+      <router-link
+        :to="`/event/${event.id}`"
         v-for="event in events"
         :key="event.id"
         class="rounded-xl overflow-hidden border border-gray-200 shadow-sm"
@@ -42,7 +44,7 @@
           </div>
           <button class="bg-[#FEBE4F] w-full text-black font-medium py-1.5 rounded">Learn more</button>
         </div>
-      </div>
+      </router-link>
     </div>
   </section>
 </template>
@@ -50,6 +52,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { PlusIcon } from "lucide-vue-next";
+import router from "../../bootstrap/router";
 
 const events = ref([]);
 const loading = ref(true);
