@@ -5,8 +5,8 @@ export default interface User {
   name: string;
   bio: string;
   avatar: string;
-  followers: number;
-  following: number;
+  followers: number[];
+  following: number[];
   achievements: string[];
   box: {
     boxNumber: number;

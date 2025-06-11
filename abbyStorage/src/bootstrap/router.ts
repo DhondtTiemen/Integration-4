@@ -16,6 +16,14 @@ const routes = [
         path: "account/:id",
         component: () => import("../screens/user/Account.vue"),
       },
+      {
+        path: "account/:id/following",
+        component: () => import("../screens/user/Following.vue"),
+      },
+      {
+        path: "account/:id/followers",
+        component: () => import("../screens/user/Followers.vue"),
+      },
       // TODO
       // {
       //   path: "account/:id/edit",

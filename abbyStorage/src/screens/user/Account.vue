@@ -78,7 +78,8 @@
             <p class="text-center text-sm mb-4 px-6">
               {{ user?.bio }}
             </p>
-            <router-link :to="`/account/${user?.id}/edit`" 
+            <router-link
+              :to="`/account/${user?.id}/edit`"
               v-if="!accountVisit"
               class="flex items-center justify-center py-2.5 px-5 mb-4 bg-alphaGreen"
             >
@@ -86,9 +87,13 @@
               <p class="font-medium text-sm">Edit profile</p>
             </router-link>
             <div class="flex gap-4 text-sm font-medium">
-              <p>{{ user?.following }} following</p>
+              <router-link :to="`/account/${user?.id}/following`">
+                <p>{{ user?.following.length }} following</p>
+              </router-link>
               <p>|</p>
-              <p>{{ user?.followers }} followers</p>
+              <router-link :to="`/account/${user?.id}/followers`">
+                <p>{{ user?.followers.length }} followers</p>
+              </router-link>
             </div>
           </div>
         </div>
@@ -118,13 +123,13 @@
                 </router-link>
               </template>
               <template v-else>
-                <router-link :to="`/box/create`"
+                <router-link
+                  :to="`/box/create`"
                   v-if="!accountVisit"
                   class="bg-alphaGreen px-5 py-2.5 font-medium text-sm"
                 >
                   Add box
                 </router-link>
-                
               </template>
             </div>
             <div v-if="user?.box">
