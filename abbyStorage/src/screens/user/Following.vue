@@ -1,6 +1,8 @@
 <template>
   <div>
-    <nav class="relative flex items-center justify-between p-4 h-[56px] bg-alphaYellow">
+    <nav
+      class="relative flex items-center justify-between p-4 h-[56px] bg-alphaYellow"
+    >
       <svg
         @click="goBack"
         xmlns="http://www.w3.org/2000/svg"
@@ -17,37 +19,49 @@
       <p
         class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium"
       >
-      Following
+        Following
       </p>
     </nav>
     <div v-if="loading" class="text-gray-500 p-4">Loading...</div>
     <div v-else>
       <div v-if="followingList.length">
-        <router-link
+        <div
           v-for="user in followingList"
           :key="user.id"
-          :to="`/account/${user.id}`"
-          class="flex items-center gap-4 border-b border-gray-400 px-4 py-3"
+          class="flex items-center justify-between border-b border-gray-300 mb-4 pb-4 px-4 gap-4 py-3"
         >
           <template v-if="user.name === 'Unknown'">
             <CircleUserRound
               class="w-10 h-10 text-gray-400 bg-gray-200 rounded-full"
             />
           </template>
-          <template v-else>
+          <router-link
+            v-else
+            :to="`/account/${user.id}`"
+            class="flex items-center gap-4"
+          >
             <img
               :src="user.avatar"
-              :alt="user.name"
-              class="w-10 h-10 rounded-full object-cover"
+              alt="avatar"
+              class="w-12 h-12 rounded-full object-cover"
             />
-          </template>
-          <div>
-            <div class="font-medium">{{ user.name }}</div>
-            <div class="text-xs text-gray-500">
-              {{ user.bio || "No bio" }}
-            </div>
-          </div>
-        </router-link>
+            <div class="font-semibold">{{ user.name }}</div>
+          </router-link>
+          <button
+            :class="[
+              'flex items-center justify-center py-2.5 px-5 font-medium text-sm transition',
+              isFollowing(user.id)
+                ? 'border-1'
+                : 'bg-alphaGreen border-1 border-alphaGreen',
+            ]"
+            @click.stop="toggleFollow(user)"
+            style="min-width: 100px"
+          >
+            <p>
+              {{ isFollowing(user.id) ? "Unfollow" : "Follow" }}
+            </p>
+          </button>
+        </div>
       </div>
       <div v-else class="text-gray-500 p-4">Not following anyone yet.</div>
     </div>
@@ -55,9 +69,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { CircleUserRound } from "lucide-vue-next";
+import db from "../../firebase/init.ts";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  getDocs,
+  where,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import type User from "../../interfaces/interface.user";
+
 const router = useRouter();
 
 const route = useRoute();
@@ -66,30 +94,141 @@ const followingList = ref<any[]>([]);
 function goBack() {
   router.back();
 }
-onMounted(async () => {
-  const userId = route.params.id;
-  // Haal alle users op
-  const usersRes = await fetch("/src/assets/data/users.json");
-  const usersData = await usersRes.json();
-  // Vind de huidige user
-  const currentUser = usersData.users.find(
-    (u: any) => String(u.id) === String(userId)
-  );
-  const followingIds: number[] = currentUser?.following || [];
+const user = ref<User | null>(null);
+const userId = route.params.id;
 
-  // Map de following naar user info, fallback naar "Unknown"
-  followingList.value = followingIds.map((fid: number) => {
-    const user = usersData.users.find((u: any) => u.id === fid);
-    return (
-      user || {
+const loggedInUser = ref<User | null>(null);
+async function getLoggedInUser() {
+  const storedId = localStorage.getItem("userId");
+  if (!storedId) return;
+  const userRef = doc(db, "users", storedId);
+  const docSnap = await getDoc(userRef);
+  if (docSnap.exists()) {
+    loggedInUser.value = { id: docSnap.id, ...docSnap.data() } as User;
+    // console.log("Logged in user fetched:", loggedInUser.value);
+  }
+}
+function isFollowing(userId: string) {
+  if (!loggedInUser.value) return false;
+  return (loggedInUser.value.following || [])
+    .map(String)
+    .includes(String(userId));
+}
+async function toggleFollow(profile: any) {
+  if (!loggedInUser.value || !profile) return;
+
+  const myId = loggedInUser.value.id;
+  const profileId = String(profile.id);
+
+  if (!myId || !profileId) {
+    console.error("No logged in user id or profile id found!");
+    return;
+  }
+
+  // Kopieer arrays zodat Vue reactiviteit werkt
+  const following = [...(loggedInUser.value.following || [])].map(String);
+  const followers = [...(profile.followers || [])].map(String);
+
+  const idx = following.indexOf(profileId);
+
+  if (idx === -1) {
+    following.push(profileId);
+    followers.push(myId);
+  } else {
+    following.splice(idx, 1);
+    const followerIdx = followers.indexOf(myId);
+    if (followerIdx !== -1) followers.splice(followerIdx, 1);
+  }
+
+  try {
+    // Update Firestore
+    const userRef = doc(db, "users", myId);
+    await updateDoc(userRef, { following });
+    const profileRef = doc(db, "users", profileId);
+    await updateDoc(profileRef, { followers });
+
+    // Update lokale refs zodat UI direct reageert
+    loggedInUser.value = { ...loggedInUser.value, following: [...following] };
+    // Zoek de juiste user in followingList en update die followers
+    const idxInList = followingList.value.findIndex(
+      (u) => String(u.id) === profileId
+    );
+    if (idxInList !== -1) {
+      followingList.value[idxInList] = {
+        ...followingList.value[idxInList],
+        followers: [...followers],
+      };
+    }
+  } catch (err) {
+    console.error("Failed to update follows in Firestore", err);
+  }
+}
+async function getUserById(docId: string) {
+  try {
+    const userRef = doc(db, "users", docId);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      console.warn("No user found with document ID:", docId);
+      user.value = null;
+      return null;
+    }
+
+    const userData = { id: docSnap.id, ...docSnap.data() };
+    user.value = userData as User;
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    user.value = null;
+    return null;
+  }
+}
+async function getFollowing() {
+  loading.value = true;
+  await getUserById(String(userId));
+  if (
+    !user.value ||
+    !user.value.following ||
+    user.value.following.length === 0
+  ) {
+    followingList.value = [];
+    loading.value = false;
+    return;
+  }
+
+  // Haal alle follower user info op
+  const followerIds = user.value.following.map(String);
+  const followingData: any[] = [];
+
+  for (const fid of followerIds) {
+    try {
+      const followingRef = doc(db, "users", fid);
+      const followingSnap = await getDoc(followingRef);
+      if (followingSnap.exists()) {
+        followingData.push({ id: followingSnap.id, ...followingSnap.data() });
+      } else {
+        followingData.push({
+          id: fid,
+          name: "Unknown",
+          avatar: "",
+          bio: "",
+        });
+      }
+    } catch {
+      followingData.push({
         id: fid,
         name: "Unknown",
         avatar: "",
         bio: "",
-      }
-    );
-  });
+      });
+    }
+  }
 
+  followingList.value = followingData;
   loading.value = false;
+}
+onMounted(() => {
+  getFollowing();
+  getLoggedInUser();
 });
 </script>

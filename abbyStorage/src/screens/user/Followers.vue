@@ -25,7 +25,7 @@
     <div v-if="loading" class="text-gray-500 p-4">Loading...</div>
     <div v-else>
       <div v-if="followList.length">
-        <router-div
+        <div
           v-for="user in followList"
           :key="user.id"
           class="flex items-center justify-between border-b border-gray-300 mb-4 pb-4 px-4 gap-4 py-3"
@@ -61,7 +61,7 @@
               {{ isFollowing(user.id) ? "Unfollow" : "Follow" }}
             </p>
           </button>
-        </router-div>
+        </div>
       </div>
       <div v-else class="text-gray-500 p-4">You don't have any followers</div>
     </div>
@@ -150,7 +150,9 @@ async function toggleFollow(profile: any) {
     // Update lokale refs zodat UI direct reageert
     loggedInUser.value = { ...loggedInUser.value, following: [...following] };
     // Zoek de juiste user in followList en update die followers
-    const idxInList = followList.value.findIndex(u => String(u.id) === profileId);
+    const idxInList = followList.value.findIndex(
+      (u) => String(u.id) === profileId
+    );
     if (idxInList !== -1) {
       followList.value[idxInList] = {
         ...followList.value[idxInList],
