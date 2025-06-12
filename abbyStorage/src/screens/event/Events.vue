@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen">
+  <section class="min-h-screen mb-16">
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
       <p

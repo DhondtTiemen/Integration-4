@@ -25,10 +25,10 @@ const routes = [
         component: () => import("../screens/user/Followers.vue"),
       },
       // TODO
-      // {
-      //   path: "account/:id/edit",
-      //   component: () => import("../screens/EditAccount.vue"),
-      // },
+      {
+        path: "account/:id/edit",
+        component: () => import("../screens/user/EditAccount.vue"),
+      },
       {
         path: "login",
         component: () => import("../screens/user/LoginForm.vue"),

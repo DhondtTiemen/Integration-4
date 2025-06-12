@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen">
+  <section class="min-h-screen mb-16">
     <!-- Header -->
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">Profile</h1>
@@ -454,8 +454,8 @@ async function getEventsById(userId: string) {
     );
     const attendedSnap = await getDocs(attendedQuery);
 
-    const attended:any = [];
-    const attend:any = [];
+    const attended: any = [];
+    const attend: any = [];
 
     attendedSnap.docs.forEach((doc) => {
       const data = doc.data();
@@ -488,7 +488,6 @@ async function getEventsById(userId: string) {
 }
 
 const loading = ref(true);
-
 
 // Make loggedInUser reactive and store the full user object
 const loggedInUser = ref<User | null>(null);

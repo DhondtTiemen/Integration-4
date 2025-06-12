@@ -1,6 +1,6 @@
 <template>
   <!-- Header -->
-  <div v-bind="$attrs">
+  <div class="h-fit overflow-hidden">
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">Add post</h1>
       <div class="flex items-center px-6 gap-6">
@@ -140,7 +140,6 @@ if (!storedIdRaw) {
   console.warn("No user ID found in localStorage.");
   router.push(`/login`);
 }
-
 
 function submitPost() {
   if (!postContent.value.trim()) {

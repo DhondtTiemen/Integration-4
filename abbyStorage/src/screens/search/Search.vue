@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-h-screen mb-16">
     <div class="flex gap-2 p-4 bg-alphaYellow">
       <input
         v-model="input"
@@ -88,7 +88,7 @@
             <router-link
               :to="`/event/${item.id}`"
               v-if="item.id"
-              class="relative block mb-4"
+              class="relative block"
             >
               <span
                 class="absolute top-4 right-4 border border-black text-black text-xs px-2 py-1"

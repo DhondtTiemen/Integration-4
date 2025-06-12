@@ -1,6 +1,6 @@
 <template>
   <router-view
-    class="min-h-screen overflow-x-hidden mb-12 bg-alphaWhite"
+    class="min-h-screen overflow-x-hidden bg-alphaWhite"
   ></router-view>
   <appNavigation
     v-if="showNavigation"
