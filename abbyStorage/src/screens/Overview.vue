@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen">
+  <section class="min-h-screen mb-4">
     <!-- HEADER -->
     <Header />
 

@@ -25,7 +25,7 @@
       </button>
     </nav>
 
-    <section v-if="event" class="p-4 space-y-6">
+    <section v-if="event" class="p-4 mb-4">
       <!-- Cover image -->
       <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
         <Image class="w-16 h-16 text-gray-400" />
