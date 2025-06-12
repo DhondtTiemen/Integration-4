@@ -209,7 +209,6 @@ function saveChanges() {
   localStorage.setItem(localStorageKey, JSON.stringify(updatedBox));
 
   // (optioneel) Log in console → dit is wat je bv. naar backend of naar JSON zou sturen
-  console.log("Updated box:", updatedBox);
 
   alert("Changes saved to localStorage!");
 }
@@ -219,7 +218,6 @@ const localStorageKey = `box_user_${user.value?.id}`;
 const localBoxData = JSON.parse(localStorage.getItem(localStorageKey) || "null");
 
 if (localBoxData) {
-  console.log("Loaded localStorage box data:", localBoxData);
   // override main image
   mainImagePreview.value = localBoxData.mainImage !== user.value?.box.mainImage ? localBoxData.mainImage : null;
 

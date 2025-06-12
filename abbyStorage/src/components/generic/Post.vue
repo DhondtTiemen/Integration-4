@@ -154,7 +154,7 @@
   <div class="flex items-center justify-between mt-2 text-sm">
     <div class="flex items-center gap-6">
       <!-- likes -->
-      <button class="flex items-center gap-2 mb-0.5" @click="togglePostLike">
+      <button class="flex items-center gap-2 mb-0.5" @click="togglePostLike()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="28"
@@ -244,7 +244,6 @@ import {
 // import events from "../../assets/data/events.json";
 
 const myUserId = localStorage.getItem("userId");
-console.log("myUserId", myUserId);
 const isLiking = ref(false);
 const props = defineProps({
   post: Object,
@@ -296,7 +295,6 @@ async function getUserById(docId: string) {
 
     const userData = { id: docSnap.id, ...docSnap.data() };
     user.value = userData as User;
-    console.log("User data fetched:", userData);
     return userData;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -321,7 +319,6 @@ async function getEventById(eventId: string | number) {
 
     const eventData = { id: docSnap.id, ...docSnap.data() };
     event.value = eventData;
-    console.log("Event data fetched:", eventData);
     return eventData;
   } catch (error) {
     console.error("Error fetching event data:", error);

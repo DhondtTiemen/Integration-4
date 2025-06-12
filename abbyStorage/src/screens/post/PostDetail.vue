@@ -136,13 +136,13 @@ import type Post from "../../interfaces/interface.post";
 const route = useRoute();
 const router = useRouter();
 
-const postId = Number(route.params.id);
+const postId = route.params.id;
 const loading = ref(true);
 const post = ref<Post | null>(null);
 const user = ref<User | null>(null);
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const newCommentText = ref("");
-const myUserId = Number(localStorage.getItem("userId"));
+const myUserId = localStorage.getItem("userId") 
 const isLiking = ref(false);
 
 const commentLiking = ref<{ [key: number]: boolean }>({});
@@ -152,7 +152,7 @@ function hasLikedComment(comment: any) {
   return comment.likes && comment.likes.includes(myUserId);
 }
 function toggleCommentLike(comment: any, index: number) {
-  const myUserId = Number(localStorage.getItem("userId"));
+  const myUserId = localStorage.getItem("userId");
   if (!comment.likes) comment.likes = [];
   const idx = comment.likes.indexOf(myUserId);
   if (idx === -1) {
@@ -168,15 +168,15 @@ function toggleCommentLike(comment: any, index: number) {
 }
 
 function hasLikedPost() {
-  return post.value?.likes && post.value.likes.includes(myUserId);
+  return post.value?.likes && post.value.likes.includes(myUserId ?? "");
 }
 
 function togglePostLike() {
   if (!post.value) return;
   if (!post.value.likes) post.value.likes = [];
-  const idx = post.value.likes.indexOf(myUserId);
+  const idx = post.value.likes.indexOf(myUserId ?? "");
   if (idx === -1) {
-    post.value.likes.push(myUserId);
+    post.value.likes.push(myUserId ?? "");
   } else {
     post.value.likes.splice(idx, 1);
   }
@@ -209,7 +209,7 @@ function timeAgo(dateString: string) {
 }
 
 // Haal de naam en avatar op van een user op basis van id
-function getUserInfo(userId: number) {
+function getUserInfo(userId: string) {
   const foundUser = users.value.find((u) => u.id === userId);
   if (!foundUser) {
     return {
@@ -238,12 +238,10 @@ async function fetchData() {
 
     users.value = usersData.users;
     const foundPost = postsData.posts.find((p: Post) => p.id === postId);
-    console.log(foundPost);
     if (foundPost) {
       post.value = foundPost;
       user.value =
         usersData.users.find((u: User) => u.id === foundPost.userId) || null;
-      console.log(user);
     }
   } catch (error) {
     console.error(error);
@@ -256,7 +254,7 @@ function submitComment() {
   if (!newCommentText.value.trim() || !post.value) return;
 
   const newComment = {
-    userId: user.value?.id || 0,
+    userId: String(user.value?.id || ""),
     text: newCommentText.value.trim(),
     timestamp: new Date().toISOString(),
     likes: [],

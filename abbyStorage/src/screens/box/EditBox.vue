@@ -219,7 +219,6 @@ const localStorageKey = `box_user_${user.value?.id}`;
 const localBoxData = JSON.parse(localStorage.getItem(localStorageKey) || "null");
 
 if (localBoxData) {
-  console.log("Loaded localStorage box data:", localBoxData);
   // override main image
   mainImagePreview.value = localBoxData.mainImage !== user.value?.box.mainImage ? localBoxData.mainImage : null;
 

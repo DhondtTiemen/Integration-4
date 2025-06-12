@@ -402,7 +402,6 @@ async function getUserById(docId: string) {
 
     const userData = { id: docSnap.id, ...docSnap.data() };
     user.value = userData as User; // <-- sla op in ref
-    console.log("User data fetched:", userData);
     return userData;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -423,7 +422,6 @@ async function getPostsById(userId: string) {
     });
 
     posts.value = postList;
-    console.log("Posts fetched:", postList);
     return postList;
   } catch (error) {
     console.error("Error fetching posts data:", error);
@@ -456,8 +454,8 @@ async function getEventsById(userId: string) {
     );
     const attendedSnap = await getDocs(attendedQuery);
 
-    const attended = [];
-    const attend = [];
+    const attended:any = [];
+    const attend:any = [];
 
     attendedSnap.docs.forEach((doc) => {
       const data = doc.data();
@@ -479,7 +477,6 @@ async function getEventsById(userId: string) {
 
     // Combineer en sla op: eerst upcoming (attend), dan organised, dan attended (verlopen)
     events.value = [...attend, ...created, ...attended];
-    console.log("events fetched:", events.value);
     return events.value;
   } catch (error) {
     console.error("Error fetching events data:", error);
@@ -490,10 +487,8 @@ async function getEventsById(userId: string) {
   }
 }
 
-let usersData: { users: User[] } = { users: [] };
 const loading = ref(true);
 
-const router = useRouter();
 
 // Make loggedInUser reactive and store the full user object
 const loggedInUser = ref<User | null>(null);

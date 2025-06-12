@@ -133,16 +133,13 @@ async function getUsersData() {
 async function handleLogin() {
   try {
     await getUsersData(); // wacht tot users geladen zijn
-    console.log(users.value);
 
     const matchedUser = users.value.find(
       (u) => u.mail === email.value && u.password === password.value
     );
-    console.log("Matched user:", matchedUser);
 
     if (matchedUser) {
       router.push(`/box/${matchedUser.id}`);
-      // console.log("User logged in:", matchedUser);
       localStorage.setItem("userId", matchedUser.id);
     } else {
       error.value = "Invalid email or password";

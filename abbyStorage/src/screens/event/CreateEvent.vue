@@ -248,7 +248,6 @@ function submitEvent() {
       status: "pending_approval",
     };
 
-    console.log("New Event:", newEvent);
 
     // Here you would normally POST to backend, or update local storage / json
     // Example: Save to localStorage (for testing):

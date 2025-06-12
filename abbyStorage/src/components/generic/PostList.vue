@@ -45,7 +45,6 @@ async function getPosts() {
     posts.value = postList.sort(
       (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
     );
-    console.log("Posts fetched:", posts.value);
     return posts.value;
   } catch (error) {
     console.error("Error fetching posts data:", error);
