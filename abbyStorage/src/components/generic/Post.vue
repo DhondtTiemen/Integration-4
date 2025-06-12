@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, computed } from "vue";
+import { computed } from "vue";
 
 import users from "../../assets/data/users.json";
 import events from "../../assets/data/events.json";
