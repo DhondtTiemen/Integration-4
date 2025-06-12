@@ -1,14 +1,12 @@
 <template>
-  <div class="px-4">
-    <Post
-      v-for="post in posts"
-      :key="post.id"
-      :post="post"
-      :showOptionsId="showOptionsId"
-      @toggle-options="toggleOptions"
-      @report-post="reportPost"
-    />
-  </div>
+  <Post
+    v-for="post in posts"
+    :key="post.id"
+    :post="post"
+    :showOptionsId="showOptionsId"
+    @toggle-options="toggleOptions"
+    @report-post="reportPost"
+  />
 </template>
 
 <script setup>
