@@ -137,7 +137,10 @@
       <!-- Suggestions -->
       <div>
         <h3 class="font-medium mb-2">You might also like</h3>
-        <div class="space-y-4">
+        <div v-if="relatedEvents.length === 0" class="text-gray-500 text-sm">
+          No related events found.
+        </div>
+        <div v-else class="space-y-4">
           <router-link
             :to="`/event/${related.id}`"
             v-for="related in relatedEvents"
@@ -172,8 +175,21 @@ import {
   Share,
   CircleUserRound,
 } from "lucide-vue-next";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  updateDoc,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 
 import type User from "../../interfaces/interface.user";
+import type Event from "../../interfaces/interface.event";
+import db from "../../firebase/init.ts";
 const route = useRoute();
 const router = useRouter();
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
@@ -182,21 +198,19 @@ function goBack() {
   router.back();
 }
 
-import type Event from "../../interfaces/interface.event";
+// const events = ref<Event[]>([]);
 const event = ref<Event | null>(null);
 const relatedEvents = ref<Event[]>([]);
 
-async function fetchUser() {
-  try {
-    const res = await fetch("/src/assets/data/users.json");
-    if (!res.ok) throw new Error("Failed to load users data");
-    const data = await res.json();
-    users.value = data.users;
-  } catch (error) {
-    console.error(error);
-  }
+async function getUsersData() {
+  users.value = []; // reset!
+  const usersQuery = query(collection(db, "users"));
+  const querySnap = await getDocs(usersQuery);
+  querySnap.forEach((doc) => {
+    users.value.push({ id: doc.id, ...doc.data() });
+  });
 }
-function getUserInfo(userId: number) {
+function getUserInfo(userId: string) {
   const foundUser = users.value.find((u: User) => u.id === userId);
   if (!foundUser) {
     return {
@@ -206,27 +220,44 @@ function getUserInfo(userId: number) {
   } else {
     return {
       name: foundUser.name,
-      avatar: foundUser.avatar || "default-avatar.jpg", // fallback avatar
+      avatar: foundUser.avatar, // fallback avatar
     };
   }
 }
-async function fetchEvents() {
-  const res = await fetch("/src/assets/data/events.json");
-  const data = await res.json();
-  const allEvents = data.events;
+async function getEventById(eventId: string) {
+  try {
+    // Forceer eventId naar string
+    const eventRef = doc(db, "events", String(eventId));
+    const docSnap = await getDoc(eventRef);
 
-  event.value = allEvents.find(
-    (e: Event) => String(e.id) === String(route.params.id)
-  );
+    if (!docSnap.exists()) {
+      console.warn("No event found with document ID:", eventId);
+      event.value = null;
+      return null;
+    }
 
-  // Suggestions: upcoming events in ABBY
-  relatedEvents.value = allEvents.filter(
+    const eventData = { id: docSnap.id, ...docSnap.data() };
+    event.value = eventData;
+    return eventData;
+  } catch (error) {
+    console.error("Error fetching event data:", error);
+    event.value = null;
+    return null;
+  }
+}
+
+async function getRelatedEvents() {
+  const events: Event[] = []; // reset!
+  const eventsQuery = query(collection(db, "events"));
+  const querySnap = await getDocs(eventsQuery);
+  querySnap.forEach((doc) => {
+    events.push({ id: doc.id, ...doc.data() });
+  });
+  relatedEvents.value = events.filter(
     (e: Event) =>
-      event.value &&
-      e.id !== event.value.id &&
-      new Date(e.date) >= new Date() &&
-      e.place?.toLowerCase().includes("abby")
+      event.value && e.id !== event.value.id && new Date(e.date) >= new Date()
   );
+  console.log(relatedEvents);
 }
 
 // fetchEvents();
@@ -270,16 +301,28 @@ function shareEvent() {
     alert("Sharing not supported in this browser.");
   }
 }
-onMounted(() => {
-  fetchEvents();
-  fetchUser();
-  route.params.id;
+onMounted(async () => {
+  await getEventById(String(route.params.id));
+  await getUsersData();
+  // Haal related events pas op als het hoofd-event er is
+  if (event.value) {
+    await getRelatedEvents();
+  }
 });
 watch(
   () => route.params.id,
   (newId) => {
     if (newId) {
-      fetchEvents();
+      getRelatedEvents();
+      getEventById(String(route.params.id));
+    }
+  }
+);
+watch(
+  () => event.value,
+  async (newEvent) => {
+    if (newEvent) {
+      await getRelatedEvents();
     }
   }
 );
