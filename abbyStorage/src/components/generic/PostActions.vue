@@ -73,23 +73,23 @@
 import { ref, computed } from "vue";
 
 const props = defineProps<{
-  postId: number | string;
-  initialLikes: number[]; // vervangt 'likes'
+  postId: string;
+  initialLikes: string[]; // vervangt 'likes'
   commentsCount: number;
   views: number;
 }>();
 
-const myUserId = Number(localStorage.getItem("userId"));
-const likes = ref<number[]>([...props.initialLikes]);
+const myUserId = localStorage.getItem("userId");
+const likes = ref<string[]>([...props.initialLikes]);
 const isLiking = ref(false);
 
-const hasLiked = computed(() => likes.value.includes(myUserId));
+const hasLiked = computed(() => likes.value.includes(myUserId ?? ""));
 
 function toggleLike() {
-  const index = likes.value.indexOf(myUserId);
+  const index = likes.value.indexOf(myUserId ?? "");
 
   if (index === -1) {
-    likes.value.push(myUserId);
+    likes.value.push(myUserId ?? "");
   } else {
     likes.value.splice(index, 1);
   }
