@@ -83,7 +83,7 @@
       </router-link>
 
       <!-- POST - CONTENT - IF EVENT -->
-      <Event v-if="event" :event="event" />
+      <EventCard v-if="event" :event="event" />
 
       <PostActions
         :postId="post?.id"
@@ -99,8 +99,8 @@
 import { defineProps, defineEmits, computed, ref, watch } from "vue";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
-import Event from "./Event.vue";
-import PostActions from "./PostActions.vue"
+import EventCard from "./EventCard.vue";
+import PostActions from "./PostActions.vue";
 
 import { formatTimeAgo } from "../../utils/date.ts";
 
@@ -118,14 +118,15 @@ import {
 } from "firebase/firestore";
 // import users from "../../assets/data/users.json";
 // import events from "../../assets/data/events.json";
-
-const myUserId = localStorage.getItem("userId");
-const isLiking = ref(false);
 const props = defineProps({
   post: Object,
   showOptionsId: [String, Number],
   getEventById: Function,
 });
+
+const myUserId = localStorage.getItem("userId");
+const isLiking = ref(false);
+
 const likes = ref<string[]>(
   props.post?.likes ? props.post.likes.map(String) : []
 );
@@ -202,21 +203,7 @@ async function getEventById(eventId: string | number) {
     return null;
   }
 }
-function formatTimeAgo(timestamp: any) {
-  const postDate = new Date(timestamp);
-  const now = new Date();
-  const diffMs = now.getTime() - postDate.getTime();
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const diffWeeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
 
-  if (diffMinutes < 1) return "1 min ago";
-  else if (diffMinutes < 60) return `${diffMinutes} min ago`;
-  else if (diffHours < 24) return `${diffHours}h ago`;
-  else if (diffDays < 7) return `${diffDays}d ago`;
-  else return `${diffWeeks}w ago`;
-}
 watch(
   () => props.post?.userId,
   (newUserId) => {
@@ -241,25 +228,8 @@ watch(
   }
 );
 
-const props = defineProps({
-  post: Object,
-  showOptionsId: [String, Number],
-  getEventById: Function,
-});
 
-const emit = defineEmits(["toggle-options", "report-post"]);
 
-const user = computed(() => {
-  return props.post
-    ? users.users.find((u) => u.id === props.post?.userId)
-    : null;
-});
-
-const event = computed(() => {
-  return props.post && props.post.eventId
-    ? events.events.find((e) => e.id === props.post?.eventId)
-    : null;
-});
 </script>
 
 <style scoped>

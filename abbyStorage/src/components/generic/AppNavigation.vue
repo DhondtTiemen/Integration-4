@@ -9,10 +9,7 @@
       </router-link>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        to="/search"
-      >
+      <router-link class="inline-block px-3 outline-none" to="/search">
         <component
           :is="isActive('/search') ? SearchFilled : SearchOutline"
           class="h-6 w-auto mx-auto"
@@ -20,10 +17,7 @@
       </router-link>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        to="/post/create"
-      >
+      <router-link class="inline-block px-3 outline-none" to="/post/create">
         <component
           :is="isActive('/post/create') ? AddFilled : AddOutline"
           class="h-6 w-auto mx-auto"
@@ -31,10 +25,7 @@
       </router-link>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        to="/events"
-      >
+      <router-link class="inline-block px-3 outline-none" to="/events">
         <component
           :is="isActive('/events') ? EventFilled : EventOutline"
           class="h-6 w-auto mx-auto"
@@ -49,7 +40,9 @@
         <div
           :class="[
             'h-8 w-8 mx-auto rounded-full overflow-hidden border-2',
-            isActive(`/account/${userId}`) ? 'border-alphaDark' : 'border-transparent'
+            isActive(`/account/${userId}`)
+              ? 'border-alphaDark'
+              : 'border-transparent',
           ]"
         >
           <img
@@ -66,8 +59,43 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import type User from "../../interfaces/interface.user";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  getDocs,
+  where,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import db from "../../firebase/init.ts";
+const user = ref<User | null>(null);
+async function getUserById(docId: string) {
+  try {
+    const userRef = doc(db, "users", docId);
+    const docSnap = await getDoc(userRef);
 
-import users from '../../assets/data/users.json'
+    if (!docSnap.exists()) {
+      console.warn("No user found with document ID:", docId);
+      user.value = null;
+      return null;
+    }
+
+    const userData = { id: docSnap.id, ...docSnap.data() };
+    user.value = userData as User;
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    user.value = null;
+    return null;
+  } finally {
+    // loading.value = false; // Uncomment if you have a loading state
+  }
+}
+import users from "../../assets/data/users.json";
 
 import HomeFilled from "../../assets/icons/HomeFilled.vue";
 import HomeOutline from "../../assets/icons/HomeOutline.vue";
@@ -94,7 +122,23 @@ const route = useRoute();
 const isActive = (path: string) => route.path === path;
 
 const profileImageUrl = computed(() => {
-  const user = users.users.find((u) => u.id === userId.value)
-  return user?.avatar || '/assets/users/default.jpg'
-})
+  if (!userId.value || !user.value) {
+    return "/assets/users/default.jpg";
+  }
+  return user.value.avatar || "/assets/users/default.jpg";
+});
+
+// Fetch user data when userId changes
+import { watch } from "vue";
+watch(
+  userId,
+  async (newId) => {
+    if (newId) {
+      await getUserById(newId);
+    } else {
+      user.value = null;
+    }
+  },
+  { immediate: true }
+);
 </script>

@@ -2,14 +2,15 @@
   <section class="min-h-screen">
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
-        <ArrowLeft class="z-10" />
-        <p class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium">
-            Events
-        </p>
-        <router-link
-            to="/event/create">
-          <PlusIcon class="w-6 h-6 mr-2 inline-block" />
-        </router-link>
+      <ArrowLeft class="z-10" />
+      <p
+        class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium"
+      >
+        Events
+      </p>
+      <router-link to="/event/create">
+        <PlusIcon class="w-6 h-6 mr-2 inline-block" />
+      </router-link>
     </nav>
 
     <div v-if="loading" class="text-center text-gray-500">
@@ -17,7 +18,7 @@
     </div>
 
     <div v-else class="space-y-4" v-for="event in events">
-        <Event v-if="event" :event="event" />
+      <Event v-if="event" :event="event" />
     </div>
   </section>
 </template>
@@ -26,7 +27,7 @@
 import { ref, onMounted } from "vue";
 import { PlusIcon } from "lucide-vue-next";
 import router from "../../bootstrap/router";
-import Event from "../../components/generic/Event.vue";
+import Event from "../../components/generic/EventCard.vue";
 
 const events = ref([]);
 const loading = ref(true);

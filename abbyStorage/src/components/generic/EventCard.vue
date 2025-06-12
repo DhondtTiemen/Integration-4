@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { formatDateTime } from "./../../utils/date.ts";
+import { formatDateTime } from "../../utils/date.ts";
 
 defineProps<{
   event: {

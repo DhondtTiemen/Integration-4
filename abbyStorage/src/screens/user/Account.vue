@@ -529,18 +529,6 @@ async function toggleFollow() {
     if (followerIdx !== -1) followers.splice(followerIdx, 1);
   }
 
-  // Update in usersData
-  const loggedInUserInDb = usersData.users.find((u) => String(u.id) === myId);
-  if (loggedInUserInDb) {
-    loggedInUserInDb.following = [...following];
-  }
-  const profileUserInDb = usersData.users.find(
-    (u) => String(u.id) === profileId
-  );
-  if (profileUserInDb) {
-    profileUserInDb.followers = [...followers];
-  }
-
   // Update refs zodat UI direct reageert
   loggedInUser.value = { ...loggedInUser.value, following: [...following] };
   user.value = { ...user.value, followers: [...followers] };

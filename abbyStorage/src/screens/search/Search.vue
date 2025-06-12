@@ -80,8 +80,7 @@
                 >Event</span
               >
 
-                <Event v-if="item" :event="item" />
-
+              <Event v-if="item" :event="item" />
             </router-link>
           </template>
         </div>
@@ -92,7 +91,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import Event from "../../components/generic/Event.vue";
+import Event from "../../components/generic/EventCard.vue";
 
 const query = ref("");
 const filter = ref("all");
@@ -117,7 +116,7 @@ const filteredResults = computed(() => {
       ...users.value
         .filter(
           (u) =>
-            u.id !== loggedInId && 
+            u.id !== loggedInId &&
             (u.name?.toLowerCase().includes(q) ||
               u.bio?.toLowerCase().includes(q))
         )
