@@ -1,6 +1,6 @@
 <template>
   <!-- POST - CONTENT - ACTIONS -->
-  <div class="flex items-center justify-between mt-6">
+  <div class="flex items-center justify-between mt-6 px-4">
     <div class="flex items-center gap-6">
       <!-- POST - CONTENT - ACTIONS - LIKES -->
       <button
@@ -15,7 +15,7 @@
           fill="none"
           :class="[
             isLiking ? 'animate-like' : '',
-            hasLiked
+            hasLiked()
               ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
               : 'text-gray-400 stroke-alphaDark',
           ]"
@@ -71,7 +71,19 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import db from "../../firebase/init.ts";
 
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  getDocs,
+  where,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 const props = defineProps<{
   postId: string;
   initialLikes: string[]; // vervangt 'likes'
@@ -79,24 +91,37 @@ const props = defineProps<{
   views: number;
 }>();
 
-const myUserId = localStorage.getItem("userId");
+const storedIdRaw = localStorage.getItem("userId");
 const likes = ref<string[]>([...props.initialLikes]);
 const isLiking = ref(false);
+// const postLikes = computed(() => likes.value?.map(String) ?? []);
 
-const hasLiked = computed(() => likes.value.includes(myUserId ?? ""));
+function hasLiked() {
+  return storedIdRaw !== null && likes.value.includes(String(storedIdRaw));
+}
 
-function toggleLike() {
-  const index = likes.value.indexOf(myUserId ?? "");
-
-  if (index === -1) {
-    likes.value.push(myUserId ?? "");
+async function toggleLike() {
+  if (!props.postId || !storedIdRaw) return;
+  const userIdStr = String(storedIdRaw);
+  const idx = likes.value.indexOf(userIdStr);
+  if (idx === -1) {
+    likes.value.push(userIdStr);
   } else {
-    likes.value.splice(index, 1);
+    likes.value.splice(idx, 1);
   }
-
   isLiking.value = true;
   setTimeout(() => {
     isLiking.value = false;
   }, 400);
+
+  try {
+    const postRef = doc(db, "posts", props.postId);
+    await updateDoc(postRef, {
+      likes: [...likes.value],
+    });
+    console.log("Post likes updated in Firestore:", likes.value);
+  } catch (err) {
+    console.error("Failed to update post likes in Firestore", err);
+  }
 }
 </script>
