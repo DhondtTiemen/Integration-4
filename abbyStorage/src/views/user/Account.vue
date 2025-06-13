@@ -121,7 +121,7 @@
                 <!-- ...icon... -->
                 My box
               </h2>
-              <template v-if="user?.box">
+              <template v-if="user?.box?.boxNumber !==0">
                 <router-link
                   v-if="accountVisit"
                   :to="`/box/${user?.id}`"
@@ -147,7 +147,7 @@
                 </router-link>
               </template>
             </div>
-            <div v-if="user?.box">
+            <div v-if="user?.box?.boxNumber !==0">
               <router-link
                 :to="`/box/${user?.id}`"
                 class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto"
@@ -190,7 +190,7 @@
               About me
             </h2>
             <p class="text-gray-700 text-sm">
-              {{ user?.bio }}
+              {{ user?.aboutMe || "This user has not provided any information about themselves." }}
             </p>
           </div>
 
