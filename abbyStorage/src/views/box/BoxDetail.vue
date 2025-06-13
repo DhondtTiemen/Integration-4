@@ -191,7 +191,7 @@
               fill="none"
               :class="[
                 isLiking ? 'animate-like' : '',
-                hasLikedBox()
+                hasLikedBox
                   ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
                   : 'text-gray-600 stroke-black',
               ]"
@@ -369,61 +369,86 @@
   <!-- <div v-else class="p-4 text-center text-red-600">User not found.</div> -->
 </template>
 
-<script lang="ts" setup>
-import { Heart, MessageSquare, Eye, SendHorizonal } from "lucide-vue-next";
-import { useRoute, useRouter } from "vue-router";
-import db from "../../firebase/firebase.ts";
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import {
-  collection,
-  addDoc,
-  setDoc,
-  doc,
-  query,
-  getDocs,
-  where,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { ref, onMounted, computed } from "vue";
-import type User from "../../interfaces/interface.user";
-const user = ref<User | null>(null);
-const loading = ref(true);
+  updateBoxLikes,
+  updateBoxComments,
+  preloadCommentUsers,
+  toggleLikeForBoxComment,
+} from "../../firebase/boxService";
+import { getUserById } from "../../firebase/userService";
+
 const route = useRoute();
-const currentUserId: string | null = route.params.id as string | null;
+const currentUserId = route.params.id as string;
+const comments = computed(() => user.value?.box?.comments ?? []);
+const commentsCount = computed(() => comments.value.length);
+
+const user = ref<any>(null);
+const loading = ref(true);
 const storedIdRaw = localStorage.getItem("userId");
 const isLiking = ref(false);
-// const profileImageUrl = computed(() => {
-//   return user.value?.avatar || "/src/assets/users/default.png";
-// });
+const commentLiking = ref<{ [key: number]: boolean }>({});
 const newCommentText = ref("");
 const commentUsers = ref<Record<string, any>>({});
-const commentLiking = ref<{ [key: number]: boolean }>({});
-const boxLikes = computed(() => user.value?.box?.likes?.map(String) ?? []);
 
+// Ophalen van de gebruiker en comments
+async function fetchUser() {
+  loading.value = true;
+  user.value = await getUserById(currentUserId);
+  loading.value = false;
+  if (user.value?.box?.comments) {
+    commentUsers.value = await preloadCommentUsers(user.value.box.comments);
+  }
+}
+function formatTimeAgo(dateString: string) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (diff < 60) return `${diff} seconds ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+  return `${Math.floor(diff / 86400)} days ago`;
+}
 function hasLikedComment(comment: any) {
   return (
     storedIdRaw !== null &&
     (comment.likes || []).map(String).includes(String(storedIdRaw))
   );
 }
+async function toggleBoxLike() {
+  if (!user.value || !storedIdRaw) return;
+  const userIdStr = String(storedIdRaw);
+  user.value.box.likes = user.value.box.likes || [];
+  const idx = user.value.box.likes.map(String).indexOf(userIdStr);
+  if (idx === -1) {
+    user.value.box.likes.push(userIdStr);
+  } else {
+    user.value.box.likes.splice(idx, 1);
+  }
+  isLiking.value = true;
+  setTimeout(() => {
+    isLiking.value = false;
+  }, 400);
+  try {
+    await updateBoxLikes(user.value.id, user.value.box.likes);
+  } catch (err) {
+    console.error("Failed to update box likes in Firestore", err);
+  }
+}
 
 async function toggleCommentLike(comment: any, index: number) {
   if (!storedIdRaw || !user.value) return;
   commentLiking.value[index] = true;
-  const userIdStr = String(storedIdRaw);
-  comment.likes = comment.likes || [];
-  const idx = comment.likes.map(String).indexOf(userIdStr);
-  if (idx === -1) {
-    comment.likes.push(userIdStr);
-  } else {
-    comment.likes.splice(idx, 1);
-  }
-
   try {
-    const userRef = doc(db, "users", String(user.value.id));
-    await updateDoc(userRef, {
-      "box.comments": user.value.box?.comments,
-    });
+    await toggleLikeForBoxComment(
+      user.value.id,
+      comment,
+      storedIdRaw,
+      user.value.box.comments
+    );
   } catch (err) {
     console.error("Failed to update comment likes in Firestore", err);
   } finally {
@@ -432,134 +457,31 @@ async function toggleCommentLike(comment: any, index: number) {
     }, 400);
   }
 }
-async function preloadCommentUsers(commentsArr: any) {
-  const uniqueUserIds = [...new Set(commentsArr.map((c: any) => c.userId))];
-  const usersObj: Record<string, any> = {};
-  await Promise.all(
-    uniqueUserIds.map(async (id: any) => {
-      const userRef = doc(db, "users", String(id));
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        usersObj[id] = { id: docSnap.id, ...docSnap.data() };
-      }
-    })
-  );
-  commentUsers.value = usersObj;
-}
-function hasLikedBox() {
-  return storedIdRaw !== null && boxLikes.value.includes(storedIdRaw);
-}
-async function toggleBoxLike() {
-  if (!user.value || !storedIdRaw) return;
-  const userIdStr = String(storedIdRaw);
-  if (user.value.box) {
-    user.value.box.likes = user.value.box.likes || [];
-  }
-  const idx = user.value.box?.likes.map(String).indexOf(userIdStr);
-  if (idx === -1) {
-    user.value.box?.likes.push(userIdStr);
-  } else if (typeof idx === "number" && idx > -1) {
-    user.value.box?.likes.splice(idx, 1);
-  }
-  isLiking.value = true;
-  setTimeout(() => {
-    isLiking.value = false;
-  }, 400);
 
-  try {
-    const userRef = doc(db, "users", String(user.value.id));
-    await updateDoc(userRef, {
-      "box.likes": user.value.box?.likes,
-    });
-    console.log("Box likes updated in Firestore:", user.value.box?.likes);
-  } catch (err) {
-    console.error("Failed to update box likes in Firestore", err);
-  }
-}
-async function getUserById(docId: string) {
-  try {
-    const userRef = doc(db, "users", docId);
-    const docSnap = await getDoc(userRef);
-
-    if (!docSnap.exists()) {
-      console.warn("No user found with document ID:", docId);
-      user.value = null;
-      return null;
-    }
-
-    const userData = { id: docSnap.id, ...docSnap.data() };
-    user.value = userData as User; // <-- sla op in ref
-
-    return userData;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    return null;
-  } finally {
-    loading.value = false; // Uncomment if you have a loading state
-  }
-}
-
-function formatTimeAgo(timestamp: any) {
-  const postDate = new Date(timestamp);
-  const now = new Date();
-  const diffMs = now.getTime() - postDate.getTime();
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const diffWeeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-
-  if (diffMinutes < 1) return "1 min ago";
-  else if (diffMinutes < 60) return `${diffMinutes} min ago`;
-  else if (diffHours < 24) return `${diffHours}h ago`;
-  else if (diffDays < 7) return `${diffDays}d ago`;
-  else return `${diffWeeks}w ago`;
-}
-function submitComment() {
+async function submitComment() {
   if (!newCommentText.value.trim() || !user.value) return;
-
   const comment = {
     userId: String(user.value.id),
     text: newCommentText.value.trim(),
     timestamp: new Date().toISOString(),
     likes: [],
   };
-
-  user.value.box?.comments.push(comment);
+  user.value.box.comments.push(comment);
   newCommentText.value = "";
-
   try {
-    const userRef = doc(db, "users", String(user.value.id));
-    updateDoc(userRef, {
-      "box.comments": user.value.box?.comments,
-    });
-    // Voeg deze regel toe:
+    await updateBoxComments(user.value.id, user.value.box.comments);
     if (user.value?.box?.comments) {
-      preloadCommentUsers(user.value.box.comments);
+      commentUsers.value = await preloadCommentUsers(user.value.box.comments);
     }
   } catch (err) {
     console.error("Failed to update comments in Firestore", err);
   }
 }
-onMounted(async () => {
-  if (currentUserId) {
-    await getUserById(currentUserId);
+const hasLikedBox = computed(() =>
+  user.value?.box?.likes?.map(String).includes(String(storedIdRaw))
+);
 
-    console.log(user.value);
-    if (user.value?.box?.comments) {
-      await preloadCommentUsers(user.value.box.comments);
-    }
-  } else {
-    loading.value = false;
-    console.warn("No current user ID found in localStorage.");
-  }
-});
-const comments = computed(() => {
-  if (!user.value?.box?.comments) return [];
-  return [...user.value.box.comments].sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  );
-});
-const commentsCount = computed(() => comments.value.length);
+onMounted(fetchUser);
 </script>
 
 <style scoped>
