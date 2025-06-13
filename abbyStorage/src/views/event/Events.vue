@@ -25,7 +25,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { PlusIcon } from "lucide-vue-next";
-import router from "../../router/index.ts;
+import router from "../../router/index.ts";
 import Event from "../../components/generic/EventCard.vue";
 import {
   collection,
