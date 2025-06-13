@@ -241,29 +241,19 @@ function hasParticipate(): boolean {
 
 console.log(participants);
 async function toggleParticipateEvent() {
-  console.log("click");
-  console.log("eventId:", eventId);
-
   if (!eventId || !storedIdRaw) return;
 
   try {
     const eventRef = doc(db, "events", String(eventId));
-
-    // ⬇️ Haal laatste deelnemerslijst op
     const eventSnap = await getDoc(eventRef);
     let currentParticipants: string[] = [];
 
     if (eventSnap.exists()) {
-      console.log("Event exists");
       currentParticipants = eventSnap.data().participants ?? [];
     } else {
-      console.warn("Event not found in Firestore");
       return;
     }
 
-    console.log("currentParticipants:", currentParticipants);
-
-    // ✅ Voeg deelnemer toe (geen toggle)
     if (!currentParticipants.includes(String(storedIdRaw))) {
       currentParticipants.push(String(storedIdRaw));
       await updateDoc(eventRef, {
@@ -271,13 +261,12 @@ async function toggleParticipateEvent() {
       });
     }
 
-    // ⬇️ Herlaad deelnemerslijst naar ref
+    // ⬇️ Herlaad het hele event zodat event.value.participants klopt
+    await getEventById(eventId);
+    // ⬇️ Herlaad eventueel ook de participants-ref als je die elders gebruikt
     await loadParticipantsFromEvent(eventId);
   } catch (err) {
     console.error("Failed to update event participants", err);
-  } finally {
-    // Indien nodig: toggle loading state
-    // isParticipating.value = false;
   }
 }
 
