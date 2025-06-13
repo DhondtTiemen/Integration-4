@@ -1,3 +1,4 @@
+<!-- TODO Check file -->
 <template>
   <div class="grid h-screen min-h-screen grid-rows-[auto_1fr_auto] sm:h-auto">
     <!-- <AppHeader /> -->
@@ -12,7 +13,7 @@
 <script lang="ts">
 // import AppHeader from '../generic/AppHeader.vue'
 // import AppFooter from '../generic/AppFooter.vue'
-import appNavigation from '../generic/AppNavigation.vue';
+import appNavigation from '../layout/AppNavigation.vue';
 
 export default {
   components: {
