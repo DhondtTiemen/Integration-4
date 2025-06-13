@@ -167,7 +167,7 @@ async function toggleFollow(profile: any) {
 
 async function getFollowers() {
   loading.value = true;
-  await getUserById(String(userId));
+  user.value = await getUserById(String(userId));
   if (
     !user.value ||
     !user.value.followers ||

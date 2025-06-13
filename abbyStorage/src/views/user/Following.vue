@@ -166,7 +166,7 @@ async function toggleFollow(profile: any) {
 }
 async function getFollowing() {
   loading.value = true;
-  await getUserById(String(userId));
+  user.value = await getUserById(String(userId)); // <-- voeg deze toewijzing toe!
   if (
     !user.value ||
     !user.value.following ||
@@ -177,7 +177,7 @@ async function getFollowing() {
     return;
   }
 
-  // Haal alle follower user info op
+  // Haal alle following user info op
   const followerIds = user.value.following.map(String);
   const followingData: any[] = [];
 
