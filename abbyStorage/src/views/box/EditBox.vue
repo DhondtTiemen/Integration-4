@@ -315,17 +315,27 @@ async function handleSave() {
     return;
   }
 
-  const colRef = collection(db, "users");
+  const mainImage = mainImagePreview.value || user.value.box?.mainImage || "";
+
+  // Kies de gewenste variant hieronder:
+  // const items = editableItems.value.map((item) => ({
+  //   name: item.name,
+  //   image: item.imagePreview || item.image || "",
+  // }));
+  console.log("preview items:", editableItems.value);
+  const items = editableItems.value.map((item) => ({
+    name: item.name,
+    image: item.imagePreview || item.image || "",
+  }));
+
   const updatedBox = {
-    mainImage: mainImagePreview.value,
-    description: boxDescription.value,
-    items: editableItems.value.map((item) => ({
-      name: item.name,
-      image: item.imagePreview || item.image, // Use preview if available
-    })),
+    mainImage,
+    description: boxDescription.value || "",
+    items,
   };
+  console.log("Updated box data:", items);
   await setDoc(
-    doc(colRef, String(userId)),
+    doc(collection(db, "users"), String(userId)),
     {
       box: updatedBox,
     },

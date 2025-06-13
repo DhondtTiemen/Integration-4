@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import type User from "../../interfaces/interface.user";
@@ -84,12 +84,22 @@ const isActive = (path: string) => route.path === path;
 //   return user.value?.avatar || "/src/assets/users/default.png";
 // });
 
+async function refreshUser() {
+  if (userId.value) {
+    user.value = await getUserById(userId.value);
+    console.log("User data refreshed:", user.value);
+  }
+}
 
 onMounted(async () => {
   const storedId = localStorage.getItem("userId");
   if (storedId) {
     userId.value = storedId;
-    user.value = await getUserById(storedId);
+    await refreshUser();
+  }
+});watch(userId, async (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    await refreshUser();
   }
 });
 </script>
