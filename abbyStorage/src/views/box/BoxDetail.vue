@@ -527,12 +527,15 @@ function submitComment() {
   user.value.box?.comments.push(comment);
   newCommentText.value = "";
 
-  // (Optioneel) Update in Firestore:
   try {
     const userRef = doc(db, "users", String(user.value.id));
     updateDoc(userRef, {
       "box.comments": user.value.box?.comments,
     });
+    // Voeg deze regel toe:
+    if (user.value?.box?.comments) {
+      preloadCommentUsers(user.value.box.comments);
+    }
   } catch (err) {
     console.error("Failed to update comments in Firestore", err);
   }
