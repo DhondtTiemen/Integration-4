@@ -419,7 +419,6 @@ async function getUserById(docId: string) {
   try {
     const userRef = doc(db, "users", docId);
     const docSnap = await getDoc(userRef);
-
     if (!docSnap.exists()) {
       console.warn("No user found with document ID:", docId);
       user.value = null;

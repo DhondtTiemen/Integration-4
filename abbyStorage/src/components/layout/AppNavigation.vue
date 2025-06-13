@@ -80,7 +80,6 @@ const userId = ref<string | null>(null);
 const route = useRoute();
 
 const isActive = (path: string) => route.path === path;
-// TODO: Add default image to assets
 const profileImageUrl = computed(() => {
   return user.value?.avatar || "/src/assets/users/default.png";
 });

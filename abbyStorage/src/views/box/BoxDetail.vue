@@ -156,12 +156,12 @@
               fill="white"
             />
           </svg>
-          Box #{{ user?.box.boxNumber }}
+          Box #{{ user?.box?.boxNumber }}
         </h2>
         <div class="flex items-center gap-2">
           <p class="text-right">
             <!-- Last changed: <br /> -->
-            {{ formatTimeAgo(user?.box.createdAt ?? "") }}
+            {{ formatTimeAgo(user?.box?.createdAt ?? "") }}
             <!-- {{ new Date(user?.box.createdAt ?? "").toLocaleDateString() }} -->
           </p>
         </div>
@@ -170,7 +170,7 @@
       <div class="w-full max-w-md mx-auto px-4">
         <div class="aspect-square bg-gray-300 flex justify-center items-center">
           <img
-            :src="user?.box.mainImage"
+            :src="user?.box?.mainImage"
             alt="Box main"
             class="w-24 h-24 object-cover rounded-lg"
           />
@@ -200,7 +200,7 @@
                 stroke-width="2"
               />
             </svg>
-            <p>{{ user?.box.likes.length }}</p>
+            <p>{{ user?.box?.likes.length }}</p>
           </button>
           <div class="flex items-center gap-2">
             <svg
@@ -216,13 +216,13 @@
                 stroke-width="2"
               />
             </svg>
-            <p>{{ user?.box.comments.length }}</p>
+            <p>{{ user?.box?.comments.length }}</p>
           </div>
         </div>
          
         <div class="flex items-center gap-2">
           <Eye class="w-8 h-8 text-gray-600" />
-          <p>{{ user?.box.views }}</p>
+          <p>{{ user?.box?.views }}</p>
         </div>
       </div>
       <div
@@ -349,7 +349,7 @@
         </h2>
 
         <div class="flex items-center justify-start overflow-y-auto gap-2">
-          <div v-for="(item, index) in user?.box.items" :key="index">
+          <div v-for="(item, index) in user?.box?.items" :key="index">
             <div class="bg-gray-300 p-4">
               <img
                 :src="item.image"
@@ -395,7 +395,7 @@ const isLiking = ref(false);
 const newCommentText = ref("");
 const commentUsers = ref<Record<string, any>>({});
 const commentLiking = ref<{ [key: number]: boolean }>({});
-const boxLikes = computed(() => user.value?.box.likes?.map(String) ?? []);
+const boxLikes = computed(() => user.value?.box?.likes?.map(String) ?? []);
 
 function hasLikedComment(comment: any) {
   return (
@@ -419,7 +419,7 @@ async function toggleCommentLike(comment: any, index: number) {
   try {
     const userRef = doc(db, "users", String(user.value.id));
     await updateDoc(userRef, {
-      "box.comments": user.value.box.comments,
+      "box.comments": user.value.box?.comments,
     });
   } catch (err) {
     console.error("Failed to update comment likes in Firestore", err);
@@ -449,12 +449,14 @@ function hasLikedBox() {
 async function toggleBoxLike() {
   if (!user.value || !storedIdRaw) return;
   const userIdStr = String(storedIdRaw);
-  user.value.box.likes = user.value.box.likes || [];
-  const idx = user.value.box.likes.map(String).indexOf(userIdStr);
+  if (user.value.box) {
+    user.value.box.likes = user.value.box.likes || [];
+  }
+  const idx = user.value.box?.likes.map(String).indexOf(userIdStr);
   if (idx === -1) {
-    user.value.box.likes.push(userIdStr);
-  } else {
-    user.value.box.likes.splice(idx, 1);
+    user.value.box?.likes.push(userIdStr);
+  } else if (typeof idx === "number" && idx > -1) {
+    user.value.box?.likes.splice(idx, 1);
   }
   isLiking.value = true;
   setTimeout(() => {
@@ -464,9 +466,9 @@ async function toggleBoxLike() {
   try {
     const userRef = doc(db, "users", String(user.value.id));
     await updateDoc(userRef, {
-      "box.likes": user.value.box.likes,
+      "box.likes": user.value.box?.likes,
     });
-    console.log("Box likes updated in Firestore:", user.value.box.likes);
+    console.log("Box likes updated in Firestore:", user.value.box?.likes);
   } catch (err) {
     console.error("Failed to update box likes in Firestore", err);
   }
@@ -519,14 +521,14 @@ function submitComment() {
     likes: [],
   };
 
-  user.value.box.comments.push(comment);
+  user.value.box?.comments.push(comment);
   newCommentText.value = "";
 
   // (Optioneel) Update in Firestore:
   try {
     const userRef = doc(db, "users", String(user.value.id));
     updateDoc(userRef, {
-      "box.comments": user.value.box.comments,
+      "box.comments": user.value.box?.comments,
     });
   } catch (err) {
     console.error("Failed to update comments in Firestore", err);
@@ -535,7 +537,7 @@ function submitComment() {
 onMounted(async () => {
   if (currentUserId) {
     await getUserById(currentUserId);
-    if (user.value?.box.comments) {
+    if (user.value?.box?.comments) {
       await preloadCommentUsers(user.value.box.comments);
     }
   } else {
@@ -544,7 +546,7 @@ onMounted(async () => {
   }
 });
 const comments = computed(() => {
-  if (!user.value?.box.comments) return [];
+  if (!user.value?.box?.comments) return [];
   return [...user.value.box.comments].sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );

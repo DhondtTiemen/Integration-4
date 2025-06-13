@@ -98,7 +98,7 @@ async function handleLogin() {
     const matchedUser = await loginUser(email.value, password.value);
 
     if (matchedUser) {
-      localStorage.setItem("userId", matchedUser.id);
+      localStorage.setItem("userId", String(matchedUser.id));
       router.push(`/box/${matchedUser.id}`);
     } else {
       error.value = "Invalid email or password";

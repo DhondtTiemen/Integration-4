@@ -175,11 +175,26 @@ async function handleRegister() {
     name: name.value,
     mail: email.value,
     password: password.value,
+    bio: "",
+    avatar: "",
+    aboutMe: "",
+    followers: [],
+    following: [],
+    achievements: [],
+    box: {
+      boxNumber: 0,
+      createdAt: "",
+      likes: [],
+      views: 0,
+      mainImage: "",
+      items: [],
+      description: "",
+      comments: [],
+    },
+    posts: []
   };
-  // hier later: validatie + API call naar backend (bv. met Axios)
-  // localStorage.setItem("userId", user.id.toString());
   const docRef = await addDoc(colRef, user);
   localStorage.setItem("userId", docRef.id)
-  router.push("/box/create"); // Redirect naar login na registratie
+  router.push("/box/create"); 
 }
 </script>

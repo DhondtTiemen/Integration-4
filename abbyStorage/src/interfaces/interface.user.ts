@@ -3,10 +3,11 @@ import type Event from "./interface.event";
 
 export default interface User {
   id?: string;
-  mail: string;
-  password: string;
-  name: string;
+  mail?: string;
+  password?: string;
+  name?: string;
   bio?: string;
+  aboutMe?:string;
   avatar?: string;
   followers?: string[];
   following?: string[];
@@ -17,7 +18,7 @@ export default interface User {
     likes: string[];
     views: number;
     mainImage: string;
-    items: { name: string; image: string }[];
+    items: [];
     description?: string;
     comments: {
       userId: string;
