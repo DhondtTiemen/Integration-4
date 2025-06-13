@@ -1,8 +1,13 @@
 <template>
   <!-- Single image -->
   <div v-if="images?.length === 1" class="mb-6">
-    <img
+    <!-- <img
       :src="'/assets/images/' + images[0]"
+      alt="post image"
+      class="w-full h-80 object-cover m-auto"
+    /> -->
+    <img
+      :src="images[0]"
       alt="post image"
       class="w-full h-80 object-cover m-auto"
     />
