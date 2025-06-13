@@ -58,6 +58,7 @@
             />
           </svg>
         </button>
+        <LogOut @click="logOut" />
       </div>
     </header>
 
@@ -362,6 +363,7 @@ import {
   Award,
   User as UserIcon,
   CalendarDays,
+  LogOut
 } from "lucide-vue-next";
 import { onMounted, ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -388,6 +390,12 @@ const posts = ref<Post[]>([]);
 const events = ref<Event[]>([]);
 const accountVisit = ref(false);
 const route = useRoute();
+const router = useRouter();
+
+function logOut() {
+  localStorage.setItem("userId", "");
+  router.push("/register")
+}
 
 async function getUserById(docId: string) {
   try {

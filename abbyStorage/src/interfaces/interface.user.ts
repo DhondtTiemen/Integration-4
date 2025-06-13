@@ -2,16 +2,16 @@ import type Post from "./interface.post";
 import type Event from "./interface.event";
 
 export default interface User {
-  id: string;
+  id?: string;
   mail: string;
   password: string;
   name: string;
-  bio: string;
-  avatar: string;
-  followers: string[];
-  following: string[];
-  achievements: string[];
-  box: {
+  bio?: string;
+  avatar?: string;
+  followers?: string[];
+  following?: string[];
+  achievements?: string[];
+  box?: {
     boxNumber: number;
     createdAt: string;
     likes: string[];
@@ -26,7 +26,5 @@ export default interface User {
       likes: string[];
     }[];
   };
-  posts: Post[];
-  createdEvents: Event[];
-  attendedEvents: Event[];
+  posts?: Post[];
 }

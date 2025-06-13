@@ -37,11 +37,11 @@
 
         <form @submit.prevent="handleRegister" class="space-y-4">
           <div>
-            <label for="username" class="block mb-2 text-sm">Username</label>
+            <label for="name" class="block mb-2 text-sm">Username</label>
             <input
-              v-model="username"
-              type="username"
-              id="username"
+              v-model="name"
+              type="name"
+              id="name"
               placeholder="JohnD"
               required
               class="border border-alphaDark text-gray-600 text-sm block w-full p-2.5 focus:ring-alphaDark focus:border-alphaDark"
@@ -143,10 +143,24 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-const username = ref("");
+import type User from "../../interfaces/interface.user";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  updateDoc,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
+
+import db from "../../firebase/firebase.ts";
+const name = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
@@ -155,18 +169,17 @@ const subscribeNewsletter = ref(false);
 const router = useRouter();
 
 localStorage.setItem("userId", "");
-function handleRegister() {
-  // TODO:delete the math.random() when database is ready, database will generate the ID
-  const user = {
-    id: Math.floor(Math.random() * 1000), // Simuleer een ID
-    username: username.value,
-    email: email.value,
+async function handleRegister() {
+  const colRef = collection(db, "users");
+  const user: User = {
+    name: name.value,
+    mail: email.value,
     password: password.value,
   };
-
   // hier later: validatie + API call naar backend (bv. met Axios)
-  localStorage.setItem("userId", user.id.toString());
-  
+  // localStorage.setItem("userId", user.id.toString());
+  const docRef = await addDoc(colRef, user);
+  localStorage.setItem("userId", docRef.id)
   router.push("/box/create"); // Redirect naar login na registratie
 }
 </script>
