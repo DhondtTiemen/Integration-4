@@ -128,7 +128,7 @@
                 fill="none"
                 :class="[
                   commentLiking[comment.timestamp] ? 'animate-pulse' : '',
-                  (currentUserId)
+                  currentUserId
                     ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
                     : 'text-gray-600 stroke-black',
                 ]"
@@ -213,6 +213,7 @@ onMounted(async () => {
   loading.value = false;
 });
 
+// TODO: Fix this stupid Heart thing
 // Helper functions
 // function hasUserLikedComment(commentLikes: string[], userId: string | null) {
 //   if (!userId) return false;
