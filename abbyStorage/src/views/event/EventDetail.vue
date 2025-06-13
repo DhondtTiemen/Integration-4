@@ -379,39 +379,4 @@ watch(
     }
   }
 );
-// onMounted(async () => {
-//   await getEventById(String(route.params.id));
-//   await getUsersData();
-//   // Haal related events pas op als het hoofd-event er is
-//   if (event.value) {
-//     await getRelatedEvents();
-//   }
-//   await loadParticipantsFromEvent(eventId);
-
-//   if (hasParticipate()) {
-//     console.log("User has already participated");
-//   }
-// });
-// watch(
-//   () => route.params.id,
-//   (newId) => {
-//     if (newId) {
-//       getRelatedEvents();
-//       getEventById(String(route.params.id));
-//     }
-//   }
-// );
-// watch(
-//   () => event.value,
-//   async (newEvent) => {
-//     if (newEvent) {
-//       await getRelatedEvents();
-//     }
-//   }
-// );
-// watch(participants, (newVal) => {
-//   if (event.value) {
-//     event.value.participants = newVal;
-//   }
-// });
 </script>
