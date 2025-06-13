@@ -308,30 +308,7 @@ async function fetchUser() {
 onMounted(() => {
   fetchUser();
 });
-async function handleSave2() {
-  if (!userId || !user.value) {
-    console.error("No userId or user data");
-    return;
-  }
 
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      box: {
-        mainImage: user.value.box?.mainImage,
-        description: user.value.box?.description,
-        items: editableItems.value.map((item) => ({
-          name: item.name,
-          image: item.imagePreview || item.image, // Use preview if available
-        })),
-      },
-    });
-    console.log("Box updated!");
-    router.push("/box/" + userId); // Redirect to the user's account page
-  } catch (error) {
-    console.error("Error updating box:", error);
-  }
-}
 async function handleSave() {
   if (!userId || !user.value) {
     console.error("No userId or user data");

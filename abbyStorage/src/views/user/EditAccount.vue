@@ -20,11 +20,31 @@
 
     <div class="relative w-24 h-24 mx-auto mb-4">
       <!-- User Icon -->
-      <CircleUserRound class="w-24 h-24 text-primary-600 text-gray-600" />
-
+      <img
+        v-if="avatarPreview"
+        :src="avatarPreview"
+        alt="Box main"
+        class="w-24 h-24 object-cover rounded-full"
+      /><img
+        v-else
+        :src="user?.avatar"
+        alt="Main Image"
+        class="w-24 h-24 object-cover rounded-full"
+      />
       <!-- Pencil Icon -->
-      <div class="absolute bottom-0 right-0 bg-black rounded-full p-2">
-        <Pencil class="w-4 h-4 text-white" />
+      <div
+        class="absolute bottom-0 right-0 bg-black rounded-full w-9 h-9 flex items-center justify-center"
+      >
+        <label
+          class="relative cursor-pointer flex items-center justify-center w-full h-full"
+        >
+          <input
+            @change="onAvatarChange"
+            type="file"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+          />
+          <Pencil class="w-5 h-5 text-white" />
+        </label>
       </div>
     </div>
 
@@ -117,6 +137,8 @@ import { getUserById } from "../../firebase/userService.ts";
 const route = useRoute();
 const router = useRouter();
 const userId: string = String(route.params.id);
+
+const avatarPreview = ref<string | null>(null);
 function goBack() {
   history.back();
 }
@@ -132,6 +154,7 @@ async function handleSave() {
   try {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
+      avatar: avatarPreview.value,
       name: user.value.name,
       bio: user.value.bio,
       aboutMe: user.value.aboutMe,
@@ -142,7 +165,17 @@ async function handleSave() {
     console.error("Error updating user:", error);
   }
 }
-
+function onAvatarChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    const file = target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      avatarPreview.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
 import { onMounted } from "vue";
 
 onMounted(async () => {
