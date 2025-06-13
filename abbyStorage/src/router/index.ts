@@ -45,6 +45,10 @@ const routes = [
         path: "register",
         component: () => import("../views/user/RegisterForm.vue"),
       },
+      {
+        path: "chat/:userId",
+        component: () => import("../views/Chat.vue"),
+      },
 
       // --- BOX ---
       {
