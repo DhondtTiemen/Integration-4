@@ -49,7 +49,6 @@
         >
           <img
             :src="profileImageUrl"
-            @error="onImgError"
             alt="Profile"
             class="h-full w-full object-cover"
           />
@@ -81,15 +80,11 @@ const userId = ref<string | null>(null);
 const route = useRoute();
 
 const isActive = (path: string) => route.path === path;
-
 // TODO: Add default image to assets
 const profileImageUrl = computed(() => {
-  return user.value?.avatar || "/assets/users/default.jpg";
+  return user.value?.avatar || "/src/assets/users/default.png";
 });
 
-const onImgError = (event: Event) => {
-  (event.target as HTMLImageElement).src = "/assets/users/default.jpg";
-};
 
 onMounted(async () => {
   const storedId = localStorage.getItem("userId");

@@ -69,7 +69,7 @@
         <div v-else class="mb-8">
           <div class="flex flex-col items-center justify-center">
             <img
-              :src="user?.avatar"
+              :src="profileImageUrl"
               alt="Avatar"
               class="h-32 w-32 rounded-full object-cover mb-6"
             />
@@ -103,11 +103,11 @@
             </button>
             <div class="flex gap-4 text-sm font-medium">
               <router-link :to="`/account/${user?.id}/following`">
-                <p>{{ user?.following.length }} following</p>
+                <p>{{ user?.following?.length ?? 0 }} following</p>
               </router-link>
               <p>|</p>
               <router-link :to="`/account/${user?.id}/followers`">
-                <p>{{ user?.followers.length }} followers</p>
+                <p>{{ user?.followers?.length ?? 0 }} followers</p>
               </router-link>
             </div>
           </div>
@@ -165,11 +165,11 @@
               </router-link>
             </div>
             <div v-else>
-              <p class="text-gray-500 text-center py-8">
-                <span v-if="!accountVisit"
-                  >You have not created a box yet.</span
+              <p class="text-gray-500 text-center text-sm py-8">
+                <p v-if="!accountVisit"
+                  >You have not created a box yet.</p
                 >
-                <span v-else>This user has not created a box yet.</span>
+                <p v-else>This user has not created a box yet.</p>
               </p>
             </div>
           </div>
@@ -220,10 +220,16 @@
                 My achievements
               </h2>
               <p class="text-gray-600 text-sm mt-1">
-                {{ user?.achievements.length }} badges
+                {{ user?.achievements?.length ?? 0 }} badges
               </p>
             </div>
-            <div class="flex gap-2">
+            <p
+              v-if="posts.length === 0"
+              class="text-gray-500 text-sm text-center mb-4"
+            >
+              No badges yet.
+            </p>
+            <div v-else class="flex gap-2">
               <div v-for="(badge, index) in user?.achievements" :key="index">
                 <img
                   :src="badge"
@@ -290,7 +296,7 @@
               </router-link>
             </div>
 
-            <div v-else class="text-sm text-gray-500">
+            <div v-else class="text-gray-500 text-sm text-center mb-4">
               No events to display.
             </div>
           </div>
@@ -320,29 +326,38 @@
               My posts
             </h2>
 
-            <div class="grid grid-cols-3 gap-2 justify-center">
-              <router-link
-                :to="`/post/${post?.id}`"
-                v-for="post in posts.slice(0, 5)"
-                :key="post.id"
-                class="bg-gray-100 h-28 w-28 flex justify-center items-center overflow-hidden"
+            <div>
+              <p
+                v-if="posts.length === 0"
+                class="text-gray-500 text-sm text-center mb-4"
               >
-                <img
-                  v-if="post.images?.length"
-                  :src="post.images[0]"
-                  alt="Post image"
-                  class="w-full h-full object-cover"
-                />
-                <Image v-else class="w-10 h-10 text-gray-400" />
-              </router-link>
+                No posts yet.
+              </p>
 
-              <div
-                v-if="posts.length > 5"
-                class="bg-gray-100 h-28 w-28 flex justify-center items-center"
-              >
-                <p class="text-gray-500 text-xs text-center">
-                  +{{ posts.length - 5 }}
-                </p>
+              <div v-else class="grid grid-cols-3 gap-2 justify-center">
+                <router-link
+                  :to="`/post/${post?.id}`"
+                  v-for="post in posts.slice(0, 5)"
+                  :key="post.id"
+                  class="bg-gray-100 h-28 w-28 flex justify-center items-center overflow-hidden"
+                >
+                  <img
+                    v-if="post.images?.length"
+                    :src="post.images[0]"
+                    alt="Post image"
+                    class="w-full h-full object-cover"
+                  />
+                  <Image v-else class="w-10 h-10 text-gray-400" />
+                </router-link>
+
+                <div
+                  v-if="posts.length > 5"
+                  class="bg-gray-100 h-28 w-28 flex justify-center items-center"
+                >
+                  <p class="text-gray-500 text-xs text-center">
+                    +{{ posts.length - 5 }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -363,7 +378,7 @@ import {
   Award,
   User as UserIcon,
   CalendarDays,
-  LogOut
+  LogOut,
 } from "lucide-vue-next";
 import { onMounted, ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -394,8 +409,11 @@ const router = useRouter();
 
 function logOut() {
   localStorage.setItem("userId", "");
-  router.push("/register")
+  router.push("/register");
 }
+const profileImageUrl = computed(() => {
+  return user.value?.avatar || "/src/assets/users/default.png";
+});
 
 async function getUserById(docId: string) {
   try {
