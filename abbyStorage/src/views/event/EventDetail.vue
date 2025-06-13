@@ -208,6 +208,15 @@ function goBack() {
 const participants = ref<string[]>([]);
 const event = ref<Event | null>(null);
 const relatedEvents = ref<Event[]>([]);
+
+async function loadEventPageData(eventId: string) {
+  await getEventById(eventId);
+  await getUsersData();
+  if (event.value) {
+    await getRelatedEvents();
+    await loadParticipantsFromEvent(eventId);
+  }
+}
 async function loadParticipantsFromEvent(eventId: string) {
   try {
     const eventRef = doc(db, "events", eventId);
@@ -359,38 +368,50 @@ function shareEvent() {
   }
 }
 onMounted(async () => {
-  await getEventById(String(route.params.id));
-  await getUsersData();
-  // Haal related events pas op als het hoofd-event er is
-  if (event.value) {
-    await getRelatedEvents();
-  }
-  await loadParticipantsFromEvent(eventId);
-
-  if (hasParticipate()) {
-    console.log("User has already participated");
-  }
+  await loadEventPageData(String(route.params.id));
 });
+
 watch(
   () => route.params.id,
-  (newId) => {
+  async (newId) => {
     if (newId) {
-      getRelatedEvents();
-      getEventById(String(route.params.id));
+      await loadEventPageData(String(newId));
     }
   }
 );
-watch(
-  () => event.value,
-  async (newEvent) => {
-    if (newEvent) {
-      await getRelatedEvents();
-    }
-  }
-);
-watch(participants, (newVal) => {
-  if (event.value) {
-    event.value.participants = newVal;
-  }
-});
+// onMounted(async () => {
+//   await getEventById(String(route.params.id));
+//   await getUsersData();
+//   // Haal related events pas op als het hoofd-event er is
+//   if (event.value) {
+//     await getRelatedEvents();
+//   }
+//   await loadParticipantsFromEvent(eventId);
+
+//   if (hasParticipate()) {
+//     console.log("User has already participated");
+//   }
+// });
+// watch(
+//   () => route.params.id,
+//   (newId) => {
+//     if (newId) {
+//       getRelatedEvents();
+//       getEventById(String(route.params.id));
+//     }
+//   }
+// );
+// watch(
+//   () => event.value,
+//   async (newEvent) => {
+//     if (newEvent) {
+//       await getRelatedEvents();
+//     }
+//   }
+// );
+// watch(participants, (newVal) => {
+//   if (event.value) {
+//     event.value.participants = newVal;
+//   }
+// });
 </script>
