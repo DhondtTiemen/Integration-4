@@ -117,13 +117,13 @@
           <img
             v-if="mainImagePreview"
             :src="mainImagePreview"
-            alt="Box main"
+            alt="Main Image Preview"
             class="w-32 h-32 object-cover rounded-lg"
           />
           <img
             v-else
-            :src="user?.box.mainImage"
-            alt="Box main"
+            :src="user?.box?.mainImage"
+            alt="Main Image"
             class="w-32 h-32 object-cover rounded-lg"
           />
         </div>
@@ -243,7 +243,7 @@
 
       <div class="p-4">
         <button
-          @click="saveChanges"
+          @click="handleSave"
           class="bg-alphaGreen p-4 w-full text-sm font-medium"
         >
           Save Changes
@@ -256,17 +256,28 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
-
-const route = useRoute();
-const userID = Number(route.params.id);
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  updateDoc,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
+import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
-
+import { useRoute, useRouter } from "vue-router";
+import { getUserById } from "../../firebase/userService";
 const user = ref<User | null>(null);
-const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 const loading = ref(true);
-
+const route = useRoute();
+const userId = String(route.params.id);
+const router = useRouter();
+const boxDescription = ref("");
 const mainImagePreview = ref<string | null>(null);
 const editableItems = ref<
   Array<{ name: string; image: string; imagePreview?: string | null }>
@@ -274,11 +285,12 @@ const editableItems = ref<
 
 async function fetchUser() {
   try {
-    const res = await fetch("/src/assets/data/users.json");
-    if (!res.ok) throw new Error("Failed to load users data");
-    const data = await res.json();
-    users.value = data.users;
-    user.value = data.users.find((u: any) => u.id === userID) || null;
+    user.value = await getUserById(String(userId));
+    if (user.value?.box?.description) {
+      boxDescription.value = user.value.box.description;
+    }
+    // console.log("Fetching user with ID:", userID);
+    console.log("Fetched user:", user.value);
     if (user.value?.box?.items) {
       editableItems.value = user.value.box.items.map((item: any) => ({
         name: item.name,
@@ -296,57 +308,53 @@ async function fetchUser() {
 onMounted(() => {
   fetchUser();
 });
+async function handleSave2() {
+  if (!userId || !user.value) {
+    console.error("No userId or user data");
+    return;
+  }
 
-const boxDescription = ref("");
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      box: {
+        mainImage: user.value.box?.mainImage,
+        description: user.value.box?.description,
+        items: editableItems.value.map((item) => ({
+          name: item.name,
+          image: item.imagePreview || item.image, // Use preview if available
+        })),
+      },
+    });
+    console.log("Box updated!");
+    router.push("/box/" + userId); // Redirect to the user's account page
+  } catch (error) {
+    console.error("Error updating box:", error);
+  }
+}
+async function handleSave() {
+  if (!userId || !user.value) {
+    console.error("No userId or user data");
+    return;
+  }
 
-function saveChanges() {
-  if (!user.value) return;
-
-  // Bouw het box object dat je wil opslaan
+  const colRef = collection(db, "users");
   const updatedBox = {
-    mainImage: mainImagePreview.value || user.value.box.mainImage,
+    mainImage: mainImagePreview.value,
+    description: boxDescription.value,
     items: editableItems.value.map((item) => ({
       name: item.name,
-      image: item.imagePreview || item.image, // als nieuwe preview → gebruik die
+      image: item.imagePreview || item.image, // Use preview if available
     })),
-    description: boxDescription.value,
   };
-
-  // Save to localStorage (key bv. 'box_user_1')
-  const localStorageKey = `box_user_${user.value.id}`;
-  localStorage.setItem(localStorageKey, JSON.stringify(updatedBox));
-
-  // (optioneel) Log in console → dit is wat je bv. naar backend of naar JSON zou sturen
-  console.log("Updated box:", updatedBox);
-
-  alert("Changes saved to localStorage!");
-}
-
-// Load possible localStorage override
-const localStorageKey = `box_user_${user.value?.id}`;
-const localBoxData = JSON.parse(
-  localStorage.getItem(localStorageKey) || "null"
-);
-
-if (localBoxData) {
-  // override main image
-  mainImagePreview.value =
-    localBoxData.mainImage !== user.value?.box.mainImage
-      ? localBoxData.mainImage
-      : null;
-
-  // override items
-  editableItems.value = localBoxData.items.map((item: any) => ({
-    name: item.name,
-    image: item.image,
-    imagePreview: null,
-  }));
-
-  // override description
-  boxDescription.value = localBoxData.description || "";
-} else {
-  // fallback → standaard JSON data
-  boxDescription.value = user.value?.box?.description || "";
+  await setDoc(
+    doc(colRef, String(userId)),
+    {
+      box: updatedBox,
+    },
+    { merge: true }
+  );
+  router.push("/box/" + userId);
 }
 
 function onMainImageChange(event: Event) {

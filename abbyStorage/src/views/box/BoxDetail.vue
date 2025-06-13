@@ -168,6 +168,7 @@
       </div>
 
       <div class="w-full max-w-md mx-auto px-4">
+        <p class="pb-2">{{ user?.box?.description }}</p>
         <div class="aspect-square bg-gray-300 flex justify-center items-center">
           <img
             :src="user?.box?.mainImage"
@@ -200,7 +201,7 @@
                 stroke-width="2"
               />
             </svg>
-            <p>{{ user?.box?.likes.length }}</p>
+            <p>{{ user?.box?.likes?.length ?? 0 }}</p>
           </button>
           <div class="flex items-center gap-2">
             <svg
@@ -216,7 +217,7 @@
                 stroke-width="2"
               />
             </svg>
-            <p>{{ user?.box?.comments.length }}</p>
+            <p>{{ user?.box?.comments?.length ?? 0 }}</p>
           </div>
         </div>
          
@@ -391,7 +392,9 @@ const route = useRoute();
 const currentUserId: string | null = route.params.id as string | null;
 const storedIdRaw = localStorage.getItem("userId");
 const isLiking = ref(false);
-
+// const profileImageUrl = computed(() => {
+//   return user.value?.avatar || "/src/assets/users/default.png";
+// });
 const newCommentText = ref("");
 const commentUsers = ref<Record<string, any>>({});
 const commentLiking = ref<{ [key: number]: boolean }>({});
@@ -537,6 +540,8 @@ function submitComment() {
 onMounted(async () => {
   if (currentUserId) {
     await getUserById(currentUserId);
+
+    console.log(user.value);
     if (user.value?.box?.comments) {
       await preloadCommentUsers(user.value.box.comments);
     }

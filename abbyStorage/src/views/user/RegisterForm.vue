@@ -131,10 +131,10 @@
           </button>
           <p class="text-sm font-light">
             Already have an account?
-            <a
-              href="#"
+            <router-link
+              to="/login"
               class="font-medium text-alphaGreen underline dark:text-primary-500"
-              >Login here</a
+              >Login here</router-link
             >
           </p>
         </form>
@@ -176,7 +176,7 @@ async function handleRegister() {
     mail: email.value,
     password: password.value,
     bio: "",
-    avatar: "",
+    avatar: "/src/assets/users/default.png",
     aboutMe: "",
     followers: [],
     following: [],
@@ -191,10 +191,10 @@ async function handleRegister() {
       description: "",
       comments: [],
     },
-    posts: []
+    posts: [],
   };
   const docRef = await addDoc(colRef, user);
-  localStorage.setItem("userId", docRef.id)
-  router.push("/box/create"); 
+  localStorage.setItem("userId", docRef.id);
+  router.push("/box/create");
 }
 </script>

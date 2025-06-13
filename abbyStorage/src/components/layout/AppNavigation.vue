@@ -48,7 +48,7 @@
           ]"
         >
           <img
-            :src="profileImageUrl"
+            :src="user?.avatar"
             alt="Profile"
             class="h-full w-full object-cover"
           />
@@ -80,9 +80,9 @@ const userId = ref<string | null>(null);
 const route = useRoute();
 
 const isActive = (path: string) => route.path === path;
-const profileImageUrl = computed(() => {
-  return user.value?.avatar || "/src/assets/users/default.png";
-});
+// const profileImageUrl = computed(() => {
+//   return user.value?.avatar || "/src/assets/users/default.png";
+// });
 
 
 onMounted(async () => {

@@ -69,7 +69,7 @@
         <div v-else class="mb-8">
           <div class="flex flex-col items-center justify-center">
             <img
-              :src="profileImageUrl"
+              :src="user?.avatar"
               alt="Avatar"
               class="h-32 w-32 rounded-full object-cover mb-6"
             />
@@ -155,7 +155,11 @@
                 <div
                   class="aspect-square bg-gray-300 flex justify-center items-center"
                 >
-                  <Image class="w-16 h-16 text-gray-400" />
+                <img
+            :src="user?.box?.mainImage"
+            alt="Box main"
+            class="w-24 h-24 object-cover rounded-lg"
+          />
                 </div>
                 <div
                   class="aspect-square bg-gray-100 flex justify-center items-center"
@@ -163,6 +167,8 @@
                   <p class="text-gray-500">All photos</p>
                 </div>
               </router-link>
+              
+              <p class="pt-2">{{ user?.box?.description }}</p>
             </div>
             <div v-else>
               <p class="text-gray-500 text-center text-sm py-8">
@@ -411,9 +417,6 @@ function logOut() {
   localStorage.setItem("userId", "");
   router.push("/register");
 }
-const profileImageUrl = computed(() => {
-  return user.value?.avatar || "/src/assets/users/default.png";
-});
 
 async function getUserById(docId: string) {
   try {
