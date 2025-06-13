@@ -1,3 +1,6 @@
+import type Post from "./interface.post";
+import type Event from "./interface.event";
+
 export default interface User {
   id: string;
   mail: string;
@@ -15,7 +18,7 @@ export default interface User {
     views: number;
     mainImage: string;
     items: { name: string; image: string }[];
-    description: string;
+    description?: string;
     comments: {
       userId: string;
       text: string;
@@ -23,4 +26,7 @@ export default interface User {
       likes: string[];
     }[];
   };
+  posts: Post[];
+  createdEvents: Event[];
+  attendedEvents: Event[];
 }
