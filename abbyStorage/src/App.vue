@@ -9,6 +9,8 @@ import { useRoute } from "vue-router";
 import AppNavigation from "./components/layout/AppNavigation.vue";
 
 const route = useRoute();
+
+// TODO: Add scanner pages
 const hideOnRoutes = ["/login", "/register"];
 const showNavigation = computed(() => !hideOnRoutes.includes(route.path));
 </script>

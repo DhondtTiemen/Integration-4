@@ -3,7 +3,7 @@
     <Logo class="h-6 w-auto fill-alphaDark" />
 
     <div class="flex items-center gap-6">
-      <IconButton label="Scanner" to="/scanner">
+      <IconButton label="Scanner" :to="`/scanner/${userId}`">
         <!-- TODO: Change SVG -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +81,15 @@
   </header>
 </template>
 
-<script setup="ts">
-import Logo from "../../assets/images/svg/Logo.vue"
-import IconButton from "../generic/IconButton.vue"
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import Logo from "../../assets/images/svg/Logo.vue";
+import IconButton from "../generic/IconButton.vue";
+
+const userId = ref("");
+
+onMounted(() => {
+  const id = localStorage.getItem("userId");
+  if (id) userId.value = id;
+});
 </script>

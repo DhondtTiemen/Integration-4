@@ -17,6 +17,14 @@ const routes = [
         component: () => import("../views/user/Account.vue"),
       },
       {
+        path: "scanner/:id",
+        component: () => import("../views/user/Scanner.vue"),
+      },
+      {
+        path: "scanner/scan",
+        component: () => import("../views/user/Scan.vue"),
+      },
+      {
         path: "account/:id/following",
         component: () => import("../views/user/Following.vue"),
       },
