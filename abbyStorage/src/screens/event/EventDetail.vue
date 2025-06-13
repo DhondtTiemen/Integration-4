@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col">
+  <div class="min-h-screen bg-white flex flex-col pb-16">
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
       <svg
@@ -25,7 +25,7 @@
       </button>
     </nav>
 
-    <section v-if="event" class="p-4 mb-4">
+    <section v-if="event" class="p-4 mb-4 flex flex-col gap-4">
       <!-- Cover image -->
       <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
         <Image class="w-16 h-16 text-gray-400" />
@@ -49,15 +49,20 @@
           </a>
         </p>
         <button
-          class="mt-3 px-5 py-2.5 w-full text-sm font-medium"
-          :class="
+          class="mt-3 px-5 py-2.5 w-full text-sm font-medium transition-all"
+          :class="[
             isPast
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-alphaGreen hover:bg-green-700'
-          "
+              : hasParticipate()
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-alphaGreen hover:bg-green-700',
+          ]"
           :disabled="isPast"
+          @click="toggleParticipateEvent"
         >
-          {{ isPast ? "Event finished" : "Join event" }}
+          <span v-if="isPast">Event finished</span>
+          <span v-else-if="hasParticipate()">Already joined</span>
+          <span v-else>Join event</span>
         </button>
       </div>
 
@@ -166,7 +171,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   Image,
@@ -194,13 +199,78 @@ const route = useRoute();
 const router = useRouter();
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
 
+const storedIdRaw = localStorage.getItem("userId");
+const eventId: string = route.params.id as string;
 function goBack() {
   router.back();
 }
 
-// const events = ref<Event[]>([]);
+const participants = ref<string[]>([]);
 const event = ref<Event | null>(null);
 const relatedEvents = ref<Event[]>([]);
+async function loadParticipantsFromEvent(eventId: string) {
+  try {
+    const eventRef = doc(db, "events", eventId);
+    const eventSnap = await getDoc(eventRef);
+
+    if (eventSnap.exists()) {
+      participants.value = eventSnap.data().participants ?? [];
+    } else {
+      participants.value = [];
+    }
+  } catch (error) {
+    console.error("Error loading participants:", error);
+    participants.value = [];
+  }
+}
+
+function hasParticipate(): boolean {
+  return (
+    storedIdRaw !== null && participants.value.includes(String(storedIdRaw))
+  );
+}
+
+console.log(participants);
+async function toggleParticipateEvent() {
+  console.log("click");
+  console.log("eventId:", eventId);
+
+  if (!eventId || !storedIdRaw) return;
+
+  try {
+    const eventRef = doc(db, "events", String(eventId));
+
+    // ⬇️ Haal laatste deelnemerslijst op
+    const eventSnap = await getDoc(eventRef);
+    let currentParticipants: string[] = [];
+
+    if (eventSnap.exists()) {
+      console.log("Event exists");
+      currentParticipants = eventSnap.data().participants ?? [];
+    } else {
+      console.warn("Event not found in Firestore");
+      return;
+    }
+
+    console.log("currentParticipants:", currentParticipants);
+
+    // ✅ Voeg deelnemer toe (geen toggle)
+    if (!currentParticipants.includes(String(storedIdRaw))) {
+      currentParticipants.push(String(storedIdRaw));
+      await updateDoc(eventRef, {
+        participants: currentParticipants,
+      });
+    }
+
+    // ⬇️ Herlaad deelnemerslijst naar ref
+    await loadParticipantsFromEvent(eventId);
+  } catch (err) {
+    console.error("Failed to update event participants", err);
+  } finally {
+    // Indien nodig: toggle loading state
+    // isParticipating.value = false;
+  }
+}
 
 async function getUsersData() {
   users.value = []; // reset!
@@ -257,20 +327,7 @@ async function getRelatedEvents() {
     (e: Event) =>
       event.value && e.id !== event.value.id && new Date(e.date) >= new Date()
   );
-  console.log(relatedEvents);
 }
-
-// fetchEvents();
-
-// const participants = ref([
-//   { avatar: "/avatars/a1.jpg" },
-//   { avatar: "/avatars/a2.jpg" },
-//   { avatar: "/avatars/a3.jpg" },
-//   { avatar: "/avatars/a4.jpg" },
-//   { avatar: "/avatars/a5.jpg" },
-//   { avatar: "/avatars/a6.jpg" },
-//   { avatar: "/avatars/a7.jpg" },
-// ]);
 
 const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
 
@@ -308,6 +365,11 @@ onMounted(async () => {
   if (event.value) {
     await getRelatedEvents();
   }
+  await loadParticipantsFromEvent(eventId);
+
+  if (hasParticipate()) {
+    console.log("User has already participated");
+  }
 });
 watch(
   () => route.params.id,
@@ -326,4 +388,9 @@ watch(
     }
   }
 );
+watch(participants, (newVal) => {
+  if (event.value) {
+    event.value.participants = newVal;
+  }
+});
 </script>

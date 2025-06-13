@@ -45,21 +45,34 @@ const events = ref([]);
 const loading = ref(true);
 
 async function getEvents() {
-  try{
+  try {
     events.value = []; // reset!
-  const eventsQuery = query(collection(db, "events"));
-  const querySnap = await getDocs(eventsQuery);
-  querySnap.forEach((doc) => {
-    events.value.push({ id: doc.id, ...doc.data() });
-  
+    const eventsQuery = query(collection(db, "events"));
+    const querySnap = await getDocs(eventsQuery);
+    const now = new Date();
 
-  });
-}catch (error) {
-    console.error("Error fetching user data:", error);
-    user.value = null;
+    const fetchedEvents = [];
+    querySnap.forEach((doc) => {
+      const data = { id: doc.id, ...doc.data() };
+      // Zorg dat event.date een Date object is
+      const eventDate = new Date(data.date);
+      // Alleen toekomstige events
+      if (eventDate >= now) {
+        data.dateObj = eventDate;
+        fetchedEvents.push(data);
+      }
+    });
+
+    // Sorteer op datum (dichtstbijzijnde eerst)
+    fetchedEvents.sort((a, b) => a.dateObj - b.dateObj);
+
+    events.value = fetchedEvents;
+  } catch (error) {
+    console.error("Error fetching events data:", error);
+    events.value = [];
     return null;
   } finally {
-    loading.value = false; // Uncomment if you have a loading state
+    loading.value = false;
   }
 }
 
