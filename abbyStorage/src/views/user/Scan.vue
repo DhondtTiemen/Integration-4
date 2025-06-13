@@ -1,72 +1,59 @@
-
-
 <template>
-  <div class="min-h-screen bg-white flex flex-col items-center justify-between py-6 px-4">
+  <div
+    class=" bg-white flex flex-col items-center justify-between py-6 px-4"
+  >
     <h2 class="text-lg font-bold text-gray-800 mb-4">Scan a QR Code</h2>
-    <video ref="video" class="w-full max-w-sm rounded-lg shadow-md" autoplay playsinline muted></video>
-    <canvas ref="canvas" class="hidden"></canvas>
-    <p class="text-sm text-gray-600 mt-4" v-if="!scanned">Point your camera at a QR code</p>
-    <p class="text-green-600 text-sm mt-2 font-medium" v-if="scanned">QR code detected!</p>
+    <qrcode-stream @detect="onDetect" @init="onInit" />
+    <p class="text-sm text-gray-600 mt-4" v-if="!scanned">
+      Point your camera at a QR code
+    </p>
+    <p class="text-green-600 text-sm mt-2 font-medium" v-if="scanned">
+      QR code detected!
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import jsQR from 'jsqr'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { QrcodeStream } from "vue-qrcode-reader";
+import { useRouter } from "vue-router";
 
-const video = ref<HTMLVideoElement | null>(null)
-const canvas = ref<HTMLCanvasElement | null>(null)
-const scanned = ref(false)
-const router = useRouter()
+const router = useRouter();
+const scanned = ref(false);
 
-let scanInterval: number | null = null
-
-const startScan = async () => {
+function isValidHttpUrl(str: string): boolean {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    if (video.value) {
-      video.value.srcObject = stream
-    }
-
-    scanInterval = window.setInterval(() => {
-      if (!canvas.value || !video.value) return
-      const context = canvas.value.getContext('2d')
-      if (!context) return
-
-      canvas.value.width = video.value.videoWidth
-      canvas.value.height = video.value.videoHeight
-
-      context.drawImage(video.value, 0, 0, canvas.value.width, canvas.value.height)
-      const imageData = context.getImageData(0, 0, canvas.value.width, canvas.value.height)
-      const code = jsQR(imageData.data, imageData.width, imageData.height)
-
-      if (code && !scanned.value) {
-        scanned.value = true
-        clearInterval(scanInterval!)
-        const targetUrl = code.data
-        router.push(targetUrl)
-      }
-    }, 500)
-  } catch (e) {
-    // Optionally handle camera access error
-    // e.g., show a message to the user
+    const url = new URL(str);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
   }
 }
 
-onMounted(() => {
-  startScan()
-})
+const onDetect = (detectedCodes: { rawValue: string }[]) => {
+  if (!detectedCodes.length) return;
 
-onUnmounted(() => {
-  if (scanInterval) {
-    clearInterval(scanInterval)
+  const content = detectedCodes[0].rawValue;
+  console.log("Scanned content:", content);
+
+  if (isValidHttpUrl(content)) {
+    try {
+      const url = new URL(content);
+      router.push(url.pathname);
+      scanned.value = true;
+    } catch (e) {
+      console.warn("Invalid URL for routing:", content);
+    }
+  } else {
+    alert(`QR code content: ${content}`);
   }
-  if (video.value?.srcObject) {
-    const tracks = (video.value.srcObject as MediaStream).getTracks()
-    tracks.forEach((track) => track.stop())
-  }
-})
+};
+
+const onInit = (promise: Promise<void>) => {
+  promise
+    .then(() => console.log("Camera initialized successfully!"))
+    .catch((error) => console.error("Camera init error:", error));
+};
 </script>
 
 <style scoped>
