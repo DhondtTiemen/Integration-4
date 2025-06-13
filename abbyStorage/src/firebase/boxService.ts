@@ -1,12 +1,7 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import db from "./firebase";
 
-export async function getUserById(userId: string) {
-  const userRef = doc(db, "users", userId);
-  const docSnap = await getDoc(userRef);
-  if (!docSnap.exists()) return null;
-  return { id: docSnap.id, ...docSnap.data() };
-}
+
 
 export async function updateBoxLikes(userId: string, likes: string[]) {
   const userRef = doc(db, "users", userId);
