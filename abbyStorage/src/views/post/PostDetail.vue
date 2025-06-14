@@ -1,5 +1,5 @@
 <template>
-  <div v-bind="$attrs">
+  <div v-bind="$attrs" class="pb-16">
     <PageHeader :title="'Post'" :post="post ?? undefined" />
 
     <router-link
@@ -37,7 +37,8 @@
     />
 
     <div class="p-4 border-b border-gray-300">
-      <p class="">{{ post?.content }}</p>
+      <p class="pb-2">{{ post?.content }}</p>
+      <p >Created in {{ post?.location }}</p>
       <p class="text-gray-400 mt-2">
         {{ formatTimeAgo(post?.timestamp ?? "") }}
       </p>
