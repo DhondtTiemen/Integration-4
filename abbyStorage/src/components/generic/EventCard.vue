@@ -63,6 +63,4 @@ const props = defineProps<{
     image: string;
   };
 }>();
-console.log("EventCard props:");
-console.log(props.event);
 </script>

@@ -79,11 +79,9 @@ onMounted(async () => {
 
   // Haal het event op uit Firestore
   const event = await getEventById(eventId);
-  console.log("Event:", event);
   if (event && Array.isArray(event.participants)) {
     participantIds = event.participants.map(String);
   }
-  console.log("Participant IDs:", participantIds);
 
   // Haal alle user info op voor de deelnemers
   const users: any[] = [];
@@ -107,7 +105,6 @@ onMounted(async () => {
       });
     }
   }
-  console.log("Participants:", users);
   participants.value = users;
   loading.value = false;
 });

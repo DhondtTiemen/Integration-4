@@ -188,8 +188,6 @@ function onAvatarChange(event: Event) {
 import { onMounted } from "vue";
 
 onMounted(async () => {
-  console.log("Fetching user data for ID:", userId);
   user.value = await getUserById(userId);
-  console.log("User data:", user.value);
 });
 </script>

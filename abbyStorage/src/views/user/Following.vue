@@ -106,7 +106,6 @@ async function getLoggedInUser() {
   const docSnap = await getDoc(userRef);
   if (docSnap.exists()) {
     loggedInUser.value = { id: docSnap.id, ...docSnap.data() } as User;
-    // console.log("Logged in user fetched:", loggedInUser.value);
   }
 }
 function isFollowing(userId: string) {

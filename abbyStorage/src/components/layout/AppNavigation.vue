@@ -88,7 +88,6 @@ async function refreshUser() {
   if (userId.value) {
     user.value = null;
     user.value = await getUserById(userId.value);
-    console.log("User data refreshed:", user.value);
   }
 }
 
@@ -110,7 +109,6 @@ watch(
 watch(userId, async (newId, oldId) => {
   if (newId && newId !== oldId) {
     await refreshUser();
-    console.log("User ID changed, refreshed user data:", user.value);
   }
 });
 </script>

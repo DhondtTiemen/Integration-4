@@ -51,7 +51,6 @@ const message = ref('')
 const messages = ref<{ from: string, message: string }[]>([])
 
 onMounted(() => {
-  console.log('Target userId:', targetUserId) // ✅ check hier
 
   socket.emit('join', currentUserId)
 

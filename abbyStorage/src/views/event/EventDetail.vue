@@ -252,7 +252,6 @@ function hasParticipate(): boolean {
   );
 }
 
-console.log(participants);
 async function toggleParticipateEvent() {
   if (!eventId || !storedIdRaw) return;
 
