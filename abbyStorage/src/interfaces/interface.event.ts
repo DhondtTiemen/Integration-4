@@ -7,7 +7,7 @@ export default interface Event {
   place: string;
   achievements: string[];
   materials: string[];
-  images: string[];
+  image: string;
   createdBy: string; // userId van de maker
   participants: string[]; // array van userIds
   status: "approved" | "pending" | "rejected"; // of alleen string als meerdere statussen mogelijk

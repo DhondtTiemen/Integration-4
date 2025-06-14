@@ -24,24 +24,19 @@ export function formatTimeAgo(timestamp: number | string | Date) {
  * @param datetime - The date/time to format, can be a number, string, or Date.
  * @returns A formatted string like "May 25, 2025 ◦ 5:00 PM" or empty string if invalid date.
  */
-export function formatDateTime(datetime: number | string | Date) {
-  const date = new Date(datetime);
-  if (isNaN(date.getTime())) return "";
-
-  const dateOptions: Intl.DateTimeFormatOptions = {
+export function formatDateTime(dateStr: string) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  // Haal datum en tijd apart op
+  const datePart = d.toLocaleDateString("en-GB", {
+    day: "2-digit",
     month: "short",
-    day: "numeric",
     year: "numeric",
-  };
-
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
+  });
+  const timePart = d.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
     minute: "2-digit",
-    hour12: true,
-  };
-
-  const dateString = date.toLocaleDateString("en-US", dateOptions);
-  const timeString = date.toLocaleTimeString("en-US", timeOptions);
-
-  return `${dateString} ◦ ${timeString}`;
+    hour12: false,
+  });
+  return `${datePart} • ${timePart}`;
 }

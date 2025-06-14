@@ -173,7 +173,6 @@
           <ImageTemplate
             :path="user?.box?.mainImage"
             alt="Box main"
-            class="w-24 h-24 object-cover rounded-lg"
             :screen="'boxDetail'"
           />
         </div>

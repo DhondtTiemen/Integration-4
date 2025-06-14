@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-16">
     <nav class="relative flex items-center p-4 bg-alphaYellow">
       <svg
         @click="goBack"
@@ -28,15 +28,32 @@
           <div
             class="aspect-square bg-gray-600 w-full h-full flex justify-center items-center"
           >
-            <Image class="w-16 h-16 text-gray-400" />
+            <img
+              v-if="mainImagePreview"
+              :src="mainImagePreview"
+              class="w-full h-full object-cover aspect-square"
+              alt="Event image"
+            />
+            <Image v-else class="w-16 h-16 text-gray-400" />
           </div>
           <div
-            class="flex flex-col aspect-square bg-gray-300 w-full h-full justify-center items-center"
+            class="flex flex-col aspect-square bg-gray-300 w-full h-full justify-center items-center cursor-pointer"
+            @click="triggerImageInput"
           >
             <Plus class="w-16 h-16 text-gray-400" />
-            <p class="text-gray-400">Add photos</p>
+            <p class="text-gray-400">Add photo</p>
+            <input
+              ref="mainImageInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="onMainImageChange"
+            />
           </div>
         </div>
+        <p v-if="errors.mainImage" class="text-red-500 text-sm mt-1">
+          {{ errors.mainImage }}
+        </p>
       </div>
 
       <!-- Form -->
@@ -147,12 +164,16 @@
               @click="addMaterial"
             />
           </div>
+          <p v-if="errors.materials" class="text-red-500 text-sm mt-1">
+            {{ errors.materials }}
+          </p>
         </div>
 
         <!-- Submit -->
         <button
           @click="submitEvent"
           class="w-full bg-alphaGreen py-2.5 px-5 hover:bg-primary-700 transition-colors duration-200 text-white font-medium"
+          :disabled="loading"
         >
           Request event
         </button>
@@ -161,21 +182,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ArrowLeft, Image, Plus, Trash2 } from "lucide-vue-next";
-
+<script setup lang="ts">
+import { Image, Plus, Trash2 } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import db from "../../firebase/firebase";
+import { uploadImage } from "../../firebase/imageService";
+
+const router = useRouter();
 
 const eventName = ref("");
 const description = ref("");
 const eventDate = ref("");
 const location = ref("");
+const mainImageFile = ref<File | null>(null);
+const mainImagePreview = ref<string | null>(null);
+const mainImageInput = ref<HTMLInputElement | null>(null);
+const loading = ref(false);
 
-const materials = ref([
-  "paper or sketchbook",
-  "Set of graphite pencils (2H to 6B)",
-]);
+const materials = ref([""]);
 const newMaterial = ref("");
 
 const errors = ref({
@@ -183,11 +209,31 @@ const errors = ref({
   description: "",
   eventDate: "",
   location: "",
+  mainImage: "",
+  materials: "",
 });
 
 function goBack() {
-  history.back();
+  router.back();
 }
+
+function triggerImageInput() {
+  mainImageInput.value?.click();
+}
+
+function onMainImageChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    const file = target.files[0];
+    mainImageFile.value = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      mainImagePreview.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
 function addMaterial() {
   const trimmed = newMaterial.value.trim();
   if (trimmed !== "") {
@@ -207,6 +253,8 @@ function validateForm() {
     description: "",
     eventDate: "",
     location: "",
+    mainImage: "",
+    materials: "",
   };
 
   let valid = true;
@@ -231,67 +279,66 @@ function validateForm() {
     valid = false;
   }
 
+  if (!mainImageFile.value) {
+    errors.value.mainImage = "Event image is required.";
+    valid = false;
+  }
+  if (!materials.value.length || materials.value.every((m) => !m.trim())) {
+    errors.value.materials = "At least one material is required.";
+    valid = false;
+  }
+
   return valid;
 }
 
-function submitEvent() {
-  if (validateForm()) {
-    const newEvent = {
-      id: Date.now(), // simple unique id
+async function submitEvent() {
+  if (!validateForm()) {
+    return;
+  }
+  loading.value = true;
+  try {
+    // Upload main image
+    let mainImageUrl = "";
+    if (mainImageFile.value) {
+      mainImageUrl = await uploadImage(
+        mainImageFile.value,
+        `events/${Date.now()}_${mainImageFile.value.name}`
+      );
+    }
+
+    const creatorId = localStorage.getItem("userId") || null;
+
+    // Save event to Firestore, voeg creator direct toe aan participants
+    const docRef = await addDoc(collection(db, "events"), {
       title: eventName.value,
       about: description.value,
-      date: eventDate.value.split("T")[0],
-      time: eventDate.value.split("T")[1],
+      date: eventDate.value,
       place: location.value,
       materials: materials.value,
-      images: [],
-      createdBy: 1, // example: logged in user id
-      participants: [],
-      status: "pending_approval",
-    };
-
-    // Here you would normally POST to backend, or update local storage / json
-    // Example: Save to localStorage (for testing):
-    const existingEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    existingEvents.push(newEvent);
-    localStorage.setItem("events", JSON.stringify(existingEvents));
+      image: mainImageUrl,
+      createdBy: creatorId,
+      participants: creatorId ? [creatorId] : [],
+      status: "pending",
+      timestamp: Timestamp.now(),
+    });
 
     // Reset form
     eventName.value = "";
     description.value = "";
     eventDate.value = "";
     location.value = "";
+    mainImageFile.value = null;
+    mainImagePreview.value = null;
     materials.value = [];
     newMaterial.value = "";
 
-    alert("Event submitted successfully!");
-  } else {
-    console.log("Form has errors");
+    // Ga naar de detailpagina van het nieuwe event
+    router.push(`/event/${docRef.id}`);
+  } catch (err) {
+    errors.value.eventName = "Failed to create event. Try again.";
+    console.error(err);
+  } finally {
+    loading.value = false;
   }
 }
-
-export default {
-  components: {
-    ArrowLeft,
-    Image,
-    Plus,
-    Trash2,
-  },
-
-  setup() {
-    return {
-      eventName,
-      description,
-      eventDate,
-      location,
-      materials,
-      newMaterial,
-      errors,
-      addMaterial,
-      removeMaterial,
-      submitEvent,
-      goBack,
-    };
-  },
-};
 </script>

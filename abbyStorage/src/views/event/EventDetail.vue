@@ -28,15 +28,20 @@
     <section v-if="event" class="p-4 mb-4 flex flex-col gap-4">
       <!-- Cover image -->
       <div class="aspect-[4/3] bg-gray-200 flex items-center justify-center">
-        <Image class="w-16 h-16 text-gray-400" />
+        <ImageTemplate :path="event.image" screen="boxDetail" />
       </div>
 
       <!-- Event info -->
       <div>
-        <h2 class="text-xl font-bold mb-2">{{ event.title }}</h2>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">{{ event.title }}</h2>
+          <p class="text-sm text-gray-600">
+            Event is {{ event.status }} for approval
+          </p>
+        </div>
         <p class="text-sm text-gray-600 flex items-center gap-1">
           <CalendarDays class="w-4 h-4" />
-          {{ formatDate(event.date) }} • {{ event.time }}
+          {{ formatDateTime(event.date) }}
         </p>
         <p class="text-sm text-gray-600 flex items-center gap-1 mt-1">
           <MapPin class="w-4 h-4" />
@@ -152,10 +157,12 @@
             :key="related.id"
             class="bg-gray-100 p-3 rounded flex flex-col"
           >
-            <div class="aspect-[4/2] bg-gray-300 mb-2"></div>
+            <div class="aspect-[4/2] bg-gray-300 mb-2">
+              <ImageTemplate :path="related.image" screen="default" />
+            </div>
             <p class="text-sm font-semibold">{{ related.title }}</p>
             <p class="text-xs text-gray-600">
-              {{ formatDate(related.date) }} • {{ related.place }}
+              {{ formatDateTime(related.date) }} • {{ related.place }}
             </p>
             <button
               class="bg-alphaYellow w-fit px-4 py-1 mt-2 text-sm font-medium"
@@ -195,6 +202,9 @@ import {
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import db from "../../firebase/firebase.ts";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
+
+import { formatDateTime } from "../../utils/date.ts";
 const route = useRoute();
 const router = useRouter();
 const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
@@ -332,14 +342,6 @@ const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
 const isPast = event.value?.date
   ? new Date(event.value.date) < new Date()
   : false;
-
-function formatDate(dateStr: any) {
-  return new Date(dateStr).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 function shareEvent() {
   if (navigator.share && event.value) {

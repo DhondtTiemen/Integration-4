@@ -4,12 +4,7 @@
     <span class="absolute top-4 right-4 bg-alphaGreen font-medium px-2.5 py-2"
       >Event</span
     >
-
-    <img
-      :src="'https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg'"
-      alt="post image"
-      class="h-40 w-full object-cover"
-    />
+    <ImageTemplate :path="event.image" :screen="'eventDetail'" />
 
     <!-- POST - CONTENT - EVENT -->
     <div class="bg-alphaPurple p-4">
@@ -28,7 +23,7 @@
               fill="black"
             />
           </svg>
-          {{ formatDateTime(event.date + "T" + event.time) }}
+          {{ formatDateTime(event.date) }}
         </p>
         <p class="flex items-center gap-2">
           <svg
@@ -56,14 +51,18 @@
 
 <script setup lang="ts">
 import { formatDateTime } from "../../utils/date.ts";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
 
-defineProps<{
+const props = defineProps<{
   event: {
     id: number | string;
     title: string;
     date: string;
     time: string;
     place: string;
+    image: string;
   };
 }>();
+console.log("EventCard props:");
+console.log(props.event);
 </script>

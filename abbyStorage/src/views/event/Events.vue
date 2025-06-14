@@ -26,6 +26,7 @@
 import { ref, onMounted } from "vue";
 import { PlusIcon } from "lucide-vue-next";
 import router from "../../router/index.ts";
+
 import Event from "../../components/generic/EventCard.vue";
 import {
   collection,
@@ -47,7 +48,11 @@ const loading = ref(true);
 async function getEvents() {
   try {
     events.value = []; // reset!
-    const eventsQuery = query(collection(db, "events"));
+    // Voeg where-clause toe voor status 'approved'
+    const eventsQuery = query(
+      collection(db, "events"),
+      where("status", "==", "approved")
+    );
     const querySnap = await getDocs(eventsQuery);
     const now = new Date();
 

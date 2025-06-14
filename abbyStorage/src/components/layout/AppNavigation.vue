@@ -49,7 +49,6 @@
         >
           <ImageTemplate
             :path="user?.avatar"
-            class="h-full w-full object-cover"
             :screen="'nav'"
           />
         </div>

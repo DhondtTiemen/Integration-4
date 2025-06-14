@@ -191,7 +191,6 @@
               v-else-if="item.image"
               :path="item.image"
               alt="Item"
-              class="w-full h-full object-cover rounded"
               :screen="`imageItems`"
             />
             <!-- <img
