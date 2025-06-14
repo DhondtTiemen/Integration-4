@@ -336,7 +336,10 @@ async function getRelatedEvents() {
   });
   relatedEvents.value = events.filter(
     (e: Event) =>
-      event.value && e.id !== event.value.id && new Date(e.date) >= new Date()
+      event.value &&
+      e.id !== event.value.id &&
+      new Date(e.date) >= new Date() &&
+      e.status === "approved"
   );
 }
 

@@ -51,7 +51,7 @@ async function getEvents() {
     // Voeg where-clause toe voor status 'approved'
     const eventsQuery = query(
       collection(db, "events"),
-      where("status", "==", "approved")
+      where("status", "==", "Approved")
     );
     const querySnap = await getDocs(eventsQuery);
     const now = new Date();
@@ -72,6 +72,7 @@ async function getEvents() {
     fetchedEvents.sort((a, b) => a.dateObj - b.dateObj);
 
     events.value = fetchedEvents;
+    console.log("Fetched events:", events.value);
   } catch (error) {
     console.error("Error fetching events data:", error);
     events.value = [];

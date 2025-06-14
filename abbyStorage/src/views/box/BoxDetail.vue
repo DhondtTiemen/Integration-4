@@ -2,7 +2,7 @@
   <div class="min-h-screen mb-16">
     <div v-if="loading" class="text-center p-4">Loading...</div>
 
-    <div v-else v-bind="$attrs">
+    <div v-else>
       <!-- Header -->
       <header class="flex items-center justify-between h-16 bg-alphaYellow">
         <h1 class="text-xl font-bold h-6 px-6">
@@ -106,263 +106,277 @@
           </button>
         </div>
       </header>
-
-      <div
-        v-if="storedIdRaw != currentUserId"
-        class="flex items-center justify-between px-4 border-b border-gray-200"
-      >
-        <router-link
-          :to="`/account/${user?.id}`"
-          class="flex gap-4 items-center py-4"
+      <div v-if="user && user.box && user.box.boxNumber != 0" v-bind="$attrs">
+        <div
+          v-if="storedIdRaw != currentUserId"
+          class="flex items-center justify-between px-4 border-b border-gray-200"
         >
-          <img
-            :src="user?.avatar"
-            alt="Avatar"
-            class="w-12 h-12 rounded-full object-cover"
-          />
-          <div class="flex flex-col">
-            <p class="text-lg font-bold">{{ user?.name }}</p>
-          </div>
-        </router-link>
-        <router-link
-          :to="`/account/${user?.id}`"
-          class="bg-alphaGreen font-medium text-sm py-2.5 px-5"
-        >
-          View profile
-        </router-link>
-      </div>
-
-      <div
-        class="flex gap-4 justify-between items-center text-sm text-gray-600 bg-white p-4"
-      >
-        <h2 class="text-lg font-medium">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-auto inline mr-2"
-            viewBox="0 0 23 23"
-            fill="none"
+          <router-link
+            :to="`/account/${user?.id}`"
+            class="flex gap-4 items-center py-4"
           >
-            <rect width="23" height="23" fill="#222222" />
-            <path
-              d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
-              fill="white"
-            />
-            <path
-              d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
-              fill="white"
-            />
-            <path
-              d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
-              fill="white"
-            />
-          </svg>
-          Box #{{ user?.box?.boxNumber }}
-        </h2>
-        <div class="flex items-center gap-2">
-          <p class="text-right">
-            <!-- Last changed: <br /> -->
-            {{ formatTimeAgo(user?.box?.createdAt ?? "") }}
-            <!-- {{ new Date(user?.box.createdAt ?? "").toLocaleDateString() }} -->
-          </p>
-        </div>
-      </div>
-
-      <div class="w-full max-w-md mx-auto px-4">
-        <p class="pb-2">{{ user?.box?.description }}</p>
-        <div class="aspect-square bg-gray-500 flex justify-center items-center">
-          <ImageTemplate
-            :path="user?.box?.mainImage"
-            alt="Box main"
-            :screen="'boxDetail'"
-          />
-        </div>
-      </div>
-
-      <div
-        class="flex justify-between bg-white items-center p-4 border-b border-gray-200"
-      >
-        <div class="flex gap-4 justify-center">
-          <button class="flex items-center gap-2" @click="toggleBoxLike()">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="24"
-              viewBox="0 0 28 25"
-              fill="none"
-              :class="[
-                isLiking ? 'animate-like' : '',
-                hasLikedBox
-                  ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
-                  : 'text-gray-600 stroke-black',
-              ]"
-            >
-              <path
-                d="M11.4436 23.9877L16.5567 24C19.5793 21.4085 21.967 18.968 23.4492 17.3631C25.1715 15.4981 26.3404 13.1944 26.7822 10.708C27.1995 8.36087 27.0717 5.90859 25.9183 4.12869C23.1341 -0.168074 16.9841 0.0585967 14.3474 4.3125C14.2944 4.39823 14.2338 4.48162 14.1922 4.57499C14.147 4.67658 14.0126 5.02892 14.0001 5.0618C14.0001 5.0618 13.8557 4.66777 13.8081 4.56266C13.7695 4.47751 13.7148 4.40117 13.6666 4.32248C11.037 0.0474394 4.87039 -0.18804 2.08141 4.11636C1.18365 5.50164 0.907191 7.29504 1.0261 9.12896C1.22765 12.2466 2.57428 15.1839 4.75862 17.443C6.31691 19.0543 8.70577 21.4585 11.4436 23.9877Z"
-                stroke-width="2"
-              />
-            </svg>
-            <p>{{ user?.box?.likes?.length ?? 0 }}</p>
-          </button>
-          <div class="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 26"
-              fill="none"
-            >
-              <path
-                d="M23 1.5H1V17.5507H5.3048V23.5L11.7703 17.5507H23V1.5Z"
-                stroke="#222222"
-                stroke-width="2"
-              />
-            </svg>
-            <p>{{ user?.box?.comments?.length ?? 0 }}</p>
-          </div>
-        </div>
-         
-        <div class="flex items-center gap-2">
-          <Eye class="w-8 h-8 text-gray-600" />
-          <p>{{ user?.box?.views }}</p>
-        </div>
-      </div>
-      <div
-        class="p-4 border-b-2 border-gray-200 bg-white"
-        v-if="user && !loading"
-      >
-        <div class="flex justify-between items-center">
-          <p>{{ commentsCount }} comment{{ commentsCount !== 1 ? "s" : "" }}</p>
-          <!-- <p class="text-primary-600 font-semibold">See all</p> -->
-        </div>
-
-        <div class="flex gap-4 items-center mt-4">
-          <div class="w-fit flex-shrink-0">
             <img
               :src="user?.avatar"
               alt="Avatar"
               class="w-12 h-12 rounded-full object-cover"
             />
-          </div>
-          <form @submit.prevent="submitComment" class="relative w-full">
-            <input
-              v-model="newCommentText"
-              class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-primary-500"
-              name="comment"
-              id="comment"
-              type="text"
-              placeholder="Add a comment..."
-              enterkeyhint="send"
-              autocomplete="off"
-            />
-            <button
-              type="submit"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0"
-              :disabled="!newCommentText.trim()"
-              aria-label="Submit comment"
-            >
-              <SendHorizonal class="w-6 h-6 text-gray-600" />
-            </button>
-          </form>
+            <div class="flex flex-col">
+              <p class="text-lg font-bold">{{ user?.name }}</p>
+            </div>
+          </router-link>
+          <router-link
+            :to="`/account/${user?.id}`"
+            class="bg-alphaGreen font-medium text-sm py-2.5 px-5"
+          >
+            View profile
+          </router-link>
         </div>
 
         <div
-          class="flex gap-4 items-start mt-4"
-          v-for="(comment, index) in comments"
-          :key="index"
+          class="flex gap-4 justify-between items-center text-sm text-gray-600 bg-white p-4"
         >
-          <router-link :to="`/account/${comment.userId}`">
-            <img
-              :src="commentUsers[comment.userId]?.avatar"
-              alt="User avatar"
-              class="w-12 h-12 rounded-full object-cover"
+          <h2 class="text-lg font-medium">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-auto inline mr-2"
+              viewBox="0 0 23 23"
+              fill="none"
+            >
+              <rect width="23" height="23" fill="#222222" />
+              <path
+                d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
+                fill="white"
+              />
+              <path
+                d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
+                fill="white"
+              />
+              <path
+                d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
+                fill="white"
+              />
+            </svg>
+            Box #{{ user?.box?.boxNumber }}
+          </h2>
+          <div class="flex items-center gap-2">
+            <p class="text-right">
+              <!-- Last changed: <br /> -->
+              {{ formatTimeAgo(user?.box?.createdAt ?? "") }}
+              <!-- {{ new Date(user?.box.createdAt ?? "").toLocaleDateString() }} -->
+            </p>
+          </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto px-4">
+          <p class="pb-2">{{ user?.box?.description }}</p>
+          <div
+            class="aspect-square bg-gray-500 flex justify-center items-center"
+          >
+            <ImageTemplate
+              :path="user?.box?.mainImage"
+              alt="Box main"
+              :screen="'boxDetail'"
             />
-          </router-link>
-          <div>
-            <div class="flex items-baseline gap-2">
-              <router-link :to="`/account/${comment.userId}`">
-                <p class="font-bold">
-                  @{{ commentUsers[comment.userId]?.name }}
-                </p>
-              </router-link>
-              <p class="text-sm">{{ formatTimeAgo(comment.timestamp) }}</p>
-            </div>
-            <p class="text-sm">{{ comment.text }}</p>
-            <div class="flex items-center gap-2 mt-2 text-sm">
-              <button
-                class="flex items-center gap-1"
-                @click="toggleCommentLike(comment, index)"
-                :aria-pressed="hasLikedComment(comment)"
-                :disabled="commentLiking[index]"
-                style="
-                  background: none;
-                  border: none;
-                  padding: 0;
-                  cursor: pointer;
-                "
+          </div>
+        </div>
+
+        <div
+          class="flex justify-between bg-white items-center p-4 border-b border-gray-200"
+        >
+          <div class="flex gap-4 justify-center">
+            <button class="flex items-center gap-2" @click="toggleBoxLike()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="24"
+                viewBox="0 0 28 25"
+                fill="none"
+                :class="[
+                  isLiking ? 'animate-like' : '',
+                  hasLikedBox
+                    ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
+                    : 'text-gray-600 stroke-black',
+                ]"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="28"
-                  height="24"
-                  viewBox="0 0 28 25"
-                  fill="none"
-                  :class="[
-                    commentLiking[index] ? 'animate-like' : '',
-                    hasLikedComment(comment)
-                      ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
-                      : 'text-gray-600 stroke-black',
-                  ]"
-                >
-                  <path
-                    d="M11.4436 23.9877L16.5567 24C19.5793 21.4085 21.967 18.968 23.4492 17.3631C25.1715 15.4981 26.3404 13.1944 26.7822 10.708C27.1995 8.36087 27.0717 5.90859 25.9183 4.12869C23.1341 -0.168074 16.9841 0.0585967 14.3474 4.3125C14.2944 4.39823 14.2338 4.48162 14.1922 4.57499C14.147 4.67658 14.0126 5.02892 14.0001 5.0618C14.0001 5.0618 13.8557 4.66777 13.8081 4.56266C13.7695 4.47751 13.7148 4.40117 13.6666 4.32248C11.037 0.0474394 4.87039 -0.18804 2.08141 4.11636C1.18365 5.50164 0.907191 7.29504 1.0261 9.12896C1.22765 12.2466 2.57428 15.1839 4.75862 17.443C6.31691 19.0543 8.70577 21.4585 11.4436 23.9877Z"
-                    stroke-width="2"
-                  />
-                </svg>
-                <p>{{ comment.likes ? comment.likes.length : 0 }}</p>
+                <path
+                  d="M11.4436 23.9877L16.5567 24C19.5793 21.4085 21.967 18.968 23.4492 17.3631C25.1715 15.4981 26.3404 13.1944 26.7822 10.708C27.1995 8.36087 27.0717 5.90859 25.9183 4.12869C23.1341 -0.168074 16.9841 0.0585967 14.3474 4.3125C14.2944 4.39823 14.2338 4.48162 14.1922 4.57499C14.147 4.67658 14.0126 5.02892 14.0001 5.0618C14.0001 5.0618 13.8557 4.66777 13.8081 4.56266C13.7695 4.47751 13.7148 4.40117 13.6666 4.32248C11.037 0.0474394 4.87039 -0.18804 2.08141 4.11636C1.18365 5.50164 0.907191 7.29504 1.0261 9.12896C1.22765 12.2466 2.57428 15.1839 4.75862 17.443C6.31691 19.0543 8.70577 21.4585 11.4436 23.9877Z"
+                  stroke-width="2"
+                />
+              </svg>
+              <p>{{ user?.box?.likes?.length ?? 0 }}</p>
+            </button>
+            <div class="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 26"
+                fill="none"
+              >
+                <path
+                  d="M23 1.5H1V17.5507H5.3048V23.5L11.7703 17.5507H23V1.5Z"
+                  stroke="#222222"
+                  stroke-width="2"
+                />
+              </svg>
+              <p>{{ user?.box?.comments?.length ?? 0 }}</p>
+            </div>
+          </div>
+           
+          <div class="flex items-center gap-2">
+            <Eye class="w-8 h-8 text-gray-600" />
+            <p>{{ user?.box?.views }}</p>
+          </div>
+        </div>
+        <div
+          class="p-4 border-b-2 border-gray-200 bg-white"
+          v-if="user && !loading"
+        >
+          <div class="flex justify-between items-center">
+            <p>
+              {{ commentsCount }} comment{{ commentsCount !== 1 ? "s" : "" }}
+            </p>
+            <!-- <p class="text-primary-600 font-semibold">See all</p> -->
+          </div>
+
+          <div class="flex gap-4 items-center mt-4">
+            <div class="w-fit flex-shrink-0">
+              <img
+                :src="user?.avatar"
+                alt="Avatar"
+                class="w-12 h-12 rounded-full object-cover"
+              />
+            </div>
+            <form @submit.prevent="submitComment" class="relative w-full">
+              <input
+                v-model="newCommentText"
+                class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-primary-500"
+                name="comment"
+                id="comment"
+                type="text"
+                placeholder="Add a comment..."
+                enterkeyhint="send"
+                autocomplete="off"
+              />
+              <button
+                type="submit"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer bg-transparent border-0 p-0"
+                :disabled="!newCommentText.trim()"
+                aria-label="Submit comment"
+              >
+                <SendHorizonal class="w-6 h-6 text-gray-600" />
               </button>
+            </form>
+          </div>
+
+          <div
+            class="flex gap-4 items-start mt-4"
+            v-for="(comment, index) in comments"
+            :key="index"
+          >
+            <router-link :to="`/account/${comment.userId}`">
+              <img
+                :src="commentUsers[comment.userId]?.avatar"
+                alt="User avatar"
+                class="w-12 h-12 rounded-full object-cover"
+              />
+            </router-link>
+            <div>
+              <div class="flex items-baseline gap-2">
+                <router-link :to="`/account/${comment.userId}`">
+                  <p class="font-bold">
+                    @{{ commentUsers[comment.userId]?.name }}
+                  </p>
+                </router-link>
+                <p class="text-sm">{{ formatTimeAgo(comment.timestamp) }}</p>
+              </div>
+              <p class="text-sm">{{ comment.text }}</p>
+              <div class="flex items-center gap-2 mt-2 text-sm">
+                <button
+                  class="flex items-center gap-1"
+                  @click="toggleCommentLike(comment, index)"
+                  :aria-pressed="hasLikedComment(comment)"
+                  :disabled="commentLiking[index]"
+                  style="
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    cursor: pointer;
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="24"
+                    viewBox="0 0 28 25"
+                    fill="none"
+                    :class="[
+                      commentLiking[index] ? 'animate-like' : '',
+                      hasLikedComment(comment)
+                        ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
+                        : 'text-gray-600 stroke-black',
+                    ]"
+                  >
+                    <path
+                      d="M11.4436 23.9877L16.5567 24C19.5793 21.4085 21.967 18.968 23.4492 17.3631C25.1715 15.4981 26.3404 13.1944 26.7822 10.708C27.1995 8.36087 27.0717 5.90859 25.9183 4.12869C23.1341 -0.168074 16.9841 0.0585967 14.3474 4.3125C14.2944 4.39823 14.2338 4.48162 14.1922 4.57499C14.147 4.67658 14.0126 5.02892 14.0001 5.0618C14.0001 5.0618 13.8557 4.66777 13.8081 4.56266C13.7695 4.47751 13.7148 4.40117 13.6666 4.32248C11.037 0.0474394 4.87039 -0.18804 2.08141 4.11636C1.18365 5.50164 0.907191 7.29504 1.0261 9.12896C1.22765 12.2466 2.57428 15.1839 4.75862 17.443C6.31691 19.0543 8.70577 21.4585 11.4436 23.9877Z"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <p>{{ comment.likes ? comment.likes.length : 0 }}</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 border-b-2 border-gray-200">
+          <h2 class="text-lg font-medium mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-auto inline mr-2"
+              viewBox="0 0 23 23"
+              fill="none"
+            >
+              <rect width="23" height="23" fill="#222222" />
+              <path
+                d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
+                fill="white"
+              />
+              <path
+                d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
+                fill="white"
+              />
+              <path
+                d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
+                fill="white"
+              />
+            </svg>
+            Items inside
+          </h2>
+
+          <div class="flex items-center justify-start overflow-y-auto gap-2">
+            <div
+              v-for="(item, index) in (user?.box?.items as BoxItem[])"
+              :key="index"
+            >
+              <div class="">
+                <img
+                  :src="item.image"
+                  :alt="item.name"
+                  class="w-60 h-60 object-cover"
+                />
+              </div>
+              <div class="p-4 bg-alphaBlue font-medium">
+                <p>{{ item.name }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="p-4 border-b-2 border-gray-200">
-        <h2 class="text-lg font-medium mb-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-auto inline mr-2"
-            viewBox="0 0 23 23"
-            fill="none"
-          >
-            <rect width="23" height="23" fill="#222222" />
-            <path
-              d="M3.98787 11.8882H6.69218C6.80367 12.0002 6.74295 12.1821 6.75621 12.3262C6.99526 14.9169 9.77662 16.7769 12.5021 16.1693C14.3117 15.7659 15.8317 14.3162 16.0907 12.5844C16.1187 12.3968 16.0919 12.1658 16.1208 11.9964C16.1282 11.9529 16.1473 11.9176 16.183 11.8884H18.8873C18.9126 11.9033 18.9202 11.9211 18.9256 11.9476C18.9465 12.0542 18.9353 12.3721 18.9266 12.4934C18.7103 15.4577 16.2473 18.0236 13.1657 18.7041C8.77016 19.6744 4.25499 16.6923 3.94858 12.4932C3.93966 12.3721 3.92843 12.054 3.94961 11.9474C3.95471 11.9209 3.96262 11.9031 3.98787 11.8882Z"
-              fill="white"
-            />
-            <path
-              d="M5.9375 6.90069C6.09403 5.23496 8.039 4.40618 9.20848 5.48572C9.5153 5.76886 9.9375 6.42189 9.9375 6.87518V9.96174L9.90282 10H5.97218L5.9375 9.96174V6.90069Z"
-              fill="white"
-            />
-            <path
-              d="M12.9375 7.96137C13.054 6.61911 14.3766 5.7394 15.4591 6.06963C16.1292 6.27403 16.9375 7.19641 16.9375 8.04237V9.9595L16.9028 10H12.9722L12.9375 9.9595V7.96137Z"
-              fill="white"
-            />
-          </svg>
-          Items inside
-        </h2>
-
-        <div class="flex items-center justify-start overflow-y-auto gap-2">
-          <div v-for="(item, index) in user?.box?.items" :key="index">
-            <div class="">
-              <img
-                :src="item.image"
-                :alt="item.name"
-                class="w-60 h-60 object-cover"
-              />
-            </div>
-            <div class="p-4 bg-alphaBlue font-medium">
-              <p>{{ item.name }}</p>
-            </div>
-          </div>
-        </div>
+      <div
+        v-else-if="!loading"
+        class="p-4 text-center flex mt-64 justify-center text-gray-600"
+      >
+        <p class="text-lg font-semibold">{{user?.name}} did not created a box yet</p>
       </div>
     </div>
   </div>
@@ -378,18 +392,23 @@ import {
   preloadCommentUsers,
   toggleLikeForBoxComment,
 } from "../../firebase/boxService";
-import {
-  Eye,SendHorizonal
-} from "lucide-vue-next";
+import { Eye, SendHorizonal } from "lucide-vue-next";
 import { getUserById } from "../../firebase/userService";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import type User from "../../interfaces/interface.user";
 
 const route = useRoute();
 const currentUserId = route.params.id as string;
 const comments = computed(() => user.value?.box?.comments ?? []);
 const commentsCount = computed(() => comments.value.length);
 
-const user = ref<any>(null);
+interface BoxItem {
+  name: string;
+  image: string;
+  // add other properties if needed
+}
+
+const user = ref<User | null>(null);
 const loading = ref(true);
 const storedIdRaw = localStorage.getItem("userId");
 const isLiking = ref(false);
@@ -423,7 +442,7 @@ function hasLikedComment(comment: any) {
   );
 }
 async function toggleBoxLike() {
-  if (!user.value || !storedIdRaw) return;
+  if (!user.value || !user.value.box || !storedIdRaw) return;
   const userIdStr = String(storedIdRaw);
   user.value.box.likes = user.value.box.likes || [];
   const idx = user.value.box.likes.map(String).indexOf(userIdStr);
@@ -437,7 +456,7 @@ async function toggleBoxLike() {
     isLiking.value = false;
   }, 400);
   try {
-    await updateBoxLikes(user.value.id, user.value.box.likes);
+    await updateBoxLikes(String(user.value.id), user.value.box.likes);
   } catch (err) {
     console.error("Failed to update box likes in Firestore", err);
   }
@@ -448,10 +467,10 @@ async function toggleCommentLike(comment: any, index: number) {
   commentLiking.value[index] = true;
   try {
     await toggleLikeForBoxComment(
-      user.value.id,
+      String(user.value.id),
       comment,
       storedIdRaw,
-      user.value.box.comments
+      user.value.box?.comments ?? []
     );
   } catch (err) {
     console.error("Failed to update comment likes in Firestore", err);
@@ -470,10 +489,13 @@ async function submitComment() {
     timestamp: new Date().toISOString(),
     likes: [],
   };
-  user.value.box.comments.push(comment);
+  user.value.box?.comments.push(comment);
   newCommentText.value = "";
   try {
-    await updateBoxComments(user.value.id, user.value.box.comments);
+    await updateBoxComments(
+      String(user.value.id),
+      user.value.box?.comments ?? []
+    );
     if (user.value?.box?.comments) {
       commentUsers.value = await preloadCommentUsers(user.value.box.comments);
     }

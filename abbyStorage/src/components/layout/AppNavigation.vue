@@ -64,7 +64,7 @@ import { useRoute } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import { getUserById } from "../../firebase/userService";
 
-import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 // Icon Imports
 import HomeFilled from "../../assets/icons/HomeFilled.vue";
 import HomeOutline from "../../assets/icons/HomeOutline.vue";

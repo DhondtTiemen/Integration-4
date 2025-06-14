@@ -7,7 +7,7 @@
   />
   <img
     v-if="screen == 'edit'"
-    :class="imgClass || 'w-24 h-24 object-cover rounded-full'"
+    :class="imgClass || 'w-fill object-cover rounded-full'"
     :src="url || defaultPath"
     :alt="alt || 'Avatar'"
   />
