@@ -405,7 +405,7 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-
+import { getUserById } from "../../firebase/userService";
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
 const events = ref<Event[]>([]);
@@ -418,24 +418,11 @@ function logOut() {
   router.push("/register");
 }
 
-async function getUserById(docId: string) {
-  try {
-    const userRef = doc(db, "users", docId);
-    const docSnap = await getDoc(userRef);
-    if (!docSnap.exists()) {
-      console.warn("No user found with document ID:", docId);
-      user.value = null;
-      return null;
-    }
 
-    const userData = { id: docSnap.id, ...docSnap.data() };
-    user.value = userData as User; // <-- sla op in ref
-    return userData;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    return null;
-  } finally {
-    loading.value = false; // Uncomment if you have a loading state
+
+async function refreshUser(id: string) {
+  if (id) {
+    user.value = await getUserById(id);
   }
 }
 async function getPostsById(userId: string) {
@@ -579,7 +566,7 @@ onMounted(() => {
   const currentUserId = route.params.id as string;
   accountVisit.value = storedId !== currentUserId;
   getLoggedInUser();
-  getUserById(currentUserId);
+  refreshUser(currentUserId);
   getPostsById(currentUserId);
   getEventsById(currentUserId);
 });
@@ -589,7 +576,7 @@ watch(
     const userId = Array.isArray(route.params.id)
       ? route.params.id[0]
       : route.params.id;
-    getUserById(userId);
+      refreshUser(userId);
     getPostsById(userId);
     getEventsById(userId);
     getLoggedInUser();

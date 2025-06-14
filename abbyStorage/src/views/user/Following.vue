@@ -86,6 +86,7 @@ import {
 } from "firebase/firestore";
 import type User from "../../interfaces/interface.user";
 
+import { getUserById } from "../../firebase/userService";
 const router = useRouter();
 
 const route = useRoute();
@@ -163,29 +164,9 @@ async function toggleFollow(profile: any) {
     console.error("Failed to update follows in Firestore", err);
   }
 }
-async function getUserById(docId: string) {
-  try {
-    const userRef = doc(db, "users", docId);
-    const docSnap = await getDoc(userRef);
-
-    if (!docSnap.exists()) {
-      console.warn("No user found with document ID:", docId);
-      user.value = null;
-      return null;
-    }
-
-    const userData = { id: docSnap.id, ...docSnap.data() };
-    user.value = userData as User;
-    return userData;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    user.value = null;
-    return null;
-  }
-}
 async function getFollowing() {
   loading.value = true;
-  await getUserById(String(userId));
+  user.value = await getUserById(String(userId)); // <-- voeg deze toewijzing toe!
   if (
     !user.value ||
     !user.value.following ||
@@ -196,7 +177,7 @@ async function getFollowing() {
     return;
   }
 
-  // Haal alle follower user info op
+  // Haal alle following user info op
   const followerIds = user.value.following.map(String);
   const followingData: any[] = [];
 

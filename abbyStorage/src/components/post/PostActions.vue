@@ -14,7 +14,7 @@
           viewBox="0 0 28 25"
           fill="none"
           :class="[
-            isLiking ? 'animate-ping' : '',
+            isLiking ? 'animate-like' : '',
             hasLiked()
               ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
               : 'text-gray-400 stroke-alphaDark',
@@ -109,3 +109,22 @@ async function toggleLike() {
   }, 400);
 }
 </script>
+<style scoped>
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-like {
+  animation: pop 0.4s cubic-bezier(0.36, 1.64, 0.56, 1) both;
+}
+</style>

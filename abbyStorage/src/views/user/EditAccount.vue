@@ -142,7 +142,6 @@ const avatarPreview = ref<string | null>(null);
 function goBack() {
   history.back();
 }
-// TODO: avatar
 const user = ref<User | null>(null);
 
 async function handleSave() {
@@ -154,7 +153,7 @@ async function handleSave() {
   try {
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
-      avatar: avatarPreview.value,
+      avatar: avatarPreview.value ? avatarPreview.value : user.value.avatar,
       name: user.value.name,
       bio: user.value.bio,
       aboutMe: user.value.aboutMe,

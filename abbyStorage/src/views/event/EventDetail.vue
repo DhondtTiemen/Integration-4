@@ -208,6 +208,15 @@ function goBack() {
 const participants = ref<string[]>([]);
 const event = ref<Event | null>(null);
 const relatedEvents = ref<Event[]>([]);
+
+async function loadEventPageData(eventId: string) {
+  await getEventById(eventId);
+  await getUsersData();
+  if (event.value) {
+    await getRelatedEvents();
+    await loadParticipantsFromEvent(eventId);
+  }
+}
 async function loadParticipantsFromEvent(eventId: string) {
   try {
     const eventRef = doc(db, "events", eventId);
@@ -232,29 +241,19 @@ function hasParticipate(): boolean {
 
 console.log(participants);
 async function toggleParticipateEvent() {
-  console.log("click");
-  console.log("eventId:", eventId);
-
   if (!eventId || !storedIdRaw) return;
 
   try {
     const eventRef = doc(db, "events", String(eventId));
-
-    // ⬇️ Haal laatste deelnemerslijst op
     const eventSnap = await getDoc(eventRef);
     let currentParticipants: string[] = [];
 
     if (eventSnap.exists()) {
-      console.log("Event exists");
       currentParticipants = eventSnap.data().participants ?? [];
     } else {
-      console.warn("Event not found in Firestore");
       return;
     }
 
-    console.log("currentParticipants:", currentParticipants);
-
-    // ✅ Voeg deelnemer toe (geen toggle)
     if (!currentParticipants.includes(String(storedIdRaw))) {
       currentParticipants.push(String(storedIdRaw));
       await updateDoc(eventRef, {
@@ -262,13 +261,12 @@ async function toggleParticipateEvent() {
       });
     }
 
-    // ⬇️ Herlaad deelnemerslijst naar ref
+    // ⬇️ Herlaad het hele event zodat event.value.participants klopt
+    await getEventById(eventId);
+    // ⬇️ Herlaad eventueel ook de participants-ref als je die elders gebruikt
     await loadParticipantsFromEvent(eventId);
   } catch (err) {
     console.error("Failed to update event participants", err);
-  } finally {
-    // Indien nodig: toggle loading state
-    // isParticipating.value = false;
   }
 }
 
@@ -359,38 +357,15 @@ function shareEvent() {
   }
 }
 onMounted(async () => {
-  await getEventById(String(route.params.id));
-  await getUsersData();
-  // Haal related events pas op als het hoofd-event er is
-  if (event.value) {
-    await getRelatedEvents();
-  }
-  await loadParticipantsFromEvent(eventId);
-
-  if (hasParticipate()) {
-    console.log("User has already participated");
-  }
+  await loadEventPageData(String(route.params.id));
 });
+
 watch(
   () => route.params.id,
-  (newId) => {
+  async (newId) => {
     if (newId) {
-      getRelatedEvents();
-      getEventById(String(route.params.id));
+      await loadEventPageData(String(newId));
     }
   }
 );
-watch(
-  () => event.value,
-  async (newEvent) => {
-    if (newEvent) {
-      await getRelatedEvents();
-    }
-  }
-);
-watch(participants, (newVal) => {
-  if (event.value) {
-    event.value.participants = newVal;
-  }
-});
 </script>
