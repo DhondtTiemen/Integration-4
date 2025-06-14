@@ -274,11 +274,11 @@
                 :key="event.id"
                 class="flex items-center gap-4"
               >
-                <img
+                <ImageTemplate
                   v-if="event.images?.length"
-                  :src="`${event.images[0]}`"
+                  :path="`${event.images[0]}`"
                   alt="Event"
-                  class="w-12 h-12 object-cover"
+                  :screen="'eventThumbnail'"
                 />
                 <div class="flex flex-col">
                   <p class="text-sm font-medium text-gray-900">
@@ -343,11 +343,11 @@
                   :key="post.id"
                   class="bg-gray-100 h-28 w-28 flex justify-center items-center overflow-hidden"
                 >
-                  <img
+                  <ImageTemplate
                     v-if="post.images?.length"
-                    :src="post.images[0]"
+                    :path="post.images[0]"
                     alt="Post image"
-                    class="w-full h-full object-cover"
+                    screen="postImage"
                   />
                   <Image v-else class="w-10 h-10 text-gray-400" />
                 </router-link>

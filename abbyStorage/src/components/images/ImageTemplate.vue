@@ -31,9 +31,21 @@
   />
   <img
     v-if="screen == 'boxDetail'"
-    class="w-full h-full object-cover "
+    class="w-full h-full object-cover"
     :src="url || defaultPath"
     alt="Main Image"
+  />
+  <img
+    v-if="screen == 'eventThumbnail'"
+    class="w-12 h-12 object-cover"
+    :src="url || defaultPath"
+    alt="Event"
+  />
+  <img
+    v-if="screen == 'postImage'"
+    class="w-full h-full object-cover"
+    :src="url || defaultPath"
+    alt="Event"
   />
 </template>
 
@@ -52,7 +64,12 @@ async function fetchUrl() {
     try {
       url.value = await getDownloadURL(storageRef(storage, props.path));
     } catch {
-      if (props.screen === "mainImage" || props.screen === "imageItems") {
+      if (
+        props.screen === "mainImage" ||
+        props.screen === "imageItems" ||
+        props.screen === "boxDetail" ||
+        props.screen === "eventThumbnail" || props.screen === "postImage"
+      ) {
         url.value = defaultPathImage;
       } else {
         // For other screens, use the default user avatar
