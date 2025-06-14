@@ -134,7 +134,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 
 import db from "../../firebase/firebase.ts";
 import { getUserById } from "../../firebase/userService.ts";

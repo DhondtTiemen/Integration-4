@@ -266,7 +266,7 @@ import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import { getUserById } from "../../firebase/userService";
 import { useRouter } from "vue-router";
-import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 import { uploadImage } from "../../firebase/imageService";
 
 const userID = localStorage.getItem("userId");
