@@ -25,15 +25,13 @@ export default {
 
   props: {
     posts: Array,
-    showOptionsId: [String, Number] // afhankelijk van jouw gebruik
+    showOptionsId: [String, Number] 
   },
   
   methods: {
     toggleOptions(id) {
-      // logica
     },
     reportPost(id) {
-      // logica
     }
   }
 }

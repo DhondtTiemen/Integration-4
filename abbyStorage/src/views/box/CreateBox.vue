@@ -306,7 +306,6 @@ const boxDescription = ref("");
 async function handleBox() {
   const colRef = collection(db, "users");
 
-  // Upload main image indien nodig
   let mainImageUrl = user.value?.box?.mainImage || "";
   if (mainImageFile.value) {
     mainImageUrl = await uploadImage(
@@ -320,7 +319,6 @@ async function handleBox() {
     mainImageUrl = mainImagePreview.value;
   }
 
-  // Upload item images indien nodig
   const items = [];
   for (let i = 0; i < editableItems.value.length; i++) {
     const item = editableItems.value[i];
@@ -371,7 +369,7 @@ function onItemImageChange(event: Event, index: number) {
   if (target.files && target.files[0]) {
     const file = target.files[0];
     if (editableItems.value[index]) {
-      editableItems.value[index].imageFile = file; // <-- sla bestand op
+      editableItems.value[index].imageFile = file;
       const reader = new FileReader();
       reader.onload = (e) => {
         editableItems.value[index].imagePreview = e.target?.result as string;

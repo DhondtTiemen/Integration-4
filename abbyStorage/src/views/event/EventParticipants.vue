@@ -77,13 +77,11 @@ onMounted(async () => {
   const eventId = String(route.params.id);
   let participantIds: string[] = [];
 
-  // Haal het event op uit Firestore
   const event = await getEventById(eventId);
   if (event && Array.isArray(event.participants)) {
     participantIds = event.participants.map(String);
   }
 
-  // Haal alle user info op voor de deelnemers
   const users: any[] = [];
   for (const pid of participantIds) {
     try {

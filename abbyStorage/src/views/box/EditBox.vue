@@ -263,7 +263,6 @@
     </div>
     <!-- </div> -->
   </div>
-  <!-- <div v-else class="p-4 text-center text-red-600">User not found.</div> -->
 </template>
 
 <script lang="ts" setup>
@@ -273,9 +272,8 @@ import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import { useRoute, useRouter } from "vue-router";
 import { getUserById } from "../../firebase/userService";
-import { uploadImage } from "../../firebase/imageService"; // <-- importeer de upload service
+import { uploadImage } from "../../firebase/imageService";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
-import { Image } from "lucide-vue-next";
 
 const user = ref<User | null>(null);
 const loading = ref(true);
@@ -325,7 +323,6 @@ async function handleSave() {
     return;
   }
 
-  // Upload main image indien nodig
   let mainImage = user.value.box?.mainImage || "";
   if (mainImageFile.value) {
     mainImage = await uploadImage(
@@ -336,7 +333,6 @@ async function handleSave() {
     mainImage = mainImagePreview.value;
   }
 
-  // Upload item images indien nodig
   const items = [];
   for (let i = 0; i < editableItems.value.length; i++) {
     const item = editableItems.value[i];

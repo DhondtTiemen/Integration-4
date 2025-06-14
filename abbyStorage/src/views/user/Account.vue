@@ -439,13 +439,11 @@ function logOut() {
 const filteredEvents = computed(() => {
   const now = new Date();
   if (filter.value === 'Attending') {
-    // Eerst georganiseerde (Organised), dan Attend (waar user deelnemer is), beide in de toekomst
     const organised = events.value.filter(
       (event) =>
         event.type === 'Organised' &&
         new Date(event.date) >= now
     );
-    // Haal alle attend events die niet ook organised zijn
     const organisedIds = new Set(organised.map(e => e.id));
     const attend = events.value.filter(
       (event) =>
@@ -455,7 +453,6 @@ const filteredEvents = computed(() => {
     );
     return [...organised, ...attend];
   } else {
-    // Alleen events uit het verleden waar de user deelnemer was
     return events.value.filter(
       (event) =>
         event.type === 'Attended' &&
@@ -474,7 +471,6 @@ async function getPostsById(userId: string) {
     const q = query(collection(db, "posts"), where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
 
-    // Verzamel alle posts in een array
     const postList: Post[] = [];
     querySnapshot.forEach((doc) => {
       postList.push({ id: doc.id, ...doc.data() } as Post);
@@ -494,7 +490,6 @@ async function getEventsById(userId: string) {
   try {
     const now = new Date();
 
-    // Events die de user heeft aangemaakt
     const createdQuery = query(
       collection(db, "events"),
       where("createdBy", "==", userId)
@@ -506,7 +501,6 @@ async function getEventsById(userId: string) {
       type: "Organised",
     }));
 
-    // Events waar de user deelnemer is
     const attendedQuery = query(
       collection(db, "events"),
       where("participants", "array-contains", userId)
@@ -534,7 +528,6 @@ async function getEventsById(userId: string) {
       }
     });
 
-    // Combineer en sla op: eerst upcoming (attend), dan organised, dan attended (verlopen)
     events.value = [...attend, ...created, ...attended];
     return events.value;
   } catch (error) {
@@ -548,7 +541,6 @@ async function getEventsById(userId: string) {
 
 const loading = ref(true);
 
-// Make loggedInUser reactive and store the full user object
 const loggedInUser = ref<User | null>(null);
 async function getLoggedInUser() {
   const storedId = localStorage.getItem("userId");
@@ -561,7 +553,6 @@ async function getLoggedInUser() {
 }
 const isFollowing = computed(() => {
   if (!loggedInUser.value || !user.value) return false;
-  // Zet alles naar string voor vergelijking
   return (loggedInUser.value.following || [])
     .map(String)
     .includes(String(user.value.id));
@@ -586,7 +577,6 @@ async function toggleFollow() {
     if (followerIdx !== -1) followers.splice(followerIdx, 1);
   }
 
-  // Update refs zodat UI direct reageert
   loggedInUser.value = { ...loggedInUser.value, following: [...following] };
   user.value = { ...user.value, followers: [...followers] };
 
@@ -604,7 +594,6 @@ async function toggleFollow() {
   }
 }
 onMounted(() => {
-  // fetchData();
   const storedId = localStorage.getItem("userId");
   const currentUserId = route.params.id as string;
   accountVisit.value = storedId !== currentUserId;

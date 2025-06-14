@@ -35,7 +35,7 @@ export async function toggleLikeForBoxComment(
   likerId: string,
   commentsArr: any[]
 ) {
-  // Zoek de juiste comment in de array
+  // Search for the comment in the comments array
   const idx = commentsArr.findIndex(
     (c) =>
       c.userId === comment.userId &&

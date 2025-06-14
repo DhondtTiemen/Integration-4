@@ -27,7 +27,6 @@ export function formatTimeAgo(timestamp: number | string | Date) {
 export function formatDateTime(dateStr: string) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  // Haal datum en tijd apart op
   const datePart = d.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",

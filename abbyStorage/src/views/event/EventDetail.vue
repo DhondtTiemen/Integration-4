@@ -210,7 +210,7 @@ import ImageTemplate from "../../components/images/ImageTemplate.vue";
 import { formatDateTime } from "../../utils/date.ts";
 const route = useRoute();
 const router = useRouter();
-const users = ref<User[]>([]); // alle users om usernames en avatars op te halen
+const users = ref<User[]>([]); 
 
 const storedIdRaw = localStorage.getItem("userId");
 const eventId: string = route.params.id as string;
@@ -273,9 +273,7 @@ async function toggleParticipateEvent() {
       });
     }
 
-    // ⬇️ Herlaad het hele event zodat event.value.participants klopt
     await getEventById(eventId);
-    // ⬇️ Herlaad eventueel ook de participants-ref als je die elders gebruikt
     await loadParticipantsFromEvent(eventId);
   } catch (err) {
     console.error("Failed to update event participants", err);
@@ -283,7 +281,7 @@ async function toggleParticipateEvent() {
 }
 
 async function getUsersData() {
-  users.value = []; // reset!
+  users.value = []; 
   const usersQuery = query(collection(db, "users"));
   const querySnap = await getDocs(usersQuery);
   querySnap.forEach((doc) => {
@@ -295,18 +293,17 @@ function getUserInfo(userId: string) {
   if (!foundUser) {
     return {
       name: "Unknown",
-      avatar: "default-avatar.jpg", // fallback avatar
+      avatar: "default-avatar.jpg", 
     };
   } else {
     return {
       name: foundUser.name,
-      avatar: foundUser.avatar, // fallback avatar
+      avatar: foundUser.avatar, 
     };
   }
 }
 async function getEventById(eventId: string) {
   try {
-    // Forceer eventId naar string
     const eventRef = doc(db, "events", String(eventId));
     const docSnap = await getDoc(eventRef);
 
@@ -327,7 +324,7 @@ async function getEventById(eventId: string) {
 }
 
 async function getRelatedEvents() {
-  const events: Event[] = []; // reset!
+  const events: Event[] = []; 
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
   querySnap.forEach((doc) => {

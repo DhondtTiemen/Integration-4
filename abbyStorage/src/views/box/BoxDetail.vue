@@ -405,7 +405,6 @@ const commentsCount = computed(() => comments.value.length);
 interface BoxItem {
   name: string;
   image: string;
-  // add other properties if needed
 }
 
 const user = ref<User | null>(null);
@@ -416,7 +415,6 @@ const commentLiking = ref<{ [key: number]: boolean }>({});
 const newCommentText = ref("");
 const commentUsers = ref<Record<string, any>>({});
 
-// Ophalen van de gebruiker en comments
 async function fetchUser() {
   loading.value = true;
   user.value = await getUserById(currentUserId);

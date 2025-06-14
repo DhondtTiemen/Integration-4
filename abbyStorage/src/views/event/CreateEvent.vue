@@ -308,7 +308,6 @@ async function submitEvent() {
 
     const creatorId = localStorage.getItem("userId") || null;
 
-    // Save event to Firestore, voeg creator direct toe aan participants
     const docRef = await addDoc(collection(db, "events"), {
       title: eventName.value,
       about: description.value,
@@ -332,7 +331,6 @@ async function submitEvent() {
     materials.value = [];
     newMaterial.value = "";
 
-    // Ga naar de detailpagina van het nieuwe event
     router.push(`/event/${docRef.id}`);
   } catch (err) {
     errors.value.eventName = "Failed to create event. Try again.";

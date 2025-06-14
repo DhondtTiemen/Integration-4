@@ -80,9 +80,6 @@ const userId = ref<string | null>(null);
 const route = useRoute();
 
 const isActive = (path: string) => route.path === path;
-// const profileImageUrl = computed(() => {
-//   return user.value?.avatar || "/src/assets/users/default.png";
-// });
 
 async function refreshUser() {
   if (userId.value) {
@@ -97,7 +94,6 @@ onMounted(async () => {
     userId.value = storedId;
     await refreshUser();
   }
-  // Luister naar profiel-updates
   window.addEventListener("profile-updated", refreshUser);
 });
 watch(

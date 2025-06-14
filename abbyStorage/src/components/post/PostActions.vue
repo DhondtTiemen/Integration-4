@@ -78,7 +78,7 @@ import {
 
 const props = defineProps<{
   postId: string;
-  initialLikes: string[]; // vervangt 'likes'
+  initialLikes: string[]; 
   commentsCount: number;
   views: number;
 }>();

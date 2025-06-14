@@ -11,14 +11,10 @@
 </template>
 
 <script lang="ts">
-// import AppHeader from '../generic/AppHeader.vue'
-// import AppFooter from '../generic/AppFooter.vue'
 import appNavigation from '../layout/AppNavigation.vue';
 
 export default {
   components: {
-    // AppHeader,
-    // AppFooter,
     appNavigation,
   },
 }

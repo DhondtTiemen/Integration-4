@@ -6,7 +6,7 @@ export default interface Post {
   images: string[];
   location: string;
   likes: string[];
-  eventId: string; // gebruik `string` als het soms leeg is: ""
+  eventId: string;
   comments: {
     userId: string;
     text: string;

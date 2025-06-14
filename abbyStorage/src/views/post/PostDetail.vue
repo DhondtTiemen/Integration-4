@@ -171,7 +171,6 @@ import type Post from "../../interfaces/interface.post";
 
 import {
   getPostById,
-  // hasUserLikedComment,
   toggleLikeForComment,
   fetchCommentAuthors,
   addCommentToPost,
@@ -179,7 +178,6 @@ import {
 import { getUserById } from "../../firebase/userService";
 import { formatTimeAgo } from "../../utils/date";
 
-// Top-level refs and constants
 const route = useRoute();
 const currentUserId = String(route.params.id);
 const storedIdRaw = localStorage.getItem("userId");
@@ -191,7 +189,6 @@ const commentUsers = ref<Record<string, any>>({});
 const commentLiking = ref<{ [key: string]: boolean }>({});
 const currentUser = ref<User | null>(null);
 
-// Computed properties
 const comments = computed<Comment[]>(() => {
   if (!post.value?.comments) return [];
   return [...post.value.comments].sort(
@@ -228,7 +225,6 @@ const commentLabel = computed(
   () => `${commentsCount.value} comment${commentsCount.value !== 1 ? "s" : ""}`
 );
 
-// Lifecycle hook
 onMounted(async () => {
   if (!currentUserId) return;
 
@@ -249,12 +245,6 @@ onMounted(async () => {
   }
 });
 
-// TODO: Fix this stupid Heart thing
-// Helper functions
-// function hasUserLikedComment(commentLikes: string[], userId: string | null) {
-//   if (!userId) return false;
-//   return commentLikes.includes(userId);
-// }
 
 async function preloadCommentUsers(commentsArr: any) {
   commentUsers.value = await fetchCommentAuthors(commentsArr);

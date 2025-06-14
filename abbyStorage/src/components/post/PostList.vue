@@ -21,7 +21,7 @@ import { fetchPosts } from "../../firebase/postService";
 const posts = ref<PostType[]>([]);
 const showOptionsId = ref<string | null>(null);
 
-// FUNCTIES
+// FUNCTIONS
 const getPosts = async () => {
   posts.value = await fetchPosts();
 };

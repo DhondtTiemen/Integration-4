@@ -151,7 +151,7 @@ export async function fetchCommentAuthors(comments: any[]): Promise<Record<strin
 export async function addCommentToPost(
   postId: string,
   comment: any,
-  comments: any[] // geen Ref<>
+  comments: any[] 
 ): Promise<any[]> {
   comments.push(comment);
 

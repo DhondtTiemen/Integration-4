@@ -242,13 +242,11 @@ if (!storedIdRaw) {
   router.push(`/login`);
 }
 
-// Event select logic
 const events = ref<any[]>([]);
 const eventSearch = ref("");
 const selectedEventId = ref("");
 
 onMounted(async () => {
-  // Fetch all events, newest first
   const eventsQuery = query(collection(db, "events"), orderBy("date", "desc"));
   const querySnap = await getDocs(eventsQuery);
   events.value = [];
@@ -296,7 +294,6 @@ async function submitPost() {
 
   loading.value = true;
   try {
-    // Upload image to storage
     let imageUrl = "";
     if (imageFile.value) {
       imageUrl = await uploadImage(

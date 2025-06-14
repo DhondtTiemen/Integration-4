@@ -155,14 +155,12 @@ async function handleSave() {
   let avatarUrl = user.value.avatar;
 
   if (avatarFile.value) {
-    // Sla op als users/<id>/avatar.jpg
     avatarUrl = await uploadImage(
       avatarFile.value,
       `users/${userId}/avatar.jpg`
     );
   }
 
-  // Update Firestore met de nieuwe avatar URL
   const userRef = doc(db, "users", userId);
   await updateDoc(userRef, {
     avatar: avatarUrl,
@@ -177,7 +175,7 @@ function onAvatarChange(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
-    avatarFile.value = file; // sla het bestand op voor upload
+    avatarFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       avatarPreview.value = e.target?.result as string;

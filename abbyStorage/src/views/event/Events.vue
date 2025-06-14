@@ -47,8 +47,7 @@ const loading = ref(true);
 
 async function getEvents() {
   try {
-    events.value = []; // reset!
-    // Voeg where-clause toe voor status 'approved'
+    events.value = [];
     const eventsQuery = query(
       collection(db, "events"),
       where("status", "==", "Approved")
@@ -59,16 +58,13 @@ async function getEvents() {
     const fetchedEvents = [];
     querySnap.forEach((doc) => {
       const data = { id: doc.id, ...doc.data() };
-      // Zorg dat event.date een Date object is
       const eventDate = new Date(data.date);
-      // Alleen toekomstige events
       if (eventDate >= now) {
         data.dateObj = eventDate;
         fetchedEvents.push(data);
       }
     });
 
-    // Sorteer op datum (dichtstbijzijnde eerst)
     fetchedEvents.sort((a, b) => a.dateObj - b.dateObj);
 
     events.value = fetchedEvents;

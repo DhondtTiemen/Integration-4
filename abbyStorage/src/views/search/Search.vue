@@ -128,7 +128,7 @@ const users = ref<User[]>([]);
 const events = ref<Event[]>([]);
 
 async function getUsersData() {
-  users.value = []; // reset!
+  users.value = []; 
   const usersQuery = query(collection(db, "users"));
   const querySnap = await getDocs(usersQuery);
   querySnap.forEach((doc) => {
@@ -136,7 +136,7 @@ async function getUsersData() {
   });
 }
 async function getEvents() {
-  events.value = []; // reset!
+  events.value = []; 
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
   querySnap.forEach((doc) => {
@@ -184,7 +184,6 @@ async function toggleFollow(profile: any) {
     if (followerIdx !== -1) followers.splice(followerIdx, 1);
   }
 
-  // Update refs zodat UI direct reageert
   loggedInUser.value = { ...loggedInUser.value, following: [...following] };
   profile.followers = [...followers];
 

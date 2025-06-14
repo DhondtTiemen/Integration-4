@@ -125,7 +125,6 @@ async function toggleFollow(profile: any) {
     return;
   }
 
-  // Kopieer arrays zodat Vue reactiviteit werkt
   const following = [...(loggedInUser.value.following || [])].map(String);
   const followers = [...(profile.followers || [])].map(String);
 
@@ -147,9 +146,7 @@ async function toggleFollow(profile: any) {
     const profileRef = doc(db, "users", profileId);
     await updateDoc(profileRef, { followers });
 
-    // Update lokale refs zodat UI direct reageert
     loggedInUser.value = { ...loggedInUser.value, following: [...following] };
-    // Zoek de juiste user in followingList en update die followers
     const idxInList = followingList.value.findIndex(
       (u) => String(u.id) === profileId
     );
@@ -165,7 +162,7 @@ async function toggleFollow(profile: any) {
 }
 async function getFollowing() {
   loading.value = true;
-  user.value = await getUserById(String(userId)); // <-- voeg deze toewijzing toe!
+  user.value = await getUserById(String(userId));
   if (
     !user.value ||
     !user.value.following ||
@@ -176,7 +173,6 @@ async function getFollowing() {
     return;
   }
 
-  // Haal alle following user info op
   const followerIds = user.value.following.map(String);
   const followingData: any[] = [];
 
