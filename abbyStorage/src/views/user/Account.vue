@@ -68,7 +68,7 @@
 
         <div v-else class="mb-8">
           <div class="flex flex-col items-center justify-center">
-            <ImageAvatar  :path="user?.avatar" :screen="`account`"/>
+            <ImageTemplate  :path="user?.avatar" :screen="`account`"/>
             <h1 class="text-2xl font-bold text-center mb-2">
               {{ user?.name }}
             </h1>
@@ -146,15 +146,15 @@
             <div v-if="user?.box?.boxNumber !==0">
               <router-link
                 :to="`/box/${user?.id}`"
-                class="grid grid-cols-2 gap-2 w-full max-w-md mx-auto"
+                class="grid grid-cols-2 border-2 border-gray-300 gap-2 w-full max-w-md mx-auto"
               >
                 <div
                   class="aspect-square bg-gray-300 flex justify-center items-center"
                 >
-                <img
-            :src="user?.box?.mainImage"
+                <ImageTemplate
+            :path="user?.box?.mainImage"
             alt="Box main"
-            class="w-24 h-24 object-cover rounded-lg"
+            :screen="'boxDetail'"
           />
                 </div>
                 <div
@@ -387,7 +387,7 @@ import { useRoute, useRouter } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
-import ImageAvatar from "../../components/images/imageAvatar.vue";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
 // DATABASE
 import db from "../../firebase/firebase.ts";
 import {

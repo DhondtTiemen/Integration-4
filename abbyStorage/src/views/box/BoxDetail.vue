@@ -169,11 +169,12 @@
 
       <div class="w-full max-w-md mx-auto px-4">
         <p class="pb-2">{{ user?.box?.description }}</p>
-        <div class="aspect-square bg-gray-300 flex justify-center items-center">
-          <img
-            :src="user?.box?.mainImage"
+        <div class="aspect-square bg-gray-500 flex justify-center items-center">
+          <ImageTemplate
+            :path="user?.box?.mainImage"
             alt="Box main"
             class="w-24 h-24 object-cover rounded-lg"
+            :screen="'boxDetail'"
           />
         </div>
       </div>
@@ -378,7 +379,11 @@ import {
   preloadCommentUsers,
   toggleLikeForBoxComment,
 } from "../../firebase/boxService";
+import {
+  Eye
+} from "lucide-vue-next";
 import { getUserById } from "../../firebase/userService";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
 
 const route = useRoute();
 const currentUserId = route.params.id as string;

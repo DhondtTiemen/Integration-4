@@ -26,12 +26,7 @@
         alt="Box main"
         class="w-24 h-24 object-cover rounded-full"
       />
-      <ImageAvatar
-        
-        v-else
-        :path="user?.avatar"
-        :screen="'edit'"
-      />
+      <ImageTemplate v-else :path="user?.avatar" :screen="'edit'" />
 
       <!-- <img
         v-else
@@ -139,7 +134,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import ImageAvatar from "../../components/images/imageAvatar.vue";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
 
 import db from "../../firebase/firebase.ts";
 import { getUserById } from "../../firebase/userService.ts";

@@ -114,17 +114,17 @@
           class="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-alphaDark"
         >
           <input type="file" @change="onMainImageChange" accept="image/*" />
+
           <img
             v-if="mainImagePreview"
+            class="w-32 h-32 object-cover rounded-lg"
             :src="mainImagePreview"
             alt="Main Image Preview"
-            class="w-32 h-32 object-cover rounded-lg"
           />
-          <img
+          <ImageTemplate
             v-else
-            :src="user?.box?.mainImage"
-            alt="Main Image"
-            class="w-32 h-32 object-cover rounded-lg"
+            :path="user?.box?.mainImage"
+            :screen="`mainImage`"
           />
         </div>
       </div>
@@ -187,12 +187,24 @@
               alt="Item preview"
               class="w-full h-full object-cover rounded"
             />
-            <img
+            <ImageTemplate
               v-else-if="item.image"
-              :src="item.image"
+              :path="item.image"
               alt="Item"
               class="w-full h-full object-cover rounded"
+              :screen="`imageItems`"
             />
+            <!-- <img
+            v-if="mainImagePreview"
+            class="w-32 h-32 object-cover rounded-lg"
+            :src="mainImagePreview"
+            alt="Main Image Preview"
+          />
+          <ImageTemplate
+            v-else
+            :path="user?.box?.mainImage"
+            :screen="`mainImage`"
+          /> -->
             <div v-else class="text-gray-400 text-center text-sm z-0">
               Click to upload
             </div>
@@ -257,30 +269,30 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import {
-  collection,
-  addDoc,
-  setDoc,
-  doc,
-  query,
-  where,
-  updateDoc,
-  getDocs,
-  getDoc,
-} from "firebase/firestore";
+import { collection, setDoc, doc } from "firebase/firestore";
 import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import { useRoute, useRouter } from "vue-router";
 import { getUserById } from "../../firebase/userService";
+import { uploadImage } from "../../firebase/imageService"; // <-- importeer de upload service
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import { Image } from "lucide-vue-next";
+
 const user = ref<User | null>(null);
 const loading = ref(true);
 const route = useRoute();
 const userId = String(route.params.id);
 const router = useRouter();
 const boxDescription = ref("");
+const mainImageFile = ref<File | null>(null);
 const mainImagePreview = ref<string | null>(null);
 const editableItems = ref<
-  Array<{ name: string; image: string; imagePreview?: string | null }>
+  Array<{
+    name: string;
+    image: string;
+    imagePreview?: string | null;
+    imageFile?: File | null;
+  }>
 >([]);
 
 async function fetchUser() {
@@ -289,13 +301,12 @@ async function fetchUser() {
     if (user.value?.box?.description) {
       boxDescription.value = user.value.box.description;
     }
-    // console.log("Fetching user with ID:", userID);
-    console.log("Fetched user:", user.value);
     if (user.value?.box?.items) {
       editableItems.value = user.value.box.items.map((item: any) => ({
         name: item.name,
         image: item.image,
         imagePreview: null,
+        imageFile: null,
       }));
     }
   } catch (error) {
@@ -315,25 +326,41 @@ async function handleSave() {
     return;
   }
 
-  const mainImage = mainImagePreview.value || user.value.box?.mainImage || "";
+  // Upload main image indien nodig
+  let mainImage = user.value.box?.mainImage || "";
+  if (mainImageFile.value) {
+    mainImage = await uploadImage(
+      mainImageFile.value,
+      `users/${userId}/box/main.jpg`
+    );
+  } else if (mainImagePreview.value) {
+    mainImage = mainImagePreview.value;
+  }
 
-  // Kies de gewenste variant hieronder:
-  // const items = editableItems.value.map((item) => ({
-  //   name: item.name,
-  //   image: item.imagePreview || item.image || "",
-  // }));
-  console.log("preview items:", editableItems.value);
-  const items = editableItems.value.map((item) => ({
-    name: item.name,
-    image: item.imagePreview || item.image || "",
-  }));
+  // Upload item images indien nodig
+  const items = [];
+  for (let i = 0; i < editableItems.value.length; i++) {
+    const item = editableItems.value[i];
+    let imageUrl = item.image || "";
+    if (item.imageFile) {
+      imageUrl = await uploadImage(
+        item.imageFile,
+        `users/${userId}/box/item_${i}.jpg`
+      );
+    } else if (item.imagePreview) {
+      imageUrl = item.imagePreview;
+    }
+    items.push({
+      name: item.name,
+      image: imageUrl,
+    });
+  }
 
   const updatedBox = {
     mainImage,
     description: boxDescription.value || "",
     items,
   };
-  console.log("Updated box data:", items);
   await setDoc(
     doc(collection(db, "users"), String(userId)),
     {
@@ -348,6 +375,7 @@ function onMainImageChange(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
+    mainImageFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       mainImagePreview.value = e.target?.result as string;
@@ -360,13 +388,14 @@ function onItemImageChange(event: Event, index: number) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (editableItems.value[index]) {
+    if (editableItems.value[index]) {
+      editableItems.value[index].imageFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
         editableItems.value[index].imagePreview = e.target?.result as string;
-      }
-    };
-    reader.readAsDataURL(file);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
 
@@ -379,6 +408,7 @@ function addNewItem() {
     name: "",
     image: "",
     imagePreview: null,
+    imageFile: null,
   });
 }
 </script>

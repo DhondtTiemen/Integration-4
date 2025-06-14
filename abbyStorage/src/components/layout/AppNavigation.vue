@@ -47,7 +47,7 @@
               : 'border-transparent',
           ]"
         >
-          <ImageAvatar
+          <ImageTemplate
             :path="user?.avatar"
             class="h-full w-full object-cover"
             :screen="'nav'"
@@ -65,7 +65,7 @@ import { useRoute } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import { getUserById } from "../../firebase/userService";
 
-import ImageAvatar from "../../components/images/imageAvatar.vue";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
 // Icon Imports
 import HomeFilled from "../../assets/icons/HomeFilled.vue";
 import HomeOutline from "../../assets/icons/HomeOutline.vue";
