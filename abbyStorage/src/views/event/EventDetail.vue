@@ -33,13 +33,15 @@
 
       <!-- Event info -->
       <div>
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">{{ event.title }}</h2>
-          <p class="text-sm text-gray-600">
-            Event is {{ event.status }} for approval
-          </p>
-        </div>
-        <p class="text-sm text-gray-600 flex items-center gap-1">
+        <h2 class="text-xl font-bold">{{ event.title }}</h2>
+        <p
+          v-if="event.status == 'Pending'"
+          class="text-sm text-gray-600 flex mt-1 items-center gap-1"
+        >
+          <Clock class="w-4 h-4" />
+          {{ event.status }}
+        </p>
+        <p class="text-sm text-gray-600 flex items-center gap-1 mt-1">
           <CalendarDays class="w-4 h-4" />
           {{ formatDateTime(event.date) }}
         </p>
@@ -186,6 +188,7 @@ import {
   MapPin,
   Share,
   CircleUserRound,
+  Clock,
 } from "lucide-vue-next";
 import {
   collection,

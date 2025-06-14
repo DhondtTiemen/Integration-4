@@ -10,6 +10,6 @@ export default interface Event {
   image: string;
   createdBy: string; // userId van de maker
   participants: string[]; // array van userIds
-  status: "approved" | "pending" | "rejected"; // of alleen string als meerdere statussen mogelijk
+  status: string; // of alleen string als meerdere statussen mogelijk
   type?: string; // Added to support dynamic property
 }

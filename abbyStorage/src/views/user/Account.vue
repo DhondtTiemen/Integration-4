@@ -275,8 +275,8 @@
                 class="flex items-center gap-4"
               >
                 <ImageTemplate
-                  v-if="event.images?.length"
-                  :path="`${event.images[0]}`"
+                  v-if="event.image"
+                  :path="`${event.image}`"
                   alt="Event"
                   :screen="'eventThumbnail'"
                 />

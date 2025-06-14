@@ -318,7 +318,7 @@ async function submitEvent() {
       image: mainImageUrl,
       createdBy: creatorId,
       participants: creatorId ? [creatorId] : [],
-      status: "pending",
+      status: "Pending",
       timestamp: Timestamp.now(),
     });
 
