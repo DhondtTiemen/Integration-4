@@ -352,7 +352,7 @@
 
         <div class="flex items-center justify-start overflow-y-auto gap-2">
           <div v-for="(item, index) in user?.box?.items" :key="index">
-            <div class="bg-gray-300 p-4">
+            <div class="">
               <img
                 :src="item.image"
                 :alt="item.name"
@@ -380,7 +380,7 @@ import {
   toggleLikeForBoxComment,
 } from "../../firebase/boxService";
 import {
-  Eye
+  Eye,SendHorizonal
 } from "lucide-vue-next";
 import { getUserById } from "../../firebase/userService";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";

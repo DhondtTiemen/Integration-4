@@ -120,11 +120,10 @@
             alt="Box main"
             class="w-32 h-32 object-cover rounded-lg"
           />
-          <img
+          <ImageTemplate
             v-else
-            :src="user?.box?.mainImage"
-            alt="Box main"
-            class="w-32 h-32 object-cover rounded-lg"
+            :path="user?.box?.mainImage"
+            :screen="`mainImage`"
           />
         </div>
       </div>
@@ -258,40 +257,37 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-
-const userID = localStorage.getItem("userId"); // Replace with actual user ID retrieval logic
-import type User from "../../interfaces/interface.user";
-import { getUserById } from "../../firebase/userService";
 import {
   collection,
-  addDoc,
   setDoc,
   doc,
-  query,
-  where,
-  updateDoc,
-  getDocs,
-  getDoc,
 } from "firebase/firestore";
-console.log("userID", userID);
-import { useRouter } from "vue-router";
 import db from "../../firebase/firebase.ts";
+import type User from "../../interfaces/interface.user";
+import { getUserById } from "../../firebase/userService";
+import { useRouter } from "vue-router";
+import ImageTemplate from "../../components/images/ImageTemplate.vue";
+import { uploadImage } from "../../firebase/imageService";
+
+const userID = localStorage.getItem("userId");
 const user = ref<User | null>(null);
 const loading = ref(true);
 
 const mainImagePreview = ref<string | null>(null);
+const mainImageFile = ref<File | null>(null);
 const editableItems = ref<
-  Array<{ name: string; image: string; imagePreview?: string | null }>
+  Array<{ name: string; image: string; imagePreview?: string | null; imageFile?: File | null }>
 >([]);
 
 async function fetchUser() {
   try {
-    getUserById(String(userID));
+    user.value = await getUserById(String(userID));
     if (user.value?.box?.items) {
       editableItems.value = user.value.box.items.map((item: any) => ({
         name: item.name,
         image: item.image,
         imagePreview: null,
+        imageFile: null,
       }));
     }
   } catch (error) {
@@ -309,12 +305,40 @@ const boxDescription = ref("");
 
 async function handleBox() {
   const colRef = collection(db, "users");
-  const updatedBox = {
-    mainImage: mainImagePreview.value || user.value?.box?.mainImage,
-    items: editableItems.value.map((item) => ({
+
+  // Upload main image indien nodig
+  let mainImageUrl = user.value?.box?.mainImage || "";
+  if (mainImageFile.value) {
+    mainImageUrl = await uploadImage(
+      mainImageFile.value,
+      `users/${userID}/box/main.jpg`
+    );
+  } else if (
+    mainImagePreview.value &&
+    mainImagePreview.value.startsWith("http")
+  ) {
+    mainImageUrl = mainImagePreview.value;
+  }
+
+  // Upload item images indien nodig
+  const items = [];
+  for (let i = 0; i < editableItems.value.length; i++) {
+    const item = editableItems.value[i];
+    let imageUrl = item.image || "";
+    if (item.imageFile) {
+      imageUrl = await uploadImage(item.imageFile, `users/${userID}/box/item_${i}.jpg`);
+    } else if (item.imagePreview && item.imagePreview.startsWith("http")) {
+      imageUrl = item.imagePreview;
+    }
+    items.push({
       name: item.name,
-      image: item.imagePreview || item.image,
-    })),
+      image: imageUrl,
+    });
+  }
+
+  const updatedBox = {
+    mainImage: mainImageUrl,
+    items,
     description: boxDescription.value,
     createdAt: String(new Date()),
     boxNumber: Math.floor(Math.random() * 99) + 1,
@@ -329,37 +353,11 @@ async function handleBox() {
   router.push("/box/" + userID);
 }
 
-// Load possible localStorage override
-const localStorageKey = `box_user_${user.value?.id}`;
-const localBoxData = JSON.parse(
-  localStorage.getItem(localStorageKey) || "null"
-);
-
-if (localBoxData) {
-  // override main image
-  mainImagePreview.value =
-    localBoxData.mainImage !== user.value?.box?.mainImage
-      ? localBoxData.mainImage
-      : null;
-
-  // override items
-  editableItems.value = localBoxData.items.map((item: any) => ({
-    name: item.name,
-    image: item.image,
-    imagePreview: null,
-  }));
-
-  // override description
-  boxDescription.value = localBoxData.description || "";
-} else {
-  // fallback → standaard JSON data
-  boxDescription.value = user.value?.box?.description || "";
-}
-
 function onMainImageChange(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
+    mainImageFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       mainImagePreview.value = e.target?.result as string;
@@ -372,13 +370,14 @@ function onItemImageChange(event: Event, index: number) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (editableItems.value[index]) {
+    if (editableItems.value[index]) {
+      editableItems.value[index].imageFile = file; // <-- sla bestand op
+      const reader = new FileReader();
+      reader.onload = (e) => {
         editableItems.value[index].imagePreview = e.target?.result as string;
-      }
-    };
-    reader.readAsDataURL(file);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
 
@@ -391,6 +390,7 @@ function addNewItem() {
     name: "",
     image: "",
     imagePreview: null,
+    imageFile: null,
   });
 }
 </script>
