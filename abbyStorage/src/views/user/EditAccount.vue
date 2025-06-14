@@ -25,12 +25,20 @@
         :src="avatarPreview"
         alt="Box main"
         class="w-24 h-24 object-cover rounded-full"
-      /><img
+      />
+      <ImageAvatar
+        
+        v-else
+        :path="user?.avatar"
+        :screen="'edit'"
+      />
+
+      <!-- <img
         v-else
         :src="user?.avatar"
         alt="Main Image"
         class="w-24 h-24 object-cover rounded-full"
-      />
+      /> -->
       <!-- Pencil Icon -->
       <div
         class="absolute bottom-0 right-0 bg-black rounded-full w-9 h-9 flex items-center justify-center"
@@ -131,13 +139,15 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
+import ImageAvatar from "../../components/images/imageAvatar.vue";
 
 import db from "../../firebase/firebase.ts";
 import { getUserById } from "../../firebase/userService.ts";
+import { uploadImage } from "../../firebase/imageService.ts";
 const route = useRoute();
 const router = useRouter();
 const userId: string = String(route.params.id);
-
+const avatarFile = ref<File | null>(null);
 const avatarPreview = ref<string | null>(null);
 function goBack() {
   history.back();
@@ -145,29 +155,34 @@ function goBack() {
 const user = ref<User | null>(null);
 
 async function handleSave() {
-  if (!userId || !user.value) {
-    console.error("No userId or user data");
-    return;
+  if (!userId || !user.value) return;
+
+  let avatarUrl = user.value.avatar;
+
+  if (avatarFile.value) {
+    // Sla op als users/<id>/avatar.jpg
+    avatarUrl = await uploadImage(
+      avatarFile.value,
+      `users/${userId}/avatar.jpg`
+    );
   }
 
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      avatar: avatarPreview.value ? avatarPreview.value : user.value.avatar,
-      name: user.value.name,
-      bio: user.value.bio,
-      aboutMe: user.value.aboutMe,
-    });
-    console.log("User updated!");
-    router.push("/account/" + userId); // Redirect to the user's account page
-  } catch (error) {
-    console.error("Error updating user:", error);
-  }
+  // Update Firestore met de nieuwe avatar URL
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, {
+    avatar: avatarUrl,
+    name: user.value.name,
+    bio: user.value.bio,
+    aboutMe: user.value.aboutMe,
+  });
+
+  router.push("/account/" + userId);
 }
 function onAvatarChange(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     const file = target.files[0];
+    avatarFile.value = file; // sla het bestand op voor upload
     const reader = new FileReader();
     reader.onload = (e) => {
       avatarPreview.value = e.target?.result as string;

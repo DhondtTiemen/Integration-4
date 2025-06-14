@@ -47,10 +47,10 @@
               : 'border-transparent',
           ]"
         >
-          <img
-            :src="user?.avatar"
-            alt="Profile"
+          <ImageAvatar
+            :path="user?.avatar"
             class="h-full w-full object-cover"
+            :screen="'nav'"
           />
         </div>
       </router-link>
@@ -65,6 +65,7 @@ import { useRoute } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import { getUserById } from "../../firebase/userService";
 
+import ImageAvatar from "../../components/images/imageAvatar.vue";
 // Icon Imports
 import HomeFilled from "../../assets/icons/HomeFilled.vue";
 import HomeOutline from "../../assets/icons/HomeOutline.vue";
@@ -86,6 +87,7 @@ const isActive = (path: string) => route.path === path;
 
 async function refreshUser() {
   if (userId.value) {
+    user.value = null;
     user.value = await getUserById(userId.value);
     console.log("User data refreshed:", user.value);
   }
@@ -97,9 +99,19 @@ onMounted(async () => {
     userId.value = storedId;
     await refreshUser();
   }
-});watch(userId, async (newId, oldId) => {
+  // Luister naar profiel-updates
+  window.addEventListener("profile-updated", refreshUser);
+});
+watch(
+  () => route.fullPath,
+  async () => {
+    await refreshUser();
+  }
+);
+watch(userId, async (newId, oldId) => {
   if (newId && newId !== oldId) {
     await refreshUser();
+    console.log("User ID changed, refreshed user data:", user.value);
   }
 });
 </script>

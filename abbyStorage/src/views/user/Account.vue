@@ -68,11 +68,7 @@
 
         <div v-else class="mb-8">
           <div class="flex flex-col items-center justify-center">
-            <img
-              :src="user?.avatar"
-              alt="Avatar"
-              class="h-32 w-32 rounded-full object-cover mb-6"
-            />
+            <ImageAvatar  :path="user?.avatar" :screen="`account`"/>
             <h1 class="text-2xl font-bold text-center mb-2">
               {{ user?.name }}
             </h1>
@@ -391,7 +387,7 @@ import { useRoute, useRouter } from "vue-router";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
-
+import ImageAvatar from "../../components/images/imageAvatar.vue";
 // DATABASE
 import db from "../../firebase/firebase.ts";
 import {
