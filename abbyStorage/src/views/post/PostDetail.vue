@@ -15,7 +15,11 @@
       <p class="font-bold">{{ user?.name }}</p>
     </router-link>
 
-    <PostImages v-if="post?.images?.length" :images="post.images" />
+    <PostImages
+      v-if="post?.images?.length"
+      :images="post.images"
+      :postId="post?.id"
+    />
 
     <div class="p-4 border-b border-gray-300">
       <p class="pb-2">{{ post?.content }}</p>
@@ -125,7 +129,7 @@
                 height="24"
                 viewBox="0 0 28 25"
                 fill="none"
-                :class="[ 
+                :class="[
                   commentLiking[index] ? 'animate-like' : '',
                   hasLikedComment(comment)
                     ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
