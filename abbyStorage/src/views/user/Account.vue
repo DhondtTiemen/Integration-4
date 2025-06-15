@@ -447,7 +447,7 @@ const filteredEvents = computed(() => {
     const organisedIds = new Set(organised.map(e => e.id));
     const attend = events.value.filter(
       (event) =>
-        event.type === 'Attend' &&
+        event.type === 'Attending' &&
         new Date(event.date) >= now &&
         !organisedIds.has(event.id)
     );
@@ -523,7 +523,7 @@ async function getEventsById(userId: string) {
         attend.push({
           id: doc.id,
           ...data,
-          type: "Attend",
+          type: "Attending",
         });
       }
     });
