@@ -1,3 +1,4 @@
+<!-- filepath: d:\Integration-4\abbyStorage\src\views\post\PostDetail.vue -->
 <template>
   <div v-bind="$attrs" class="pb-16">
     <PageHeader :title="'Post'" :post="post ?? undefined" />
@@ -14,20 +15,16 @@
       <p class="font-bold">{{ user?.name }}</p>
     </router-link>
 
-    <div class="w-full max-w-md mx-auto">
-      <div
-        class="aspect-square bg-gray-300 flex justify-center items-center rounded-lg shadow-sm"
-      >
-        <img
-          :src="post?.images[0]"
-          alt="Post image"
-          class="w-full h-full object-cover"
-        />
-        <Image v-if="!post?.images.length" class="w-24 h-24 text-gray-400" />
-      </div>
+    <PostImages v-if="post?.images?.length" :images="post.images" />
+
+    <div class="p-4 border-b border-gray-300">
+      <p class="pb-2">{{ post?.content }}</p>
+      <p>Created in {{ post?.location }}</p>
+      <p class="text-gray-400 mt-2">
+        {{ formatTimeAgo(post?.timestamp ?? "") }}
+      </p>
     </div>
 
-    <!-- ACTIONS -->
     <PostActions
       v-if="post"
       :postId="post?.id"
@@ -36,15 +33,6 @@
       :views="post?.views"
     />
 
-    <div class="p-4 border-b border-gray-300">
-      <p class="pb-2">{{ post?.content }}</p>
-      <p >Created in {{ post?.location }}</p>
-      <p class="text-gray-400 mt-2">
-        {{ formatTimeAgo(post?.timestamp ?? "") }}
-      </p>
-    </div>
-
-    <!-- TODO: COMMENTS -->
     <div
       class="p-4 border-b-2 border-gray-200 bg-white"
       v-if="post && !loading"
@@ -137,7 +125,7 @@
                 height="24"
                 viewBox="0 0 28 25"
                 fill="none"
-                :class="[
+                :class="[ 
                   commentLiking[index] ? 'animate-like' : '',
                   hasLikedComment(comment)
                     ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
@@ -159,12 +147,11 @@
 </template>
 
 <script setup lang="ts">
-import { Image } from "lucide-vue-next";
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
-
 import PageHeader from "../../components/layout/PageHeader.vue";
 import PostActions from "../../components/post/PostActions.vue";
+import PostImages from "../../components/post/PostImages.vue";
 
 import type User from "../../interfaces/interface.user";
 import type Post from "../../interfaces/interface.post";
@@ -189,7 +176,7 @@ const commentUsers = ref<Record<string, any>>({});
 const commentLiking = ref<{ [key: string]: boolean }>({});
 const currentUser = ref<User | null>(null);
 
-const comments = computed<Comment[]>(() => {
+const comments = computed(() => {
   if (!post.value?.comments) return [];
   return [...post.value.comments].sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
@@ -244,7 +231,6 @@ onMounted(async () => {
     currentUser.value = await getUserById(String(storedIdRaw));
   }
 });
-
 
 async function preloadCommentUsers(commentsArr: any) {
   commentUsers.value = await fetchCommentAuthors(commentsArr);
