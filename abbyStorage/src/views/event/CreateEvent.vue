@@ -201,7 +201,7 @@ const mainImagePreview = ref<string | null>(null);
 const mainImageInput = ref<HTMLInputElement | null>(null);
 const loading = ref(false);
 
-const materials = ref([""]);
+const materials = ref<string[]>([]);
 const newMaterial = ref("");
 
 const errors = ref({
