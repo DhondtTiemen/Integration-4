@@ -1,24 +1,16 @@
-<script setup lang="ts">
-// import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <h1 class="text-3xl font-bold underline text-green-500">Hello world!</h1>
-  </div>
+  <router-view class="min-h-screen overflow-x-hidden" />
+  <AppNavigation v-if="showNavigation" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script lang="ts" setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import AppNavigation from "./components/layout/AppNavigation.vue";
+
+const route = useRoute();
+
+// TODO: Add scanner pages
+const hideOnRoutes = ["/login", "/register"];
+const showNavigation = computed(() => !hideOnRoutes.includes(route.path));
+</script>

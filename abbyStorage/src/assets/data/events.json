@@ -1,0 +1,80 @@
+{
+  "events": [
+    {
+      "id": 1001,
+      "title": "Morning painting & Coffee",
+      "about": "Relaxed morning workshop to paint and connect over coffee.",
+      "date": "2025-05-31",
+      "time": "10:00",
+      "place": "Atelier, ABBY Creative Space",
+      "achievements": [
+        "badge1.png",
+        "badge2.png"
+      ],
+      "materials": [
+        "Paper or Sketchbook",
+        "Set of graphite pencils (2H to 6B)"
+      ],
+      "images": [
+        "/src/assets/events/download.jpg"
+      ],
+      "createdBy": 1,
+      "participants": [
+        2,
+        3
+      ],
+      "status": "approved"
+    },
+    {
+      "id": 1002,
+      "title": "Open Mic Night",
+      "about": "An open night for poetry, music and spoken word.",
+      "date": "2025-06-15",
+      "time": "20:00",
+      "place": "Salon, ABBY Creative Space",
+      "achievements": [
+        "badge1.png",
+        "badge2.png"
+      ],
+      "materials": [
+        "Microphone",
+        "Speakers",
+        "Seating for audience"
+      ],
+      "images": [
+        "/src/assets/events/download.jpg"
+      ],
+      "createdBy": 3,
+      "participants": [
+        1,
+        4
+      ],
+      "status": "approved"
+    },{
+      "id": 1003,
+      "title": "Crochet Circle",
+      "about": "Join us for a cozy crochet session, all levels welcome!",
+      "date": "2025-06-20",
+      "time": "14:00",
+      "place": "Atelier, ABBY Creative Space",
+      "achievements": [
+        "badge1.png",
+        "badge2.png"
+      ],
+      "materials": [
+        "Yarn (any color)",
+        "Crochet hook (size G/6 or H/8)",
+        "Scissors"
+      ],
+      "images": [
+        "/src/assets/events/download.jpg"
+      ],
+      "createdBy": 2,
+      "participants": [
+        1,
+        3
+      ],
+      "status": "approved"
+    }
+  ]
+}
