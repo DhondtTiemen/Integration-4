@@ -257,11 +257,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import {
-  collection,
-  setDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, setDoc, doc } from "firebase/firestore";
 import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import { getUserById } from "../../firebase/userService";
@@ -276,7 +272,12 @@ const loading = ref(true);
 const mainImagePreview = ref<string | null>(null);
 const mainImageFile = ref<File | null>(null);
 const editableItems = ref<
-  Array<{ name: string; image: string; imagePreview?: string | null; imageFile?: File | null }>
+  Array<{
+    name: string;
+    image: string;
+    imagePreview?: string | null;
+    imageFile?: File | null;
+  }>
 >([]);
 
 async function fetchUser() {
@@ -324,7 +325,10 @@ async function handleBox() {
     const item = editableItems.value[i];
     let imageUrl = item.image || "";
     if (item.imageFile) {
-      imageUrl = await uploadImage(item.imageFile, `users/${userID}/box/item_${i}.jpg`);
+      imageUrl = await uploadImage(
+        item.imageFile,
+        `users/${userID}/box/item_${i}.jpg`
+      );
     } else if (item.imagePreview && item.imagePreview.startsWith("http")) {
       imageUrl = item.imagePreview;
     }
@@ -340,6 +344,7 @@ async function handleBox() {
     description: boxDescription.value,
     createdAt: String(new Date()),
     boxNumber: Math.floor(Math.random() * 99) + 1,
+    views: Math.floor(Math.random() * 500),
   };
   await setDoc(
     doc(colRef, String(userID)),
