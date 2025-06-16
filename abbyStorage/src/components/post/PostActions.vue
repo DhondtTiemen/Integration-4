@@ -38,6 +38,7 @@ import {
   toggleLikeForPost,
   hasUserLikedPost,
 } from "../../firebase/postService";
+
 import Eye from "../../assets/icons/Eye.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
