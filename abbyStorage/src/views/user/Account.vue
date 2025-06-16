@@ -423,7 +423,6 @@ import { getUserById } from "../../firebase/userService";
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
 const events = ref<Event[]>([]);
-const accountVisit = ref(false);
 const route = useRoute();
 const router = useRouter();
 const filter = ref<'Attending' | 'Past'>('Attending');
@@ -589,10 +588,13 @@ async function toggleFollow() {
     console.error("Failed to update likes in Firestore", err);
   }
 }
-onMounted(() => {
+const accountVisit = computed(() => {
   const storedId = localStorage.getItem("userId");
   const currentUserId = route.params.id as string;
-  accountVisit.value = storedId !== currentUserId;
+  return storedId !== currentUserId;
+});
+onMounted(() => {
+  const currentUserId = route.params.id as string;
   getLoggedInUser();
   refreshUser(currentUserId);
   getPostsById(currentUserId);

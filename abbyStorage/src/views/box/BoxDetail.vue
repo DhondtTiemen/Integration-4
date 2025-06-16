@@ -353,11 +353,12 @@
             Items inside
           </h2>
 
-          <div class="flex items-center justify-start overflow-y-auto gap-2">
+          <div v-if="user.box.items.length > 0" class="flex items-center justify-start overflow-y-auto gap-2">
             <div
               v-for="(item, index) in (user?.box?.items as BoxItem[])"
               :key="index"
             >
+            <p>test</p>
               <div class="">
                 <img
                   :src="item.image"
@@ -369,6 +370,10 @@
                 <p>{{ item.name }}</p>
               </div>
             </div>
+          </div>
+          <div v-else class="p-4 text-center text-gray-600">
+            <p class="text-lg font-semibold">No items in this box</p>
+
           </div>
         </div>
       </div>
@@ -419,6 +424,7 @@ async function fetchUser() {
   loading.value = true;
   user.value = await getUserById(currentUserId);
   loading.value = false;
+  console.log("items", user.value?.box?.items.length);
   if (user.value?.box?.comments) {
     commentUsers.value = await preloadCommentUsers(user.value.box.comments);
   }

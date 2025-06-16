@@ -240,9 +240,9 @@ type Comment = {
 
 async function handleSubmitComment() {
   if (!newCommentText.value.trim() || !user.value || !post.value) return;
-
+  // console.log("userid", user.value.id);
   const comment: Comment = {
-    userId: String(user.value.id),
+    userId: String(storedIdRaw),
     text: newCommentText.value.trim(),
     timestamp: new Date().toISOString(),
     likes: [],
