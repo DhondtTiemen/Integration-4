@@ -4,7 +4,7 @@
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">Profile</h1>
       <div class="flex items-center px-6 gap-6">
-        <IconButton label="Scanner" :to="`/scanner/${user?.id}`">
+        <IconButton label="Scanner" :to="`/scanner/${userId}`">
         <!-- TODO: Change SVG -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +406,6 @@ import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
 import ImageTemplate from "/src/components/images/ImageTemplate.vue";
-import IconButton from "../../components/generic/IconButton.vue";
 // DATABASE
 import db from "../../firebase/firebase.ts";
 import {
@@ -611,4 +610,11 @@ watch(
     getLoggedInUser();
   }
 );
+
+const userId = ref("");
+
+onMounted(() => {
+  const id = localStorage.getItem("userId");
+  if (id) userId.value = id;
+});
 </script>
