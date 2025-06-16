@@ -268,7 +268,7 @@ async function submitPost() {
       likes: [],
       comments: [],
       bookmarks: [],
-      views: 0,
+      views: Math.floor(Math.random() * 500),
     });
 
     postContent.value = "";

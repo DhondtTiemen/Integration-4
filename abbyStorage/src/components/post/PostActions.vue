@@ -41,7 +41,7 @@
             stroke-width="2"
           />
         </svg>
-        <p v-if="commentsCount > 0">{{ commentsCount }}</p>
+        <p>{{ commentsCount }}</p>
       </router-link>
     </div>
 
