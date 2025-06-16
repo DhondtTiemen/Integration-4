@@ -139,6 +139,7 @@
           <button
             @click="submitPost"
             class="bg-alphaGreen w-full px-5 py-2 text-sm font-medium"
+            :disabled="loading"
           >
             Post
           </button>
@@ -202,7 +203,7 @@ function changeCancel() {
   selectedEventId.value = "";
   eventSearch.value = "";
   location.value = "";
-  
+
   router.back();
 }
 function onImageChange(event: Event) {
@@ -222,6 +223,8 @@ function onImageChange(event: Event) {
 }
 
 async function submitPost() {
+  if (loading.value) return; // bovenaan submitPost
+  loading.value = true;
   postContentError.value = "";
   imageError.value = "";
   locationError.value = "";
