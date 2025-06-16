@@ -101,6 +101,11 @@ const routes = [
         path: "messages",
         component: () => import("../components/Messages.vue"),
       },
+      {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: () => import("../views/NotFound.vue"),
+      }
     ],
   },
 ];
