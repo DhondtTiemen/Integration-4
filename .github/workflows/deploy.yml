@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/abbyStorage
+        working-directory: abbyStorage/src
 
     steps:
       - name: Checkout repository
