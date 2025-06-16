@@ -54,7 +54,7 @@
           <p class="text-sm">
             Don’t have an account yet?
             <router-link
-              to="/signup"
+              to="/register"
               class="font-medium text-alphaGreen underline"
             >
               Sign up
@@ -99,7 +99,7 @@ async function handleLogin() {
 
     if (matchedUser) {
       localStorage.setItem("userId", String(matchedUser.id));
-      router.push(`/box/${matchedUser.id}`);
+      router.push(`/`);
     } else {
       error.value = "Invalid email or password";
     }
