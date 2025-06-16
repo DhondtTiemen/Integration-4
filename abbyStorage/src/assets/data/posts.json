@@ -1,0 +1,243 @@
+{
+  "posts": [
+    {
+      "id": 5001,
+      "userId": "zx5Eek9om8SCCAMCaUYc",
+      "timestamp": "2025-06-06T10:30:00Z",
+      "content": "Morning crochet session at the Atelier!",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Atelier",
+      "likes": [
+        "fw8hnstzmLObKHi2iwHR",
+        "C26VRDdoWgeyzOxvy81P"
+      ],
+      "eventId": 1001,
+      "comments": [
+        {
+          "userId": "fw8hnstzmLObKHi2iwHR",
+          "text": "Nice!",
+          "timestamp": "2025-06-06T11:00:00Z",
+          "likes": [
+            "zx5Eek9om8SCCAMCaUYc",
+            "C26VRDdoWgeyzOxvy81P"
+          ]
+        },
+        {
+          "userId": "C26VRDdoWgeyzOxvy81P",
+          "text": "Love this!",
+          "timestamp": "2025-06-06T12:30:00Z",
+          "likes": [
+            "fw8hnstzmLObKHi2iwHR"
+          ]
+        }
+      ],
+      
+      "views": 80
+    },
+    {
+      "id": 5002,
+      "userId": "fw8hnstzmLObKHi2iwHR",
+      "timestamp": "2025-06-05T14:15:00Z",
+      "content": "Painting with coffee again ☕️🎨",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Salon",
+      "likes": [
+        "C26VRDdoWgeyzOxvy81P"
+      ],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "zx5Eek9om8SCCAMCaUYc",
+          "text": "Looks great!",
+          "timestamp": "2025-06-05T15:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+      
+    },
+    {
+      "id": 5003,
+      "userId": "zx5Eek9om8SCCAMCaUYc",
+      "timestamp": "2025-06-04T09:00:00Z",
+      "content": "Experimenting with textures today.",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "",
+      "likes": [],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "53AHqRY8ndtitJbs5fAb",
+          "text": "Interesting approach!",
+          "timestamp": "2025-06-04T10:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+      
+    },
+    {
+      "id": 5004,
+      "userId": "fw8hnstzmLObKHi2iwHR",
+      "timestamp": "2025-06-03T10:00:00Z",
+      "content": "New crochet pattern, who wants to learn?",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Atelier",
+      "likes": [
+        "zx5Eek9om8SCCAMCaUYc",
+        "C26VRDdoWgeyzOxvy81P",
+        "53AHqRY8ndtitJbs5fAb"
+      ],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "53AHqRY8ndtitJbs5fAb",
+          "text": "I'm interested!",
+          "timestamp": "2025-06-03T11:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5005,
+      "userId": "fw8hnstzmLObKHi2iwHR",
+      "timestamp": "2025-06-02T17:00:00Z",
+      "content": "Collaborative art project in progress!",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Salon",
+      "likes": [],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "C26VRDdoWgeyzOxvy81P",
+          "text": "Can't wait to see the results!",
+          "timestamp": "2025-06-02T18:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5006,
+      "userId": "C26VRDdoWgeyzOxvy81P",
+      "timestamp": "2025-06-01T12:00:00Z",
+      "content": "Creating soundscapes 🎶",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Salon",
+      "likes": [
+        "zx5Eek9om8SCCAMCaUYc",
+        2
+      ],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "fw8hnstzmLObKHi2iwHR",
+          "text": "Soothing!",
+          "timestamp": "2025-06-01T13:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5007,
+      "userId": "C26VRDdoWgeyzOxvy81P",
+      "timestamp": "2025-05-30T15:00:00Z",
+      "content": "Brainstorming new ideas...",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Atelier",
+      "likes": [],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "zx5Eek9om8SCCAMCaUYc",
+          "text": "Sounds exciting!",
+          "timestamp": "2025-05-30T16:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5008,
+      "userId": "53AHqRY8ndtitJbs5fAb",
+      "timestamp": "2025-05-29T16:00:00Z",
+      "content": "Music workshop coming soon!",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Salon",
+      "likes": [
+        "zx5Eek9om8SCCAMCaUYc",
+        "C26VRDdoWgeyzOxvy81P"
+      ],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "zx5Eek9om8SCCAMCaUYc",
+          "text": "Can't wait!",
+          "timestamp": "2025-05-29T17:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5009,
+      "userId": "53AHqRY8ndtitJbs5fAb",
+      "timestamp": "2025-05-28T11:00:00Z",
+      "content": "Gear setup day 🎛️🎚️",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Studio",
+      "likes": [],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "fw8hnstzmLObKHi2iwHR",
+          "text": "Ready to rock!",
+          "timestamp": "2025-05-28T12:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    },
+    {
+      "id": 5010,
+      "userId": "53AHqRY8ndtitJbs5fAb",
+      "timestamp": "2025-05-27T14:30:00Z",
+      "content": "Mixing session 🎧",
+      "images": [
+        "https://images.pexels.com/photos/7585762/pexels-photo-7585762.jpeg"
+      ],
+      "location": "Studio",
+      "likes": [],
+      "eventId": "",
+      "comments": [
+        {
+          "userId": "zx5Eek9om8SCCAMCaUYc",
+          "text": "Sounds great!",
+          "timestamp": "2025-05-27T15:00:00Z",
+          "likes": []
+        }
+      ],
+      "views": 80
+    }
+  ]
+}

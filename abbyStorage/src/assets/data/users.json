@@ -1,0 +1,214 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "mail": "jamie@mail.be",
+      "password": "jamie123",
+      "name": "Jamie Parker",
+      "bio": "Dreamer, painter, coffee lover. Here to create and connect.",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+      "followers": [
+        3,
+        2
+      ],
+      "following": [
+        3,
+        2,
+        4
+      ],
+      "achievements": [
+        "badge1.png",
+        "badge2.png"
+      ],
+      "box": {
+        "boxNumber": 241,
+        "createdAt": "2025-05-01",
+        "likes": [
+          2,
+          3,
+          4
+        ],
+        "views": 150,
+        "mainImage": "box-jamie.jpg",
+        "items": [
+          {
+            "name": "Origami Crane",
+            "image": "item1.jpg"
+          },
+          {
+            "name": "Paintbrush",
+            "image": "item2.jpg"
+          }
+        ],
+        "comments": [
+          {
+            "userId": 2,
+            "text": "Love your box collection!",
+            "timestamp": "2025-06-05T10:00:00Z",
+            "likes": [
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "userId": 3,
+            "text": "Inspiring setup!",
+            "timestamp": "2025-06-06T12:00:00Z",
+            "likes": [
+              1,
+              3,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "mail": "emily@mail.be",
+      "password": "emily123",
+      "name": "Emily Peterson",
+      "bio": "Crochet artist & community builder.",
+      "avatar": "https://randomuser.me/api/portraits/women/45.jpg",
+      "followers": [
+        1,
+        3
+      ],
+      "following": [
+        3,
+        4
+      ],
+      "achievements": [],
+      "box": {
+        "boxNumber": 231,
+        "createdAt": "2025-05-01",
+        "likes": [
+          1,
+          3,
+          4
+        ],
+        "views": 150,
+        "mainImage": "box-emily.jpg",
+        "items": [
+          {
+            "name": "Origami Crane",
+            "image": "item1.jpg"
+          },
+          {
+            "name": "Paintbrush",
+            "image": "item2.jpg"
+          }
+        ],
+        "comments": [
+          {
+            "userId": 1,
+            "text": "Great box, looks cozy!",
+            "timestamp": "2025-06-04T14:00:00Z",
+            "likes": [
+              2,
+              3,
+              4
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "mail": "iris@mail.be",
+      "password": "iris123",
+      "name": "Iris Vale",
+      "bio": "Creative mind, passionate about art and sound.",
+      "avatar": "https://randomuser.me/api/portraits/women/33.jpg",
+      "followers": [
+        1,
+        2
+      ],
+      "following": [
+        1,
+        2,
+        4
+      ],
+      "achievements": [
+        "badge3.png"
+      ],
+      "box": {
+        "boxNumber": 221,
+        "createdAt": "2025-05-01",
+        "likes": [
+          2,
+          1,
+          4
+        ],
+        "views": 150,
+        "mainImage": "box-iris.jpg",
+        "items": [],
+        "comments": [
+          {
+            "userId": 1,
+            "text": "Love your artistic vibe here.",
+            "timestamp": "2025-06-01T09:30:00Z",
+            "likes": [
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "userId": 4,
+            "text": "So inspiring!",
+            "timestamp": "2025-06-02T16:20:00Z",
+            "likes": [
+              1,
+              3
+              
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "mail": "alex@mail.be",
+      "password": "alex123",
+      "name": "Alex Smith",
+      "bio": "Music producer & workshop host.",
+      "avatar": "https://randomuser.me/api/portraits/men/22.jpg",
+      "followers": [
+        1,
+        2
+      ],
+      "following": [
+        1,
+        2,
+        3
+      ],
+      "achievements": [],
+      "box": {
+        "boxNumber": 658,
+        "createdAt": "2025-05-01",
+        "likes": [
+          2,
+          3,
+          1
+        ],
+        "views": 150,
+        "mainImage": "box-alex.jpg",
+        "items": [],
+        "comments": [
+          {
+            "userId": 3,
+            "text": "Can't wait for your next workshop!",
+            "timestamp": "2025-05-30T14:00:00Z",
+            "likes": [
+              1,
+              2,
+              4
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
