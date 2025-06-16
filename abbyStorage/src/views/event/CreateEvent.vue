@@ -138,13 +138,13 @@
           >
           <!-- List of materials -->
           <div
-            v-for="(index) in materials : any"
+            v-for="(material, index) in materials"
             :key="index"
             class="flex items-center gap-2 mb-2"
           >
             <input
               type="text"
-              v-model="materials[index]"
+              :value="material"
               class="w-full border border-alphaDark px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="Material"
             />

@@ -54,7 +54,7 @@
           v-for="(,idx) in images"
           :key="'dot' + idx"
           class="inline-block w-2 h-2"
-          :class="currentImage === idx ? 'bg-alphaGreen' : 'bg-gray-300'"
+          :class="currentImage === Number(idx) ? 'bg-alphaGreen' : 'bg-gray-300'"
         ></span>
       </div>
     </div>
