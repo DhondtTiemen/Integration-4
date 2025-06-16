@@ -5,6 +5,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // stel de juiste base in voor GitHub Pages
 export default defineConfig({
-  base: '/Integration-4/abbyStorage/',
+  base: '/Integration-4/',
   plugins: [vue(), tailwindcss()]
 })
