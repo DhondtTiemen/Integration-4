@@ -1,11 +1,13 @@
 <template>
-  <button
+  <router-link
+    :to="path"
+    v-if="path"
     :type="type"
     :disabled="disabled || loading"
-    class="w-full border border-alphaDark font-medium px-5 py-2.5 focus:ring-4 focus:ring-alphaDark"
+    class="w-full text-center border border-alphaDark font-medium px-5 py-2.5 focus:ring-4 focus:ring-alphaDark"
   >
     <slot>{{ loading ? loadingText : defaultText }}</slot>
-  </button>
+  </router-link>
 </template>
 
 <script setup lang="ts">
@@ -15,5 +17,6 @@ defineProps<{
   loading?: boolean;
   loadingText?: string;
   defaultText?: string;
+  path?: string;
 }>();
 </script>

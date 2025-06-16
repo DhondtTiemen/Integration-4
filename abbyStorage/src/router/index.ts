@@ -105,6 +105,18 @@ const routes = [
         path: "/:pathMatch(.*)*",
         name: "NotFound",
         component: () => import("../views/NotFound.vue"),
+      },
+      {
+        path: "onboarding/1",
+        component: () => import("../views/onboarding/ExploreShelves.vue"),
+      },
+      {
+        path: "onboarding/2",
+        component: () => import("../views/onboarding/ExpressYourself.vue"),
+      },
+      {
+        path: "onboarding/3",
+        component: () => import("../views/onboarding/Connect.vue"),
       }
     ],
   },
