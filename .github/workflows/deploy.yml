@@ -3,12 +3,16 @@ name: AbbyStorage
 on:
   push:
     branches:
-      - main  # verander als je een andere branch gebruikt
+      - main
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/abbyStorage
 
     steps:
       - name: Checkout repository
@@ -17,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  # of een andere versie die je gebruikt
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
