@@ -69,18 +69,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { CircleUserRound } from "lucide-vue-next";
 import db from "../../firebase/firebase.ts";
 import {
-  collection,
-  addDoc,
-  setDoc,
   doc,
-  query,
-  getDocs,
-  where,
   getDoc,
   updateDoc,
 } from "firebase/firestore";

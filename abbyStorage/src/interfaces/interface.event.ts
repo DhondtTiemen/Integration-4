@@ -12,4 +12,5 @@ export default interface Event {
   participants: string[]; 
   status: string; 
   type?: string; 
+  gallery?: string[];
 }

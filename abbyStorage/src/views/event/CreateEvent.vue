@@ -138,7 +138,7 @@
           >
           <!-- List of materials -->
           <div
-            v-for="(material, index) in materials"
+            v-for="(index) in materials : any"
             :key="index"
             class="flex items-center gap-2 mb-2"
           >

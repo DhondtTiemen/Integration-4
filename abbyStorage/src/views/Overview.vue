@@ -7,7 +7,6 @@
     <PostList
       v-if="posts && posts.length"
       :posts="posts"
-      :showOptionsId="showOptionsId"
       @toggle-options="toggleOptions"
       @report-post="reportPost"
     />
