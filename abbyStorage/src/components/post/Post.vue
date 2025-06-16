@@ -11,11 +11,11 @@
       />
 
       <!-- POST - CONTENT -->
-      <div class="block">
+      <router-link :to="`post/${post.id}`" class="block">
         <!-- Description -->
         <p class="mb-4">{{ post?.content }}</p>
         <PostImages v-if="post?.images?.length" :images="post.images" :postId="post.id" />
-      </div>
+      </router-link>
 
       <!-- POST - CONTENT - IF EVENT -->
       <EventCard v-if="event" :event="event" />
