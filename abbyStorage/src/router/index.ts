@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: "/Integration-4/",
+    path: "/",
     component: () => import("../components/holders/AppHolder.vue"),
     children: [
       // --- HOME ---
@@ -106,7 +106,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/Integration-4/'),
   routes,
 });
 
