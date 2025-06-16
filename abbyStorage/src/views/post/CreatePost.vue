@@ -132,7 +132,7 @@
         <div class="flex justify-between mt-6 gap-2">
           <button
             class="border border-gray-400 px-5 py-2 text-sm w-full"
-            @click="goBack"
+            @click="changeCancel()"
           >
             Cancel
           </button>
@@ -201,7 +201,17 @@ onMounted(async () => {
 function goBack() {
   router.back();
 }
-
+function changeCancel() {
+  // zet alle inputs terug naar de originele waarden
+  postContent.value = "";
+  imageFiles.value = [];
+  imagePreviews.value = [];
+  selectedEventId.value = "";
+  eventSearch.value = "";
+  location.value = "";
+  
+  router.back();
+}
 function onImageChange(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files) {

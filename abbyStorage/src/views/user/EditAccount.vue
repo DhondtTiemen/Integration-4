@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen">
-    <nav class="flex items-center justify-between bg-white shadow-md p-4 mb-4">
+    <nav class="relative flex items-center bg-white shadow-md p-4 mb-4 h-12">
       <svg
         @click="goBack"
         xmlns="http://www.w3.org/2000/svg"
@@ -8,14 +8,19 @@
         height="18"
         viewBox="0 0 21 18"
         fill="none"
+        class="z-10 cursor-pointer"
       >
         <path
           d="M21 6.07521L4.34696 9.11281L21 12.1504L21 18L0.0393824 11.9026L-2.8975e-07 6.62871L21 0L21 6.07521Z"
           fill="#222222"
         />
       </svg>
-      <p>Edit Profile</p>
-      <p class="font-bold">Save</p>
+      <p
+        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 m-0 font-medium"
+      >
+        Edit Profile
+      </p>
+      <!-- <p class="font-bold">Save</p> -->
     </nav>
 
     <div class="relative w-24 h-24 mx-auto mb-4">
@@ -94,8 +99,8 @@
 
       <!-- Save Button -->
       <div class="flex gap-4">
-        <button
-          class="w-full bg-primary-600 text-gray-600 bg-white py-2 rounded-full hover:bg-primary-700 transition-colors duration-200"
+        <button type="button" @click="changeCancel()"
+          class="w-full bg-primary-600 border text-gray-600 bg-white py-2 rounded-full hover:bg-primary-700 transition-colors duration-200"
         >
           Cancel
         </button>
@@ -148,7 +153,19 @@ function goBack() {
   history.back();
 }
 const user = ref<User | null>(null);
-
+function changeCancel() {
+  console.log("Edit cancelled");
+  console.log("User before reset:", user.value);
+  // zet alle inputs terug naar de originele waarden
+  if (user.value) {
+    user.value.name = user.value.name || "";
+    user.value.bio = user.value.bio || "";
+    user.value.aboutMe = user.value.aboutMe || "";
+    avatarFile.value = null;
+    avatarPreview.value = null;
+  }
+  router.back()
+}
 async function handleSave() {
   if (!userId || !user.value) return;
 
