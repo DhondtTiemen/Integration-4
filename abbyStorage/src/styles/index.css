@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-primary: "GT Walsheim", "Arial", "sans-serif";
+  --font-primary: "Arial", "sans-serif";
 
   --color-alphaPurple: #BB7CD2;
   --color-alphaYellow: #FEBE4F;
