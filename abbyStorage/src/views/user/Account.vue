@@ -406,6 +406,8 @@ import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
 import ImageTemplate from "/src/components/images/ImageTemplate.vue";
+import IconButton from "../../components/generic/IconButton.vue";
+
 // DATABASE
 import db from "../../firebase/firebase.ts";
 import {
