@@ -155,7 +155,7 @@
         </h2>
 
         <div
-          class="flex items-center justify-start overflow-x-auto gap-2 h-auto"
+          class="grid grid-cols-2 gap-4"
         >
           <!-- Each item -->
           <div

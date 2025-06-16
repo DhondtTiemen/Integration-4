@@ -236,10 +236,6 @@ async function submitPost() {
     imageError.value = "Please add at least one photo.";
     hasError = true;
   }
-  if (!location.value) {
-    locationError.value = "Please select a location.";
-    hasError = true;
-  }
   if (hasError) return;
 
   loading.value = true;
