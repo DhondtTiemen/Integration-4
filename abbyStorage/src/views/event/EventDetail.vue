@@ -141,7 +141,7 @@
       </div>
 
       <!-- Gallery -->
-      <div>
+      <div v-if="isPast">
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-medium">Event gallery</h3>
           <button class="text-sm text-gray-500">See all</button>
@@ -219,35 +219,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Suggestions -->
-      <!-- <div>
-        <h3 class="font-medium mb-2">You might also like</h3>
-        <div v-if="relatedEvents.length === 0" class="text-gray-500 text-sm">
-          No related events found.
-        </div>
-        <div v-else class="space-y-4">
-          <router-link
-            :to="`/event/${related.id}`"
-            v-for="related in relatedEvents"
-            :key="related.id"
-            class="bg-gray-100 p-3 rounded flex flex-col"
-          >
-            <div class="aspect-[4/2] bg-gray-300 mb-2">
-              <ImageTemplate :path="related.image" screen="default" />
-            </div>
-            <p class="text-sm font-semibold">{{ related.title }}</p>
-            <p class="text-xs text-gray-600">
-              {{ formatDateTime(related.date) }} • {{ related.place }}
-            </p>
-            <button
-              class="bg-alphaYellow w-fit px-4 py-1 mt-2 text-sm font-medium"
-            >
-              Learn more
-            </button>
-          </router-link>
-        </div>
-      </div> -->
       <div>
         <h3 class="font-medium mb-2">You might also like</h3>
         <div v-if="relatedEvents.length === 0" class="text-gray-500 text-sm">
@@ -336,12 +307,23 @@ const uploading = ref(false);
 const uploadError = ref("");
 const fileInput = ref<HTMLInputElement | null>(null);
 
+import { computed } from "vue";
+const isPast = computed(() => {
+  return event.value?.date ? new Date(event.value.date) < new Date() : false;
+});
+
 const gallery = ref<string[]>([]);
 function triggerFileInput() {
   fileInput.value?.click();
 }
 async function handleGalleryUpload() {
-  if (!fileInput.value || !fileInput.value.files || fileInput.value.files.length || !eventId) return;
+  if (
+    !fileInput.value ||
+    !fileInput.value.files ||
+    fileInput.value.files.length ||
+    !eventId
+  )
+    return;
   uploading.value = true;
   uploadError.value = "";
   try {
@@ -474,28 +456,14 @@ async function getEventById(eventId: string) {
     return null;
   }
 }
-
 async function getRelatedEvents() {
   const events: Event[] = [];
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
   querySnap.forEach((doc) => {
-    events.push({
-    id: doc.id, ...doc.data(),
-    title: "",
-    about: "",
-    date: "",
-    time: "",
-    place: "",
-    achievements: [],
-    materials: [],
-    image: "",
-    createdBy: "",
-    participants: [],
-    status: ""
-});
+    const { id, ...data } = doc.data() as Event & { id?: string };
+    events.push({ id: doc.id, ...data });
   });
-  console.log("Related events fetched:", events);
   relatedEvents.value = events.filter(
     (e: Event) =>
       event.value &&
@@ -504,10 +472,36 @@ async function getRelatedEvents() {
       e.status === "Approved"
   );
 }
-
-const isPast = event.value?.date
-  ? new Date(event.value.date) < new Date()
-  : false;
+// async function getRelatedEvents() {
+//   const events: Event[] = [];
+//   const eventsQuery = query(collection(db, "events"));
+//   const querySnap = await getDocs(eventsQuery);
+//   querySnap.forEach((doc) => {
+//     events.push({
+//       id: doc.id,
+//       ...doc.data(),
+//       title: "",
+//       about: "",
+//       date: "",
+//       time: "",
+//       place: "",
+//       achievements: [],
+//       materials: [],
+//       image: "",
+//       createdBy: "",
+//       participants: [],
+//       status: "",
+//     });
+//   });
+//   relatedEvents.value = events.filter(
+//     (e: Event) =>
+//       event.value &&
+//       e.id !== event.value.id &&
+//       new Date(e.date) >= new Date() &&
+//       e.status === "Approved"
+//   );
+//   console.log("Related events fetched:", relatedEvents.value);
+// }
 
 function shareEvent() {
   if (navigator.share && event.value) {
