@@ -126,28 +126,102 @@
         <p class="text-sm text-gray-700">{{ event.about }}</p>
       </div>
 
+      <div>
+        <h3 class="font-medium mb-2">Materials to bring</h3>
+        <ul>
+          <li
+            v-for="(m, index) in event.materials"
+            :key="index"
+            class="flex items-center gap-2 mb-1"
+          >
+            <Check class="text-alphaGreen w-8 h-8"></Check>
+            <p class="w-full">{{ m }}</p>
+          </li>
+        </ul>
+      </div>
+
       <!-- Gallery -->
       <div>
         <div class="flex justify-between items-center mb-2">
           <h3 class="font-medium">Event gallery</h3>
           <button class="text-sm text-gray-500">See all</button>
         </div>
-        <div class="grid grid-cols-4 gap-2">
+        <div v-if="gallery.length === 0">
+          <div
+            v-if="event?.createdBy === storedIdRaw"
+            class="text-center text-gray-500 py-4"
+          >
+            <button
+              class="bg-alphaGreen text-white px-4 py-2 rounded font-medium"
+              @click="triggerFileInput"
+              :disabled="uploading"
+            >
+              Add photos
+            </button>
+            <input
+              ref="fileInput"
+              type="file"
+              accept="image/*"
+              multiple
+              class="hidden"
+              @change="handleGalleryUpload"
+            />
+            <div v-if="uploading" class="text-sm text-gray-400 mt-2">
+              Uploading...
+            </div>
+            <div v-if="uploadError" class="text-sm text-red-500 mt-2">
+              {{ uploadError }}
+            </div>
+          </div>
+          <div v-else class="text-center text-gray-400 py-4">
+            No photos yet.
+          </div>
+        </div>
+        <div v-else class="grid grid-cols-4 gap-2">
           <div
             v-for="(img, i) in gallery.slice(0, 3)"
             :key="i"
             class="aspect-square bg-gray-200"
-          ></div>
+          >
+            <img :src="img" class="w-full h-full object-cover rounded" />
+          </div>
           <div
+            v-if="gallery.length > 3"
             class="aspect-square bg-alphaGreen text-white flex items-center justify-center font-medium"
           >
             +{{ gallery.length - 3 }}
+          </div>
+          <div
+            v-if="event?.createdBy === storedIdRaw"
+            class="col-span-4 text-center mt-2"
+          >
+            <button
+              class="bg-alphaGreen text-white px-4 py-2 rounded font-medium"
+              @click="triggerFileInput"
+              :disabled="uploading"
+            >
+              Add more photos
+            </button>
+            <input
+              ref="fileInput"
+              type="file"
+              accept="image/*"
+              multiple
+              class="hidden"
+              @change="handleGalleryUpload"
+            />
+            <div v-if="uploading" class="text-sm text-gray-400 mt-2">
+              Uploading...
+            </div>
+            <div v-if="uploadError" class="text-sm text-red-500 mt-2">
+              {{ uploadError }}
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Suggestions -->
-      <div>
+      <!-- <div>
         <h3 class="font-medium mb-2">You might also like</h3>
         <div v-if="relatedEvents.length === 0" class="text-gray-500 text-sm">
           No related events found.
@@ -173,6 +247,40 @@
             </button>
           </router-link>
         </div>
+      </div> -->
+      <div>
+        <h3 class="font-medium mb-2">You might also like</h3>
+        <div v-if="relatedEvents.length === 0" class="text-gray-500 text-sm">
+          No related events found.
+        </div>
+        <div v-else class="space-y-4">
+          <router-link
+            :to="`/event/${related.id}`"
+            v-for="related in relatedEvents.slice(0, 3)"
+            :key="related.id"
+            class="bg-gray-100 p-3 rounded flex flex-col"
+          >
+            <div class="aspect-[4/2] bg-gray-300 mb-2">
+              <ImageTemplate :path="related.image" screen="default" />
+            </div>
+            <p class="text-sm font-semibold">{{ related.title }}</p>
+            <p class="text-xs text-gray-600">
+              {{ formatDateTime(related.date) }} • {{ related.place }}
+            </p>
+            <button
+              class="bg-alphaYellow w-fit px-4 py-1 mt-2 text-sm font-medium"
+            >
+              Learn more
+            </button>
+          </router-link>
+          <router-link
+            v-if="relatedEvents.length > 3"
+            :to="`/events`"
+            class="block text-center text-alphaGreen font-medium mt-2"
+          >
+            See all
+          </router-link>
+        </div>
       </div>
     </section>
     <p v-else class="p-4 text-gray-500 text-sm">Loading event details...</p>
@@ -189,6 +297,7 @@ import {
   Share,
   CircleUserRound,
   Clock,
+  Check,
 } from "lucide-vue-next";
 import {
   collection,
@@ -206,11 +315,16 @@ import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
 import db from "../../firebase/firebase.ts";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
-
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { storage } from "../../firebase/firebase";
 import { formatDateTime } from "../../utils/date.ts";
 const route = useRoute();
 const router = useRouter();
-const users = ref<User[]>([]); 
+const users = ref<User[]>([]);
 
 const storedIdRaw = localStorage.getItem("userId");
 const eventId: string = route.params.id as string;
@@ -221,7 +335,48 @@ function goBack() {
 const participants = ref<string[]>([]);
 const event = ref<Event | null>(null);
 const relatedEvents = ref<Event[]>([]);
+const uploading = ref(false);
+const uploadError = ref("");
+const fileInput = ref<HTMLInputElement | null>(null);
 
+const gallery = ref<string[]>([]);
+function triggerFileInput() {
+  fileInput.value?.click();
+}
+async function handleGalleryUpload(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (!target.files || !target.files.length || !eventId) return;
+  uploading.value = true;
+  uploadError.value = "";
+  try {
+    const urls: string[] = [];
+    for (const file of Array.from(target.files)) {
+      const fileRef = storageRef(
+        storage,
+        `events/${eventId}/gallery/${Date.now()}_${file.name}`
+      );
+      await uploadBytes(fileRef, file);
+      const url = await getDownloadURL(fileRef);
+      urls.push(url);
+    }
+    // Voeg toe aan bestaande gallery
+    const eventRef = doc(db, "events", eventId);
+    const eventSnap = await getDoc(eventRef);
+    let currentGallery: string[] = [];
+    if (eventSnap.exists()) {
+      currentGallery = eventSnap.data().gallery || [];
+    }
+    const newGallery = [...currentGallery, ...urls];
+    await updateDoc(eventRef, { gallery: newGallery });
+    gallery.value = newGallery;
+  } catch (err) {
+    uploadError.value = "Upload failed. Try again.";
+    console.error(err);
+  } finally {
+    uploading.value = false;
+    if (fileInput.value) fileInput.value.value = "";
+  }
+}
 async function loadEventPageData(eventId: string) {
   await getEventById(eventId);
   await getUsersData();
@@ -281,7 +436,7 @@ async function toggleParticipateEvent() {
 }
 
 async function getUsersData() {
-  users.value = []; 
+  users.value = [];
   const usersQuery = query(collection(db, "users"));
   const querySnap = await getDocs(usersQuery);
   querySnap.forEach((doc) => {
@@ -293,12 +448,12 @@ function getUserInfo(userId: string) {
   if (!foundUser) {
     return {
       name: "Unknown",
-      avatar: "default-avatar.jpg", 
+      avatar: "default-avatar.jpg",
     };
   } else {
     return {
       name: foundUser.name,
-      avatar: foundUser.avatar, 
+      avatar: foundUser.avatar,
     };
   }
 }
@@ -315,6 +470,7 @@ async function getEventById(eventId: string) {
 
     const eventData = { id: docSnap.id, ...docSnap.data() };
     event.value = eventData;
+    gallery.value = eventData.gallery || [];
     return eventData;
   } catch (error) {
     console.error("Error fetching event data:", error);
@@ -324,22 +480,21 @@ async function getEventById(eventId: string) {
 }
 
 async function getRelatedEvents() {
-  const events: Event[] = []; 
+  const events: Event[] = [];
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
   querySnap.forEach((doc) => {
     events.push({ id: doc.id, ...doc.data() });
   });
+  console.log("Related events fetched:", events);
   relatedEvents.value = events.filter(
     (e: Event) =>
       event.value &&
       e.id !== event.value.id &&
       new Date(e.date) >= new Date() &&
-      e.status === "approved"
+      e.status === "Approved"
   );
 }
-
-const gallery = ref([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
 
 const isPast = event.value?.date
   ? new Date(event.value.date) < new Date()
