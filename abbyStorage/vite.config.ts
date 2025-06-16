@@ -1,9 +1,10 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 
-import tailwindcss from "@tailwindcss/vite";
-
-// https://vite.dev/config/
+// stel de juiste base in voor GitHub Pages
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
-});
+  base: '/Integration-4/',
+  plugins: [vue(), tailwindcss()]
+})

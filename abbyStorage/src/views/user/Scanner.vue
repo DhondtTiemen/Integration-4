@@ -37,15 +37,17 @@ import SecondaryButton from "../../components/generic/SecondaryButton.vue"
 
 import { getUserById } from '../../firebase/userService'
 
-const route = useRoute()
-const router = useRouter()
+import type User from '../../interfaces/interface.user'
 
-const user = ref({
+const user = ref<User>({
   id: '',
   name: '',
   bio: '',
   avatar: '',
 })
+
+const route = useRoute()
+const router = useRouter()
 
 onMounted(async () => {
   const userId = route.params.id as string

@@ -109,11 +109,8 @@ import { ref, computed, onMounted, watch } from "vue";
 import EventCard from "../../components/generic/EventCard.vue";
 import {
   collection,
-  addDoc,
-  setDoc,
   doc,
   query,
-  where,
   updateDoc,
   getDocs,
   getDoc,
@@ -139,9 +136,24 @@ async function getEvents() {
   events.value = []; 
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
-  querySnap.forEach((doc) => {
-    events.value.push({ id: doc.id, ...doc.data() });
+querySnap.forEach((doc) => {
+  const data = doc.data();
+  events.value.push({
+    id: doc.id,
+    title: data.title ?? '',
+    about: data.about ?? '',
+    date: data.date ?? '',
+    time: data.time ?? '',
+    place: data.place ?? '',
+    achievements: data.achievements ?? [],
+    materials: data.materials ?? [],
+    image: data.image ?? '',
+    createdBy: data.createdBy ?? '',
+    participants: data.participants ?? [],
+    status: data.status ?? '',
+    type: 'event'
   });
+});
 }
 const loggedInUser = ref<User | null>(null);
 async function getLoggedInUser() {

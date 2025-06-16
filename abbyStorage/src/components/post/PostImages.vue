@@ -51,10 +51,10 @@
       <!-- Dots -->
       <div class="flex justify-center gap-2 mt-2">
         <span
-          v-for="(img, idx) in images"
+          v-for="(,idx) in images"
           :key="'dot' + idx"
           class="inline-block w-2 h-2"
-          :class="currentImage === idx ? 'bg-alphaGreen' : 'bg-gray-300'"
+          :class="currentImage === Number(idx) ? 'bg-alphaGreen' : 'bg-gray-300'"
         ></span>
       </div>
     </div>
@@ -74,15 +74,14 @@
 </template>
 
 <script setup lang="ts">
-import type Post from "../../interfaces/interface.post";
 
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, watch } from "vue";
 const props = defineProps<{
   images: string[];
   postId?: string;
 }>();
 console.log("PostImages props:", props.images);
-const post = ref<Post | null>(null);
+
 const currentImage = ref(0);
 
 function prevImage() {

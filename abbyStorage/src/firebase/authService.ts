@@ -29,8 +29,6 @@ function normalizeUser(id: string, data: Partial<User>): User {
       comments: []
     },
     posts: data.posts || [],
-    createdEvents: data.createdEvents || [],
-    attendedEvents: data.attendedEvents || []
   };
 }
 

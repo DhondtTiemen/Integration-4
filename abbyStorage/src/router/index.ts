@@ -73,10 +73,6 @@ const routes = [
         path: "post/:id",
         component: () => import("../views/post/PostDetail.vue"),
       },
-      // {
-      //   path: "post/:id/edit",
-      //   component: () => import("../views/EditPost.vue"),
-      // },
 
       // --- EVENT ---
       {
@@ -99,10 +95,6 @@ const routes = [
         path: "search",
         component: () => import("../views/search/Search.vue"),
       },
-      // {
-      //   path: "event/:id/edit",
-      //   component: () => import("../views/event/EditEvent.vue"),
-      // },
 
       // --- SKIP ---
       {
@@ -114,7 +106,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/Integration-4/'),
   routes,
 });
 

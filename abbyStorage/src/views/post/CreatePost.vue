@@ -149,13 +149,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { Image, Link, MapPin } from "lucide-vue-next";
+import { ref, onMounted } from "vue";
+import { Image } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import {
   collection,
   addDoc,
-  Timestamp,
   getDocs,
   query,
   orderBy,
@@ -173,12 +172,6 @@ const imagePreviews = ref<string[]>([]);
 const loading = ref(false);
 
 const location = ref("");
-const errors = ref({
-  eventName: "",
-  description: "",
-  eventDate: "",
-  location: "",
-});
 
 const storedIdRaw = localStorage.getItem("userId");
 if (!storedIdRaw) {

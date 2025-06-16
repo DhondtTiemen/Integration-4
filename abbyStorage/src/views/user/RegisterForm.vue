@@ -150,13 +150,6 @@ import type User from "../../interfaces/interface.user";
 import {
   collection,
   addDoc,
-  setDoc,
-  doc,
-  query,
-  where,
-  updateDoc,
-  getDocs,
-  getDoc,
 } from "firebase/firestore";
 
 import db from "../../firebase/firebase.ts";

@@ -144,7 +144,7 @@
           >
             <input
               type="text"
-              v-model="materials[index]"
+              :value="material"
               class="w-full border border-alphaDark px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="Material"
             />

@@ -288,7 +288,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   Image,
@@ -301,11 +301,8 @@ import {
 } from "lucide-vue-next";
 import {
   collection,
-  addDoc,
-  setDoc,
   doc,
   query,
-  where,
   updateDoc,
   getDocs,
   getDoc,
@@ -343,14 +340,13 @@ const gallery = ref<string[]>([]);
 function triggerFileInput() {
   fileInput.value?.click();
 }
-async function handleGalleryUpload(event: Event) {
-  const target = event.target as HTMLInputElement;
-  if (!target.files || !target.files.length || !eventId) return;
+async function handleGalleryUpload() {
+  if (!fileInput.value || !fileInput.value.files || fileInput.value.files.length || !eventId) return;
   uploading.value = true;
   uploadError.value = "";
   try {
     const urls: string[] = [];
-    for (const file of Array.from(target.files)) {
+    for (const file of Array.from(fileInput.value.files)) {
       const fileRef = storageRef(
         storage,
         `events/${eventId}/gallery/${Date.now()}_${file.name}`
@@ -468,7 +464,7 @@ async function getEventById(eventId: string) {
       return null;
     }
 
-    const eventData = { id: docSnap.id, ...docSnap.data() };
+    const eventData = { id: docSnap.id, ...docSnap.data() } as Event;
     event.value = eventData;
     gallery.value = eventData.gallery || [];
     return eventData;
@@ -484,7 +480,20 @@ async function getRelatedEvents() {
   const eventsQuery = query(collection(db, "events"));
   const querySnap = await getDocs(eventsQuery);
   querySnap.forEach((doc) => {
-    events.push({ id: doc.id, ...doc.data() });
+    events.push({
+    id: doc.id, ...doc.data(),
+    title: "",
+    about: "",
+    date: "",
+    time: "",
+    place: "",
+    achievements: [],
+    materials: [],
+    image: "",
+    createdBy: "",
+    participants: [],
+    status: ""
+});
   });
   console.log("Related events fetched:", events);
   relatedEvents.value = events.filter(

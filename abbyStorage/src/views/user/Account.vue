@@ -395,13 +395,8 @@
 
 <script setup lang="ts">
 import {
-  CircleUserRound,
   Pencil,
-  ArrowLeft,
   Image,
-  Award,
-  User as UserIcon,
-  CalendarDays,
   LogOut,
 } from "lucide-vue-next";
 import { onMounted, ref, computed, watch } from "vue";
@@ -414,8 +409,6 @@ import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 import db from "../../firebase/firebase.ts";
 import {
   collection,
-  addDoc,
-  setDoc,
   doc,
   query,
   getDocs,

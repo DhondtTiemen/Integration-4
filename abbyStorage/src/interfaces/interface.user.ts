@@ -1,5 +1,4 @@
 import type Post from "./interface.post";
-import type Event from "./interface.event";
 
 export default interface User {
   id?: string;

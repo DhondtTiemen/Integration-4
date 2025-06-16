@@ -120,24 +120,12 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import {
-  CircleUserRound,
   Pencil,
-  ArrowLeft,
-  Image,
-  Award,
-  CalendarDays,
 } from "lucide-vue-next";
 import type User from "../../interfaces/interface.user";
 import {
-  collection,
-  addDoc,
-  setDoc,
   doc,
-  query,
-  where,
   updateDoc,
-  getDocs,
-  getDoc,
 } from "firebase/firestore";
 import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 

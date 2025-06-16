@@ -53,7 +53,7 @@
 import { formatDateTime } from "../../utils/date.ts";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
 
-const props = defineProps<{
+defineProps<{
   event: {
     id: number | string;
     title: string;

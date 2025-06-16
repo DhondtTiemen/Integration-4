@@ -1,5 +1,4 @@
 <!-- Chat page that dynamically reads the target userId from the URL -->
-// src/pages/Chat.vue
 <template>
   <div class="p-4">
     <div class="space-y-2 mb-4 max-h-[60vh] overflow-y-auto">
@@ -42,7 +41,7 @@ import { useRoute } from 'vue-router'
 const socket = io('http://192.168.0.152:3001') // of productie-URL
 
 // Replace this with logic to get the currently authenticated user
-const currentUserId = localStorage.getItem("userId");
+const currentUserId = localStorage.getItem("userId") ?? "";
 
 const route = useRoute()
 const targetUserId = route.params.userId as string
