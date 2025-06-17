@@ -44,6 +44,7 @@ const currentUserId = localStorage.getItem("userId") ?? "";
 
 const route = useRoute()
 const targetUserId = route.params.userId as string
+const userName = route.query.name as string;
 
 const message = ref('')
 const messages = ref<{ from: string, message: string }[]>([])

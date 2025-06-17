@@ -25,28 +25,25 @@
     <div v-if="loading" class="text-gray-500 p-4">Loading...</div>
     <div v-else>
       <div v-if="followingList.length">
-        <div
+        <router-link
           v-for="user in followingList"
           :key="user.id"
-          class="flex items-center justify-between border-b border-gray-300 mb-4 pb-4 px-4 gap-4 py-3"
+          :to="{ path: `/chat/${user.id}`, query: { name: user.name } }"
+          class="flex items-center justify-between border-b border-gray-300 mb-4 pb-4 px-4 gap-4 py-3 no-underline text-inherit"
         >
           <template v-if="user.name === 'Unknown'">
             <CircleUserRound
               class="w-10 h-10 text-gray-400 bg-gray-200 rounded-full"
             />
           </template>
-          <router-link
-            v-else
-            :to="`/chat/${user.id}`"
-            class="flex items-center gap-4"
-          >
+          <div class="flex items-center gap-4" v-else>
             <img
               :src="user.avatar"
               alt="avatar"
               class="w-12 h-12 rounded-full object-cover"
             />
             <div class="font-semibold">{{ user.name }}</div>
-          </router-link>
+          </div>
           <button
             :class="[
               'flex items-center justify-center py-2.5 px-5 font-medium text-sm transition',
@@ -61,7 +58,7 @@
               {{ isFollowing(user.id) ? "Unfollow" : "Follow" }}
             </p>
           </button>
-        </div>
+        </router-link>
       </div>
       <div v-else class="text-gray-500 p-4">Not following anyone yet.</div>
     </div>
@@ -89,8 +86,6 @@ const followingList = ref<any[]>([]);
 function goBack() {
   router.back();
 }
-const user = ref<User | null>(null);
-const userId = route.params.id;
 
 const loggedInUser = ref<User | null>(null);
 async function getLoggedInUser() {
@@ -156,45 +151,34 @@ async function toggleFollow(profile: any) {
 }
 async function getFollowing() {
   loading.value = true;
-  user.value = await getUserById(String(userId));
-  if (
-    !user.value ||
-    !user.value.following ||
-    user.value.following.length === 0
-  ) {
+
+  await getLoggedInUser();
+  const myUser = loggedInUser.value;
+  if (!myUser || !myUser.following || !myUser.followers) {
     followingList.value = [];
     loading.value = false;
     return;
   }
 
-  // Fetch logged in user's followers to filter mutual followers
-  let loggedInUserFollowers: string[] = [];
-  if (loggedInUser.value) {
-    loggedInUserFollowers = (loggedInUser.value.followers || []).map(String);
-  }
+  const mutualIds = myUser.following
+    .map(String)
+    .filter((id) => myUser.followers.map(String).includes(id));
 
-  const followerIds = user.value.following.map(String);
-  const followingData: any[] = [];
+  const mutualUsers: any[] = [];
 
-  for (const fid of followerIds) {
+  for (const id of mutualIds) {
     try {
-      const followingRef = doc(db, "users", fid);
-      const followingSnap = await getDoc(followingRef);
-      if (followingSnap.exists()) {
-        const userData = { id: followingSnap.id, ...followingSnap.data() };
-        // Only include if mutual: user follows them and they follow user
-        if (loggedInUserFollowers.includes(String(fid))) {
-          followingData.push(userData);
-        }
-      } else {
-        // If user does not exist, skip or add unknown? Since mutual, skip unknowns
+      const userRef = doc(db, "users", id);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        mutualUsers.push({ id: userSnap.id, ...userSnap.data() });
       }
-    } catch {
-      // skip on error
+    } catch (err) {
+      console.error(`Failed to fetch user ${id}`, err);
     }
   }
 
-  followingList.value = followingData;
+  followingList.value = mutualUsers;
   loading.value = false;
 }
 onMounted(async () => {
