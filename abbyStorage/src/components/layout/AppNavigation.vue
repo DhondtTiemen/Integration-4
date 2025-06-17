@@ -1,9 +1,9 @@
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
-
+  
   <ul
-    class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
+  class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
   >
+  <Popup :visible="showPopup" @close="showPopup = false" />
     <li>
       <router-link
         class="inline-block px-3 outline-none"

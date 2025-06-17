@@ -63,8 +63,8 @@
       </IconButton>
     </div>
 
+    <Popup :visible="showPopup" @close="showPopup = false" />
   </header>
-  <Popup :visible="showPopup" @close="showPopup = false" />
 </template>
 
 <script setup lang="ts">

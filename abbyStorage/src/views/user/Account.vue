@@ -1,7 +1,7 @@
 <template>
-        <Popup :visible="showPopup" @close="showPopup = false" />
-
-  <section class="min-h-screen mb-16">
+  
+  <section class="min-h-screen pb-16">
+    <Popup :visible="showPopup" @close="showPopup = false" />
 
 
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
