@@ -72,7 +72,7 @@ const props = defineProps<{
   imgClass?: string; // <-- voeg deze prop toe
 }>();
 const url = ref<string>("");
-const defaultPath = "/src/assets/users/default.png";
+const defaultPath = "src/assets/users/default.png";
 const defaultPathImage = "/src/assets/images/defaultImage.png";
 
 async function fetchUrl() {

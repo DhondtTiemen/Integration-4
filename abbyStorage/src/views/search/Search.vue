@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen mb-16">
+      <Popup :visible="showPopup" @close="showPopup = false" />
     <div class="flex gap-2 p-4 bg-alphaYellow">
       <input
         v-model="input"
@@ -119,10 +120,12 @@ import {
 import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
+import Popup from "../../components/generic/Popup.vue";
 const filter = ref("all");
 const input = ref("");
 const users = ref<User[]>([]);
 const events = ref<Event[]>([]);
+const showPopup = ref(false);
 
 async function getUsersData() {
   users.value = []; 
@@ -172,17 +175,22 @@ function isFollowing(userId: string) {
     .includes(String(userId));
 }
 async function toggleFollow(profile: any) {
-  if (!loggedInUser.value || !profile) return;
+  // if (!loggedInUser.value || !profile) {
+  //   // TODO: pop up you need to be logged in to follow users
+  //   showPopup.value = true;
+  // };
 
-  const myId = loggedInUser.value.id;
+  const myId = loggedInUser.value?.id;
   const profileId = String(profile.id);
 
   if (!myId || !profileId) {
-    console.error("No logged in user id or profile id found!");
-    return;
+    console.error("No logged in user id or profile id found!")
+
+    showPopup.value = true;
+    return
   }
 
-  const following = (loggedInUser.value.following || []).map(String);
+  const following = (loggedInUser.value?.following || []).map(String);
   const followers = (profile.followers || []).map(String);
 
   const idx = following.indexOf(profileId);

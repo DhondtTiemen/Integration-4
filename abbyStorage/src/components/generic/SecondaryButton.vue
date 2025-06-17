@@ -1,13 +1,21 @@
 <template>
   <router-link
-    :to="path"
     v-if="path"
+    :to="path"
     :type="type"
     :disabled="disabled || loading"
     class="w-full text-center border border-alphaDark font-medium px-5 py-2.5 focus:ring-4 focus:ring-alphaDark"
   >
     <slot>{{ loading ? loadingText : defaultText }}</slot>
   </router-link>
+  <button
+    v-else
+    :type="type"
+    :disabled="disabled || loading"
+    class="w-full text-center border border-alphaDark font-medium px-5 py-2.5 focus:ring-4 focus:ring-alphaDark"
+  >
+    <slot>{{ loading ? loadingText : defaultText }}</slot>
+  </button>
 </template>
 
 <script setup lang="ts">
