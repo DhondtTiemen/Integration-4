@@ -3,7 +3,7 @@
     <Logo class="h-6 w-auto fill-alphaDark" />
 
     <div class="flex items-center gap-6">
-      <IconButton label="Scanner" :to="`/scanner/${userId}`">
+      <IconButton label="Scanner" @click="handleScannerClick">
         <!-- TODO: Change SVG -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,9 @@
         <EventFilled class="h-6 w-6 block" />
       </IconButton>
     </div>
+
   </header>
+  <Popup :visible="showPopup" @close="showPopup = false" />
 </template>
 
 <script setup lang="ts">
@@ -70,9 +72,18 @@ import { ref, onMounted } from "vue";
 import Logo from "../../assets/images/svg/Logo.vue";
 import IconButton from "../generic/IconButton.vue";
 import EventFilled from "../../assets/icons/EventFilled.vue";
-
+import Popup from "../generic/popUp.vue";
+import { useRouter } from "vue-router";
+const showPopup = ref(false);
+const router = useRouter();
 const userId = ref("");
-
+function handleScannerClick() {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    router.push(`/scanner/${userId.value}`);
+  }
+}
 onMounted(() => {
   const id = localStorage.getItem("userId");
   if (id) userId.value = id;
