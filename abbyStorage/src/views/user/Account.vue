@@ -1,4 +1,6 @@
 <template>
+        <Popup :visible="showPopup" @close="showPopup = false" />
+
   <section class="min-h-screen mb-16">
 
 
@@ -304,6 +306,8 @@ import type Event from "../../interfaces/interface.event";
 import type Post from "../../interfaces/interface.post";
 import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 import IconButton from "../../components/generic/IconButton.vue";
+import Popup from "../../components/generic/popUp.vue";
+
 // DATABASE
 import db from "../../firebase/firebase.ts";
 import {
@@ -318,7 +322,7 @@ import {
 import { getUserById } from "../../firebase/userService";
 const loading = ref(true);
 
-// const showPopup = ref(false);
+const showPopup = ref(false);
 const user = ref<User | null>(null);
 const posts = ref<Post[]>([]);
 const events = ref<Event[]>([]);
@@ -451,8 +455,12 @@ const isFollowing = computed(() => {
 });
 
 async function toggleFollow() {
-  if (!loggedInUser.value || !user.value) return;
+  if (!loggedInUser.value || !user.value) {
+    console.error("No logged in user id or profile id found!")
 
+    showPopup.value = true;
+    return;
+  }
   const following = (loggedInUser.value.following || []).map(String);
   const followers = (user.value.followers || []).map(String);
   const profileId = String(user.value.id);
