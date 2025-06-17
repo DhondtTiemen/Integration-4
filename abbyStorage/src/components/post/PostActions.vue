@@ -22,6 +22,9 @@
         <TextBalloon class="h-6 w-auto stroke-alphaDark"/>
         <p v-if="commentsCount > 0">{{ commentsCount }}</p>
       </router-link>
+      <button @click="shareEvent">
+        <Share class="z-10" />
+      </button>
     </div>
 
     <!-- POST - CONTENT - ACTIONS - VIEWS -->
@@ -38,7 +41,9 @@ import {
   toggleLikeForPost,
   hasUserLikedPost,
 } from "../../firebase/postService";
-
+import {
+  Share,
+} from "lucide-vue-next";
 import Eye from "../../assets/icons/Eye.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
@@ -48,10 +53,26 @@ const props = defineProps<{
   initialLikes: string[]; 
   commentsCount: number;
   views: number;
+  url?: string;
+  postTitle?: string;
 }>();
 
 const likes = ref<string[]>(props.initialLikes?.map(String) || []);
-
+function shareEvent() {
+  if (navigator.share && props.postTitle) {
+    navigator
+      .share({
+        title: "Check out this event",
+        text: props.postTitle,
+        url: props.url,
+      })
+      .catch((err) => {
+        console.warn("Share canceled or failed:", err);
+      });
+  } else {
+    alert("Sharing not supported in this browser.");
+  }
+}
 watch(
   () => props.initialLikes,
   (newLikes) => {
