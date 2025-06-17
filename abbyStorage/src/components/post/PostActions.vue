@@ -1,6 +1,6 @@
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
   <div class="flex items-center justify-between mt-6 px-4">
+    <Popup :visible="showPopup" @close="showPopup = false" />
     <div class="flex items-center gap-6">
       <!-- POST - CONTENT - ACTIONS - LIKES -->
       <button

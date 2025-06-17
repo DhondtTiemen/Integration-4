@@ -1,7 +1,7 @@
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
-
+  
   <div class="min-h-screen bg-white flex flex-col pb-16">
+    <Popup :visible="showPopup" @close="showPopup = false" />
     <!-- Header -->
     <nav class="relative flex items-center justify-between p-4 bg-alphaYellow">
       <svg
