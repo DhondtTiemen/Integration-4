@@ -37,17 +37,17 @@ import { ref, onMounted } from 'vue'
 import { io } from 'socket.io-client'
 import { useRoute } from 'vue-router'
 
-const socket = io('http://192.168.0.152:3001') // of productie-URL
+const socket = io('https://abby-socket.onrender.com') // of productie-URL
 
 // Replace this with logic to get the currently authenticated user
 const currentUserId = localStorage.getItem("userId") ?? "";
 
 const route = useRoute()
 const targetUserId = route.params.userId as string
-const userName = route.query.name as string;
 
 const message = ref('')
 const messages = ref<{ from: string, message: string }[]>([])
+
 
 onMounted(() => {
 
@@ -59,6 +59,9 @@ onMounted(() => {
 })
 
 const sendMessage = () => {
+  console.log(targetUserId);
+  console.log(currentUserId);
+
   if (!message.value.trim()) return
   socket.emit('private-message', {
     to: targetUserId,

@@ -14,34 +14,32 @@ const io = new Server(server, {
   },
 })
 
-const users = new Map()
+const connectedUsers = {}
 
 io.on('connection', (socket) => {
-  console.log('New socket connected:', socket.id)
-
   socket.on('join', (userId) => {
+    connectedUsers[userId] = socket.id
     console.log(`User ${userId} connected.`)
-    users[userId] = socket.id
   })
 
   socket.on('private-message', ({ to, from, message }) => {
-    const targetSocketId = users.get(to)
-    if (targetSocketId) {
-      io.to(targetSocketId).emit('private-message', { from, message })
+    const recipientSocketId = connectedUsers[to]
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit('private-message', { from, message })
     } else {
-      console.warn(`User ${to} is not connected. Message not delivered.`)
+      console.log(`User ${to} is not connected. Message not delivered.`)
     }
   })
 
-  socket.on('get-online-users', () => {
-    socket.emit('online-users', Array.from(users.keys()))
-  })
+  socket.on('user-list', (list) => {
+  console.log("Connected users:", list)
+})
 
   socket.on('disconnect', () => {
-    for (const [userId, id] of users.entries()) {
-      if (id === socket.id) {
-        users.delete(userId)
-        console.log(`User ${userId} disconnected`)
+    for (const userId in connectedUsers) {
+      if (connectedUsers[userId] === socket.id) {
+        delete connectedUsers[userId]
+        console.log(`User ${userId} disconnected.`)
         break
       }
     }
