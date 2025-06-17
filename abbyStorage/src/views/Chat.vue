@@ -36,28 +36,24 @@
               class="w-10 h-10 text-gray-400 bg-gray-200 rounded-full"
             />
           </template>
-          <div class="flex items-center gap-4" v-else>
+          <div class="flex items-center gap-4 w-full" v-else>
             <img
               :src="user.avatar"
               alt="avatar"
               class="w-12 h-12 rounded-full object-cover"
             />
-            <div class="font-semibold">{{ user.name }}</div>
+            <div class="flex justify-between">
+<div>
+                <div class="font-semibold">{{ user.name }}</div>
+              <div class="text-sm text-gray-600 truncate">
+                {{ user.lastMessage !== "" ? user.lastMessage : "Send your first message" }}
+              </div>
+</div>
+            </div>
+            <div class="text-gray-600 ml-auto mt-1 self-start text-sm">
+                {{ user.lastMessageTime ? formatTimestamp(user.lastMessageTime) : '' }}
+              </div>
           </div>
-          <button
-            :class="[
-              'flex items-center justify-center py-2.5 px-5 font-medium text-sm transition',
-              isFollowing(user.id)
-                ? 'border-1'
-                : 'bg-alphaGreen border-1 border-alphaGreen',
-            ]"
-            @click.stop="toggleFollow(user)"
-            style="min-width: 100px"
-          >
-            <p>
-              {{ isFollowing(user.id) ? "Unfollow" : "Follow" }}
-            </p>
-          </button>
         </router-link>
       </div>
       <div v-else class="text-gray-500 p-4">Not following anyone yet.</div>
@@ -73,9 +69,28 @@ import db from "../firebase/firebase.ts";
 import {
   doc,
   getDoc,
-  updateDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import type User from "../interfaces/interface.user";
+
+function formatTimestamp(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = diffMs / (1000 * 60 * 60);
+
+  if (diffHours < 24) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } else if (diffHours < 168) {
+    return date.toLocaleDateString('nl-BE', { weekday: 'long' });
+  } else {
+    return date.toLocaleDateString('nl-BE', { day: '2-digit', month: '2-digit' });
+  }
+}
 
 const router = useRouter();
 const loading = ref(true);
@@ -94,60 +109,31 @@ async function getLoggedInUser() {
     loggedInUser.value = { id: docSnap.id, ...docSnap.data() } as User;
   }
 }
-function isFollowing(userId: string) {
-  if (!loggedInUser.value) return false;
-  return (loggedInUser.value.following || [])
-    .map(String)
-    .includes(String(userId));
+
+async function getLatestMessageBetween(userId1: string, userId2: string) {
+  const chatId = [userId1, userId2].sort().join("_");
+  const messagesRef = collection(db, "messages");
+  const q = query(
+    messagesRef,
+    where("chatId", "==", chatId),
+    orderBy("timestamp", "desc"),
+    limit(1)
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const data = querySnapshot.docs[0].data();
+    return {
+      message: data.message || "",
+      timestamp: data.timestamp?.toDate?.() || null,
+    };
+  }
+  return null;
 }
-async function toggleFollow(profile: any) {
-  if (!loggedInUser.value || !profile) return;
 
-  const myId = loggedInUser.value.id;
-  const profileId = String(profile.id);
-
-  if (!myId || !profileId) {
-    console.error("No logged in user id or profile id found!");
-    return;
-  }
-
-  const following = [...(loggedInUser.value.following || [])].map(String);
-  const followers = [...(profile.followers || [])].map(String);
-
-  const idx = following.indexOf(profileId);
-
-  if (idx === -1) {
-    following.push(profileId);
-    followers.push(myId);
-  } else {
-    following.splice(idx, 1);
-    const followerIdx = followers.indexOf(myId);
-    if (followerIdx !== -1) followers.splice(followerIdx, 1);
-  }
-
-  try {
-    // Update Firestore
-    const userRef = doc(db, "users", myId);
-    await updateDoc(userRef, { following });
-    const profileRef = doc(db, "users", profileId);
-    await updateDoc(profileRef, { followers });
-
-    loggedInUser.value = { ...loggedInUser.value, following: [...following] };
-    const idxInList = followingList.value.findIndex(
-      (u) => String(u.id) === profileId
-    );
-    if (idxInList !== -1) {
-      followingList.value[idxInList] = {
-        ...followingList.value[idxInList],
-        followers: [...followers],
-      };
-    }
-  } catch (err) {
-    console.error("Failed to update follows in Firestore", err);
-  }
-}
 async function getFollowing() {
   loading.value = true;
+  
 
   await getLoggedInUser();
   const myUser = loggedInUser.value;
@@ -168,7 +154,13 @@ async function getFollowing() {
       const userRef = doc(db, "users", id);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
-        mutualUsers.push({ id: userSnap.id, ...userSnap.data() });
+        const latest = await getLatestMessageBetween(myUser.id!, id);
+        mutualUsers.push({
+          id: userSnap.id,
+          ...userSnap.data(),
+          lastMessage: latest?.message || "",
+          lastMessageTime: latest?.timestamp || null
+        });
       }
     } catch (err) {
       console.error(`Failed to fetch user ${id}`, err);
