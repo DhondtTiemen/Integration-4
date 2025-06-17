@@ -89,6 +89,7 @@ import SearchOutline from "../../assets/icons/SearchOutline.vue";
 import AddFilled from "../../assets/icons/AddFilled.vue";
 import AddOutline from "../../assets/icons/AddOutline.vue";
 import Popup from "../generic/popUp.vue";
+import router from "../../router";
 import TextBalloonFilled from "../../assets/icons/TextBalloonFilled.vue";
 import TextBalloonOutline from "../../assets/icons/TextBalloonOutline.vue";
 
@@ -98,14 +99,12 @@ const route = useRoute();
 const storedId = ref<string | null>(null);
 const showPopup = ref(false);
 function handleAccountClick() {
-  if (!userId.value) {
-    showPopup.value = true;
-  } else {
-    // Navigeer naar account
-    window.location.href = `/account/${storedId}`;
-    // Of, als je liever de router gebruikt:
-    // router.push(`/account/${userId.value}`);
-  }
+  if (route.path !== `/account/${userId.value}`) {
+  router.push(`/account/${userId.value}`);
+} else {
+  // Force reload van de component
+  router.replace({ path: '/refresh', query: { redirect: `/account/${userId.value}` } });
+}
 }
 const isActive = (path: string) => route.path === path;
 
@@ -135,4 +134,5 @@ watch(userId, async (newId, oldId) => {
     await refreshUser();
   }
 });
+
 </script>
