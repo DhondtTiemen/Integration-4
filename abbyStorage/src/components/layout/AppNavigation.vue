@@ -78,6 +78,7 @@ import AddOutline from "../../assets/icons/AddOutline.vue";
 import EventFilled from "../../assets/icons/EventFilled.vue";
 import EventOutline from "../../assets/icons/EventOutline.vue";
 import Popup from "../generic/popUp.vue";
+import router from "../../router";
 
 const user = ref<User | null>(null);
 const userId = ref<string | null>(null);
@@ -85,14 +86,12 @@ const route = useRoute();
 const storedId = ref<string | null>(null);
 const showPopup = ref(false);
 function handleAccountClick() {
-  if (!userId.value) {
-    showPopup.value = true;
-  } else {
-    // Navigeer naar account
-    window.location.href = `/account/${storedId}`;
-    // Of, als je liever de router gebruikt:
-    // router.push(`/account/${userId.value}`);
-  }
+  if (route.path !== `/account/${userId.value}`) {
+  router.push(`/account/${userId.value}`);
+} else {
+  // Force reload van de component
+  router.replace({ path: '/refresh', query: { redirect: `/account/${userId.value}` } });
+}
 }
 const isActive = (path: string) => route.path === path;
 
@@ -122,4 +121,5 @@ watch(userId, async (newId, oldId) => {
     await refreshUser();
   }
 });
+
 </script>
