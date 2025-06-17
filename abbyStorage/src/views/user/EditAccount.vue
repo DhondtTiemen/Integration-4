@@ -150,8 +150,6 @@ function goBack() {
 }
 const user = ref<User | null>(null);
 function changeCancel() {
-  console.log("Edit cancelled");
-  console.log("User before reset:", user.value);
   // zet alle inputs terug naar de originele waarden
   if (user.value) {
     user.value.name = user.value.name || "";

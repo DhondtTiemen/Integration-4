@@ -34,7 +34,6 @@ const onDetect = (detectedCodes: { rawValue: string }[]) => {
   if (!detectedCodes.length) return;
 
   const content = detectedCodes[0].rawValue;
-  console.log("Scanned content:", content);
 
   if (isValidHttpUrl(content)) {
     try {

@@ -1,9 +1,9 @@
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
-
+  
   <ul
-    class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
+  class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
   >
+  <Popup :visible="showPopup" @close="showPopup = false" />
     <li>
       <router-link
         class="inline-block px-3 outline-none"
@@ -29,28 +29,28 @@
       </router-link>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        to="/post/create"
+      <a
+        class="inline-block px-3 outline-none cursor-pointer"
+        @click="handleAddPostClick"
         aria-label="Add post"
       >
         <component
           :is="isActive('/post/create') ? AddFilled : AddOutline"
           class="h-6 w-auto mx-auto"
         />
-      </router-link>
+      </a>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        to="/chat"
+      <a
+        class="inline-block px-3 outline-none cursor-pointer"
+        @click="handleChatClick"
         aria-label="View messages"
       >
         <component
           :is="isActive('/chat') ? TextBalloonFilled : TextBalloonOutline"
           class="h-6 w-auto mx-auto"
         />
-      </router-link>
+      </a>
     </li>
     <li>
       <a
@@ -103,11 +103,28 @@ function handleAccountClick() {
     showPopup.value = true;
   } else {
     if (route.path !== `/account/${userId.value}`) {
-  router.push(`/account/${userId.value}`);
-} 
+      router.push(`/account/${userId.value}`);
+    }
   }
 }
-
+function handleAddPostClick() {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    if (route.path !== "/post/create") {
+      router.push("/post/create");
+    }
+  }
+}
+function handleChatClick() {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    if (route.path !== "/chat") {
+      router.push("/chat");
+    }
+  }
+}
 const isActive = (path: string) => route.path === path;
 
 async function refreshUser() {
@@ -136,5 +153,4 @@ watch(userId, async (newId, oldId) => {
     await refreshUser();
   }
 });
-
 </script>

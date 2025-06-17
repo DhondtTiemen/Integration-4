@@ -1,11 +1,11 @@
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
   <div class="flex items-center justify-between mt-6 px-4">
+    <Popup :visible="showPopup" @close="showPopup = false" />
     <div class="flex items-center gap-6">
       <!-- POST - CONTENT - ACTIONS - LIKES -->
       <button
         aria-label="Like post"
-        class="flex items-center gap-2 mb-0.5 items-center"
+        class="flex items-center gap-2 mb-0.5 "
         @click="toggleLike"
       >
         <HeartOutline
@@ -62,7 +62,6 @@ import {
   toggleLikeForPost,
   hasUserLikedPost,
 } from "../../firebase/postService";
-import { Share } from "lucide-vue-next";
 import Eye from "../../assets/icons/Eye.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
@@ -110,8 +109,8 @@ function hasLiked() {
 }
 
 async function toggleLike() {
-  if (!props.postId || !storedId.value) return;
-  if (!storedId) {
+  if (!props.postId) return;
+  if (!storedId.value) {
     console.error("User ID not found in localStorage");
     showPopup.value = true; // Show popup if user is not logged in
 

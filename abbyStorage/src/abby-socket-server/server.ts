@@ -3,10 +3,12 @@ import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
+import type { Request, Response, NextFunction } from 'express';
 
 const app = express();
 
-app.use((req, res, next) => {
+
+app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Origin", "https://dhondttiemen.github.io");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");

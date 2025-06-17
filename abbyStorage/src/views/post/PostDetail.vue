@@ -1,8 +1,8 @@
 <!-- filepath: d:\Integration-4\abbyStorage\src\views\post\PostDetail.vue -->
 <template>
-  <Popup :visible="showPopup" @close="showPopup = false" />
-
+  
   <div v-bind="$attrs" class="pb-16">
+    <Popup :visible="showPopup" @close="showPopup = false" />
     <PageHeader :title="'Post'" :post="post ?? undefined" />
 
     <router-link
@@ -254,7 +254,6 @@ async function handleSubmitComment() {
     return;
   }
   if (!newCommentText.value.trim() || !user.value || !post.value) return;
-  // console.log("userid", user.value.id);
   const comment: Comment = {
     userId: String(storedIdRaw),
     text: newCommentText.value.trim(),
