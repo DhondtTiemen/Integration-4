@@ -1,5 +1,5 @@
 <template>
-  <!-- POST - CONTENT - ACTIONS -->
+    <Popup :visible="showPopup" @close="showPopup = false" />
   <div class="flex items-center justify-between mt-6 px-4">
     <div class="flex items-center gap-6">
       <!-- POST - CONTENT - ACTIONS - LIKES -->
@@ -47,6 +47,9 @@ import {
 import Eye from "../../assets/icons/Eye.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
+import Popup from "../../components/generic/popUp.vue";
+
+const showPopup = ref(false);
 
 const props = defineProps<{
   postId: string;
@@ -89,6 +92,12 @@ function hasLiked() {
 
 async function toggleLike() {
   if (!props.postId || !storedId.value) return;
+        if (!storedId) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+
+    return;
+  }
   isLiking.value = true;
   await toggleLikeForPost(props.postId, storedId.value, likes);
 

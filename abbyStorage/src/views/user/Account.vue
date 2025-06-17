@@ -316,6 +316,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getUserById } from "../../firebase/userService";
+const loading = ref(true);
 
 // const showPopup = ref(false);
 const user = ref<User | null>(null);
@@ -357,6 +358,7 @@ const filteredEvents = computed(() => {
 async function refreshUser(id: string) {
   if (id) {
     user.value = await getUserById(id);
+    console.log("User data:", user.value);
   }
 }
 async function getPostsById(userId: string) {
@@ -368,7 +370,6 @@ async function getPostsById(userId: string) {
     querySnapshot.forEach((doc) => {
       postList.push({ id: doc.id, ...doc.data() } as Post);
     });
-
     posts.value = postList;
     return postList;
   } catch (error) {
@@ -420,7 +421,6 @@ async function getEventsById(userId: string) {
         });
       }
     });
-
     events.value = [...attend, ...created, ...attended];
     return events.value;
   } catch (error) {
@@ -432,7 +432,6 @@ async function getEventsById(userId: string) {
   }
 }
 
-const loading = ref(true);
 
 const loggedInUser = ref<User | null>(null);
 async function getLoggedInUser() {
@@ -492,12 +491,8 @@ const accountVisit = computed(() => {
   return storedId !== currentUserId;
 });
 onMounted(() => {
-  const storedId = localStorage.getItem("userId");
-  if (!storedId) {
-
-    // showPopup.value = true
-    return;
-  }
+  // const storedId = localStorage.getItem("userId");
+  
   const currentUserId = route.params.id as string;
   getLoggedInUser();
   refreshUser(currentUserId);

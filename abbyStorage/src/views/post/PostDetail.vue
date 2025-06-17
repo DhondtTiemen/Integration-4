@@ -136,7 +136,13 @@ function hasLikedComment(comment: any) {
   );
 }
 async function handleToggleCommentLike(comment: any, index: number) {
-  if (!storedIdRaw || !post.value?.id) return;
+  if (!post.value?.id) return;
+        if (!storedIdRaw) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+
+    return;
+  }
   commentLiking.value[index] = true;
   try {
     await toggleLikeForComment(
