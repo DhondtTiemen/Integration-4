@@ -3,6 +3,8 @@ import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import db from "../firebase/firebase.ts";
 
 const app = express();
 
@@ -36,8 +38,23 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} connected.`);
   });
 
-  socket.on("private-message", ({ to, from, message }) => {
+  socket.on("private-message", async ({ to, from, message }) => {
     const recipientSocketId = connectedUsers[to];
+
+    // Sla op in Firestore
+    try {
+    const docRef = await addDoc(collection(db, "messages"), {
+      from,
+      to,
+      message,
+      timestamp: Timestamp.now(),
+    });
+    console.log("Message saved with ID:", docRef.id);
+  } catch (err) {
+    console.error("🔥 Failed to save message to Firestore:", err.message);
+  }
+
+    // Emit naar ontvanger indien online
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("private-message", { from, message });
     } else {
