@@ -66,7 +66,6 @@
 <script setup lang="ts">
 import { formatDateTime } from "../../utils/date.ts";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
-import { ref } from "vue";
 const storedId = localStorage.getItem("userId");
 // function to check if the user has joined the event
 const props=defineProps<{

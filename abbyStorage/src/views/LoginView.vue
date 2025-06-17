@@ -45,12 +45,17 @@
               >Forgot password?</a
             >
           </div>
-          <PrimaryButton
-            type="submit"
-            :loading="loading"
-            loadingText="Logging in..."
-            defaultText="Log in"
-          />
+          <div class="w-full">
+            <PrimaryButton
+            class="w-full block"
+              type="submit"
+              :loading="loading"
+              loadingText="Logging in..."
+              defaultText="Log in"
+              path="/"
+            />
+            
+          </div>
           <p class="text-sm">
             Don’t have an account yet?
             <router-link
