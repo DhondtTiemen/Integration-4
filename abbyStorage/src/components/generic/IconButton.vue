@@ -1,4 +1,5 @@
 <template>
+  
   <component
     :is="to ? 'router-link' : 'button'"
     :to="to"

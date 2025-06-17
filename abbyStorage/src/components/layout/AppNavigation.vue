@@ -1,9 +1,15 @@
 <template>
+  <Popup :visible="showPopup" @close="showPopup = false" />
+
   <ul
     class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
   >
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/"
+        aria-label="View homepage"
+      >
         <component
           :is="isActive('/') ? HomeFilled : HomeOutline"
           class="h-6 w-auto mx-auto"
@@ -11,7 +17,11 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/search">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/search"
+        aria-label="View searchpage"
+      >
         <component
           :is="isActive('/search') ? SearchFilled : SearchOutline"
           class="h-6 w-auto mx-auto"
@@ -19,7 +29,11 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/post/create">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/post/create"
+        aria-label="Add post"
+      >
         <component
           :is="isActive('/post/create') ? AddFilled : AddOutline"
           class="h-6 w-auto mx-auto"
@@ -27,17 +41,22 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/events">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/chat"
+        aria-label="View messages"
+      >
         <component
-          :is="isActive('/events') ? EventFilled : EventOutline"
+          :is="isActive('/chat') ? TextBalloonFilled : TextBalloonOutline"
           class="h-6 w-auto mx-auto"
         />
       </router-link>
     </li>
     <li>
-      <router-link
-        class="inline-block px-3 outline-none"
-        :to="`/account/${userId}`"
+      <a
+        class="inline-block px-3 outline-none cursor-pointer"
+        @click="handleAccountClick"
+        aria-label="View account"
       >
         <div
           :class="[
@@ -47,12 +66,9 @@
               : 'border-transparent',
           ]"
         >
-          <ImageTemplate
-            :path="user?.avatar"
-            :screen="'nav'"
-          />
+          <ImageTemplate :path="user?.avatar" :screen="'nav'" />
         </div>
-      </router-link>
+      </a>
     </li>
   </ul>
 </template>
@@ -72,12 +88,25 @@ import SearchFilled from "../../assets/icons/SearchFilled.vue";
 import SearchOutline from "../../assets/icons/SearchOutline.vue";
 import AddFilled from "../../assets/icons/AddFilled.vue";
 import AddOutline from "../../assets/icons/AddOutline.vue";
-import EventFilled from "../../assets/icons/EventFilled.vue";
-import EventOutline from "../../assets/icons/EventOutline.vue";
+import Popup from "../generic/popUp.vue";
+import router from "../../router";
+import TextBalloonFilled from "../../assets/icons/TextBalloonFilled.vue";
+import TextBalloonOutline from "../../assets/icons/TextBalloonOutline.vue";
 
 const user = ref<User | null>(null);
 const userId = ref<string | null>(null);
 const route = useRoute();
+const storedId = ref<string | null>(null);
+const showPopup = ref(false);
+function handleAccountClick() {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    if (route.path !== `/account/${userId.value}`) {
+  router.push(`/account/${userId.value}`);
+} 
+  }
+}
 
 const isActive = (path: string) => route.path === path;
 
@@ -89,9 +118,9 @@ async function refreshUser() {
 }
 
 onMounted(async () => {
-  const storedId = localStorage.getItem("userId");
+  storedId.value = localStorage.getItem("userId");
   if (storedId) {
-    userId.value = storedId;
+    userId.value = storedId.value;
     await refreshUser();
   }
   window.addEventListener("profile-updated", refreshUser);
@@ -107,4 +136,5 @@ watch(userId, async (newId, oldId) => {
     await refreshUser();
   }
 });
+
 </script>

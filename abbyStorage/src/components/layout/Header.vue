@@ -3,7 +3,7 @@
     <Logo class="h-6 w-auto fill-alphaDark" />
 
     <div class="flex items-center gap-6">
-      <IconButton label="Scanner" :to="`/scanner/${userId}`">
+      <IconButton label="Scanner" @click="handleScannerClick">
         <!-- TODO: Change SVG -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,36 +58,32 @@
           />
         </svg>
       </IconButton>
-      <IconButton label="Notifications" to="/notifications">
-        <!-- TODO: Change SVG -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          <path
-            d="M15 28.125C15.9117 28.1241 16.8034 27.8576 17.5662 27.3581C18.3289 26.8587 18.9296 26.1478 19.2949 25.3125H10.7051C11.0704 26.1478 11.6711 26.8587 12.4338 27.3581C13.1966 27.8576 14.0883 28.1241 15 28.125Z"
-            fill="#21272A"
-          />
-          <path
-            d="M23.4375 16.875V13.3283C23.4375 9.19922 21.8344 5.60215 17.8125 4.6875L17.3438 1.875H12.6562L12.1875 4.6875C8.15156 5.60215 6.5625 9.18516 6.5625 13.3283V16.875L3.75 20.625V23.4375H26.25V20.625L23.4375 16.875Z"
-            fill="#21272A"
-          />
-        </svg>
+      <IconButton label="Events" to="/events" >
+        <EventFilled class="h-6 w-6 block" />
       </IconButton>
     </div>
+
   </header>
+  <Popup :visible="showPopup" @close="showPopup = false" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import Logo from "../../assets/images/svg/Logo.vue";
 import IconButton from "../generic/IconButton.vue";
-
+import EventFilled from "../../assets/icons/EventFilled.vue";
+import Popup from "../generic/popUp.vue";
+import { useRouter } from "vue-router";
+const showPopup = ref(false);
+const router = useRouter();
 const userId = ref("");
-
+function handleScannerClick() {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    router.push(`/scanner/${userId.value}`);
+  }
+}
 onMounted(() => {
   const id = localStorage.getItem("userId");
   if (id) userId.value = id;

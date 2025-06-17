@@ -10,7 +10,7 @@
       />
       <div>
         <p class="font-bold text-lg">{{ user?.name }}</p>
-        <p class="text-base font-medium text-gray-400">
+        <p class="text-base font-medium text-gray-600">
           {{ formatTimeAgo(post.timestamp) }}
           <span v-if="post.location"> • {{ post.location }}</span>
         </p>
@@ -19,7 +19,7 @@
 
     <!-- Report Button -->
     <div class="relative">
-      <button @click="emit('toggle-options', post.id)">
+      <button @click="emit('toggle-options', post.id)" aria-label="Postopties">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-auto fill-alphaDark"
@@ -35,6 +35,7 @@
             d="M5.625 17.8125C7.1783 17.8125 8.4375 16.5533 8.4375 15C8.4375 13.4467 7.1783 12.1875 5.625 12.1875C4.0717 12.1875 2.8125 13.4467 2.8125 15C2.8125 16.5533 4.0717 17.8125 5.625 17.8125Z"
           />
         </svg>
+        <span class="sr-only">Report post</span>
       </button>
       <div
         v-if="showOptionsId === post.id"

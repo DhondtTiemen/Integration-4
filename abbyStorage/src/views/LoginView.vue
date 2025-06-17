@@ -41,8 +41,8 @@
               Remember me
             </label>
             <!-- TODO: Forget password link -->
-            <a href="#" class="text-sm font-medium text-alphaGreen underline"
-              >Forgot password?</a
+            <p class="text-sm font-medium text-alphaGreen underline"
+              >Forgot password?</p
             >
           </div>
           <div class="w-full">
@@ -52,7 +52,6 @@
               :loading="loading"
               loadingText="Logging in..."
               defaultText="Log in"
-              path="/"
             />
             
           </div>
@@ -101,9 +100,11 @@ async function handleLogin() {
 
   try {
     const matchedUser = await loginUser(email.value, password.value);
-
+    console.log("heeeeeeelp");
+    console.log("Matched user:", matchedUser);
     if (matchedUser) {
       localStorage.setItem("userId", String(matchedUser.id));
+      console.log("User logged in:", localStorage.getItem("userId"));
       router.push(`/`);
     } else {
       error.value = "Invalid email or password";

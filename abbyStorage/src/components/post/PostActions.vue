@@ -18,7 +18,7 @@
       </button>
 
       <!-- POST - CONTENT - ACTIONS - COMMENTS -->
-      <router-link :to="`/post/${postId}`" class="flex items-center gap-2">
+      <router-link :to="`/post/${postId}`" class="flex items-center gap-2" aria-label="View comments">
         <TextBalloon class="h-6 w-auto stroke-alphaDark"/>
         <p v-if="commentsCount > 0">{{ commentsCount }}</p>
       </router-link>
@@ -26,7 +26,7 @@
 
     <!-- POST - CONTENT - ACTIONS - VIEWS -->
     <div class="flex items-center gap-2">
-      <Eye class="h-6 w-auto fill-alphaDark"/>
+      <Eye class="h-6 w-auto"/>
       <p>{{ views }}</p>
     </div>
   </div>

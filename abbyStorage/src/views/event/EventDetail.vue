@@ -51,9 +51,9 @@
         </p>
         <p class="text-sm text-gray-500 mt-1">
           Hosted by
-          <a class="underline text-black" href="#">
+          <router-link :to="`/account/${event?.createdBy}`" class="underline text-black">
             {{ getUserInfo(event?.createdBy ?? -1)?.name || "Unknown" }}
-          </a>
+          </router-link>
         </p>
         <button
           class="mt-3 px-5 py-2.5 w-full text-sm font-medium transition-all"
@@ -86,7 +86,7 @@
             <template v-for="(p, i) in event.participants.slice(0, 6)" :key="i">
               <template v-if="getUserInfo(p)?.name === 'Unknown'">
                 <CircleUserRound
-                  class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 text-gray-400"
+                  class="w-10 h-10 rounded-full border-2 border-white bg-gray-200 text-gray-600"
                 />
               </template>
               <template v-else>
@@ -111,7 +111,7 @@
       <div>
         <h3 class="font-medium mb-2">Event Achievements</h3>
         <div class="flex items-center gap-4 bg-gray-100 p-3">
-          <Image class="w-10 h-10 text-gray-400" />
+          <Image class="w-10 h-10 text-gray-600" />
           <p class="text-sm">
             Expressive drawing<br /><span class="text-xs text-gray-500"
               >Complete this workshop</span
@@ -166,14 +166,14 @@
               class="hidden"
               @change="handleGalleryUpload"
             />
-            <div v-if="uploading" class="text-sm text-gray-400 mt-2">
+            <div v-if="uploading" class="text-sm text-gray-600 mt-2">
               Uploading...
             </div>
             <div v-if="uploadError" class="text-sm text-red-500 mt-2">
               {{ uploadError }}
             </div>
           </div>
-          <div v-else class="text-center text-gray-400 py-4">
+          <div v-else class="text-center text-gray-600 py-4">
             No photos yet.
           </div>
         </div>
@@ -210,7 +210,7 @@
               class="hidden"
               @change="handleGalleryUpload"
             />
-            <div v-if="uploading" class="text-sm text-gray-400 mt-2">
+            <div v-if="uploading" class="text-sm text-gray-600 mt-2">
               Uploading...
             </div>
             <div v-if="uploadError" class="text-sm text-red-500 mt-2">

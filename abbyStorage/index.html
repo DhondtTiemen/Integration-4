@@ -1,15 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/src/index.css" rel="stylesheet">
+    <meta
+      name="description"
+      content="Abby is a creative community platform where users can discover, organize, and participate in local events, share artwork, and connect with like-minded individuals — all in an inspiring digital space."
+    />
+    <link href="/src/index.css" rel="stylesheet" />
+    <!-- Preconnect to Firebase Storage -->
+    <link
+      rel="preconnect"
+      href="https://firebasestorage.googleapis.com"
+      crossorigin
+    />
+
+    <!-- Preconnect to Firestore -->
+    <link
+      rel="preconnect"
+      href="https://firestore.googleapis.com"
+      crossorigin
+    />
+
+    <!-- DNS prefetch as fallback -->
+    <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+
     <title>Abby Storage</title>
   </head>
 
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script> 
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

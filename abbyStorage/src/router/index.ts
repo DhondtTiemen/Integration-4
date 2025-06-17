@@ -45,10 +45,6 @@ const routes = [
         path: "register",
         component: () => import("../views/user/RegisterForm.vue"),
       },
-      {
-        path: "chat/:userId",
-        component: () => import("../views/Chat.vue"),
-      },
 
       // --- BOX ---
       {
@@ -98,8 +94,12 @@ const routes = [
 
       // --- SKIP ---
       {
-        path: "messages",
-        component: () => import("../components/Messages.vue"),
+        path: "chat",
+        component: () => import("../views/Chat.vue"),
+      },
+      {
+        path: "chat/:userId",
+        component: () => import("../views/ChatDetail.vue"),
       },
       {
         path: "/:pathMatch(.*)*",

@@ -169,7 +169,7 @@ async function handleRegister() {
     mail: email.value,
     password: password.value,
     bio: "",
-    avatar: "/src/assets/users/default.png",
+    avatar: "src/assets/users/default.png",
     aboutMe: "",
     followers: [],
     following: [],
@@ -188,6 +188,6 @@ async function handleRegister() {
   };
   const docRef = await addDoc(colRef, user);
   localStorage.setItem("userId", docRef.id);
-  router.push("/box/create");
+  router.push("/onboarding/1");
 }
 </script>

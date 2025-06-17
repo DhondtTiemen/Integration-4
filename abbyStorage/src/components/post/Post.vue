@@ -2,34 +2,23 @@
   <!-- Post -->
   <div class="border-b border-gray-400">
     <div class="p-4">
-      <PostHeader
-        :userId="post.userId"
-        :post="post"
-        :showOptionsId="showOptionsId"
-        @toggle-options="$emit('toggle-options', $event)"
-        @report-post="$emit('report-post', $event)"
-      />
+      <PostHeader :userId="post.userId" :post="post" :showOptionsId="showOptionsId"
+        @toggle-options="$emit('toggle-options', $event)" @report-post="$emit('report-post', $event)" />
 
       <!-- POST - CONTENT -->
       <div>
         <!-- Description -->
-        <p class="mb-4">{{ post?.content }}</p>
-        <PostImages
-          v-if="post?.images?.length"
-          :images="post.images"
-          :postId="post.id"
-        />
+        <router-link v-if="post?.id" :to="`/post/${post.id}`">
+          <p class="mb-4">{{ post?.content }}</p>
+        </router-link>
+        <PostImages v-if="post?.images?.length" :images="post.images" :postId="post.id" />
       </div>
 
       <!-- POST - CONTENT - IF EVENT -->
       <EventCard v-if="event" :event="event" />
 
-      <PostActions
-        :postId="post?.id"
-        :initial-likes="post?.likes"
-        :commentsCount="post?.comments.length"
-        :views="post?.views"
-      />
+      <PostActions :postId="post?.id" :initial-likes="post?.likes" :commentsCount="post?.comments.length"
+        :views="post?.views" />
     </div>
   </div>
 </template>
