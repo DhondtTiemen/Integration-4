@@ -28,6 +28,9 @@
 
 <script setup lang="ts" name="PageHeader">
 import router from '../../router';
+import {
+  Share
+} from "lucide-vue-next";
 
 const props = defineProps<{
   title: string;
