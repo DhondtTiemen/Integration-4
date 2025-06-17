@@ -77,22 +77,40 @@ onMounted(() => {
   });
 });
 
-const sendMessage = () => {
-  console.log(targetUserId);
-  console.log(currentUserId);
+import { query, where, getDocs, orderBy } from "firebase/firestore";
+import db from "./../firebase/firebase";
 
+import { addDoc, collection, Timestamp } from "firebase/firestore";
+
+// In sendMessage()
+const sendMessage = async () => {
   if (!message.value.trim()) return;
+
+  // Emit via socket
   socket.emit("private-message", {
     to: targetUserId,
     from: currentUserId,
     message: message.value,
   });
+
+  // Locaal tonen
   messages.value.push({ from: currentUserId, message: message.value });
+
+  // Opslaan in Firestore
+  try {
+    await addDoc(collection(db, "messages"), {
+      from: currentUserId,
+      to: targetUserId,
+      message: message.value,
+      timestamp: Timestamp.now(),
+    });
+  } catch (err) {
+    console.error("🔥 Failed to save message:", err);
+  }
+
+  // Clear input
   message.value = "";
 };
-
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-import db from "./../firebase/firebase";
 
 onMounted(async () => {
   socket.emit("join", currentUserId);
