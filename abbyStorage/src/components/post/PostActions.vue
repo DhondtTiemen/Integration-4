@@ -1,5 +1,5 @@
 <template>
-  <!-- POST - CONTENT - ACTIONS -->
+    <Popup :visible="showPopup" @close="showPopup = false" />
   <div class="flex items-center justify-between mt-6 px-4">
     <div class="flex items-center gap-6">
       <!-- POST - CONTENT - ACTIONS - LIKES -->
@@ -22,6 +22,9 @@
         <TextBalloon class="h-6 w-auto stroke-alphaDark"/>
         <p v-if="commentsCount > 0">{{ commentsCount }}</p>
       </router-link>
+      <button @click="shareEvent">
+        <Share class="z-10" />
+      </button>
     </div>
 
     <!-- POST - CONTENT - ACTIONS - VIEWS -->
@@ -38,20 +41,41 @@ import {
   toggleLikeForPost,
   hasUserLikedPost,
 } from "../../firebase/postService";
-
+import {
+  Share,
+} from "lucide-vue-next";
 import Eye from "../../assets/icons/Eye.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
+import Popup from "../../components/generic/popUp.vue";
+
+const showPopup = ref(false);
 
 const props = defineProps<{
   postId: string;
   initialLikes: string[]; 
   commentsCount: number;
   views: number;
+  url?: string;
+  postTitle?: string;
 }>();
 
 const likes = ref<string[]>(props.initialLikes?.map(String) || []);
-
+function shareEvent() {
+  if (navigator.share && props.postTitle) {
+    navigator
+      .share({
+        title: "Check out this event",
+        text: props.postTitle,
+        url: props.url,
+      })
+      .catch((err) => {
+        console.warn("Share canceled or failed:", err);
+      });
+  } else {
+    alert("Sharing not supported in this browser.");
+  }
+}
 watch(
   () => props.initialLikes,
   (newLikes) => {
@@ -68,6 +92,12 @@ function hasLiked() {
 
 async function toggleLike() {
   if (!props.postId || !storedId.value) return;
+        if (!storedId) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+
+    return;
+  }
   isLiking.value = true;
   await toggleLikeForPost(props.postId, storedId.value, likes);
 

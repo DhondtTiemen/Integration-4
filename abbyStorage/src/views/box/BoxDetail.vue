@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen mb-16">
+    <Popup :visible="showPopup" @close="showPopup = false" />
     <div v-if="loading" class="text-center p-4">Loading...</div>
 
     <div v-else>
@@ -166,9 +167,10 @@
         </div>
 
         <div class="flex gap-4 items-center mt-4">
-          <div class="w-fit flex-shrink-0">
-            <img :src="user?.avatar" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
+        <div class="w-12">
+          <ImageTemplate :path="storedIdRaw ?? ''" :screen="'nav'" />
           </div>
+
           <form @submit.prevent="submitComment" class="relative w-full">
             <input v-model="newCommentText"
               class="bg-gray-100 rounded-xl px-4 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -242,7 +244,7 @@ import type User from "../../interfaces/interface.user";
 import HeartOutline from "../../assets/icons/HeartOutline.vue";
 import TextBalloon from "../../assets/icons/TextBalloon.vue";
 import Eye from "../../assets/icons/Eye.vue";
-
+import Popup from "../../components/generic/popUp.vue";
 const route = useRoute();
 const currentUserId = route.params.id as string;
 const comments = computed(() => user.value?.box?.comments ?? []);
@@ -260,12 +262,14 @@ const isLiking = ref(false);
 const commentLiking = ref<{ [key: number]: boolean }>({});
 const newCommentText = ref("");
 const commentUsers = ref<Record<string, any>>({});
+const showPopup = ref(false);
 
 async function fetchUser() {
-  loading.value = true;
+  // loading.value = true;
+  
   user.value = await getUserById(currentUserId);
   loading.value = false;
-  console.log("items", user.value?.box?.items.length);
+  // console.log("items", user.value?.box?.items.length);
   if (user.value?.box?.comments) {
     commentUsers.value = await preloadCommentUsers(user.value.box.comments);
   }
@@ -287,7 +291,13 @@ function hasLikedComment(comment: any) {
   );
 }
 async function toggleBoxLike() {
-  if (!user.value || !user.value.box || !storedIdRaw) return;
+  if (!user.value || !user.value.box ) return;
+    if (!storedIdRaw) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+
+    return;
+  }
   const userIdStr = String(storedIdRaw);
   user.value.box.likes = user.value.box.likes || [];
   const idx = user.value.box.likes.map(String).indexOf(userIdStr);
@@ -308,7 +318,13 @@ async function toggleBoxLike() {
 }
 
 async function toggleCommentLike(comment: any, index: number) {
-  if (!storedIdRaw || !user.value) return;
+  if (!user.value) return;
+      if (!storedIdRaw) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+
+    return;
+  }
   commentLiking.value[index] = true;
   try {
     await toggleLikeForBoxComment(
@@ -327,6 +343,11 @@ async function toggleCommentLike(comment: any, index: number) {
 }
 
 async function submitComment() {
+  if (!storedIdRaw) {
+    console.error("User ID not found in localStorage");
+    showPopup.value = true; // Show popup if user is not logged in
+    return;
+  }
   if (!newCommentText.value.trim() || !user.value) return;
   const comment = {
     userId: String(user.value.id),

@@ -18,7 +18,7 @@
       <EventCard v-if="event" :event="event" />
 
       <PostActions :postId="post?.id" :initial-likes="post?.likes" :commentsCount="post?.comments.length"
-        :views="post?.views" />
+        :views="post?.views" :postTitle="post.content" :url="currentUrl+post.id"/>
     </div>
   </div>
 </template>
@@ -35,6 +35,8 @@ import PostImages from "..//post/PostImages.vue";
 import PostActions from "..//post/PostActions.vue";
 
 import { getEventById } from "../../firebase/eventService.ts";
+
+const currentUrl = window.location.href ;
 
 const props = defineProps<{
   post: PostType;
