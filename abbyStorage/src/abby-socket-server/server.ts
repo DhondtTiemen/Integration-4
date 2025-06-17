@@ -82,6 +82,6 @@ io.on("connection", (socket: import("socket.io").Socket) => {
 });
 
 const PORT = Number(process.env.PORT) || 3001;
-server.listen(PORT, '0.0.0.0', (): void => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Socket.IO server listening on port ${PORT}`);
 });
