@@ -91,7 +91,6 @@ const props = defineProps<{
   images: string[];
   postId?: string;
 }>();
-console.log("PostImages props:", props.images);
 
 const currentImage = ref(0);
 

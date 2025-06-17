@@ -524,36 +524,6 @@ async function getRelatedEvents() {
       e.status === "Approved"
   );
 }
-// async function getRelatedEvents() {
-//   const events: Event[] = [];
-//   const eventsQuery = query(collection(db, "events"));
-//   const querySnap = await getDocs(eventsQuery);
-//   querySnap.forEach((doc) => {
-//     events.push({
-//       id: doc.id,
-//       ...doc.data(),
-//       title: "",
-//       about: "",
-//       date: "",
-//       time: "",
-//       place: "",
-//       achievements: [],
-//       materials: [],
-//       image: "",
-//       createdBy: "",
-//       participants: [],
-//       status: "",
-//     });
-//   });
-//   relatedEvents.value = events.filter(
-//     (e: Event) =>
-//       event.value &&
-//       e.id !== event.value.id &&
-//       new Date(e.date) >= new Date() &&
-//       e.status === "Approved"
-//   );
-//   console.log("Related events fetched:", relatedEvents.value);
-// }
 
 function shareEvent() {
   if (navigator.share && event.value) {

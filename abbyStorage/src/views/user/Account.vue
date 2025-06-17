@@ -362,7 +362,6 @@ const filteredEvents = computed(() => {
 async function refreshUser(id: string) {
   if (id) {
     user.value = await getUserById(id);
-    console.log("User data:", user.value);
   }
 }
 async function getPostsById(userId: string) {

@@ -265,11 +265,9 @@ const commentUsers = ref<Record<string, any>>({});
 const showPopup = ref(false);
 
 async function fetchUser() {
-  // loading.value = true;
   
   user.value = await getUserById(currentUserId);
   loading.value = false;
-  // console.log("items", user.value?.box?.items.length);
   if (user.value?.box?.comments) {
     commentUsers.value = await preloadCommentUsers(user.value.box.comments);
   }
