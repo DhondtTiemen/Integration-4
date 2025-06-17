@@ -19,7 +19,7 @@
       <p
         class="absolute left-1/2 transform -translate-x-1/2 text-center font-medium"
       >
-        Following
+        Chats
       </p>
     </nav>
     <div v-if="loading" class="text-gray-500 p-4">Loading...</div>
@@ -37,7 +37,7 @@
           </template>
           <router-link
             v-else
-            :to="`/account/${user.id}`"
+            :to="`/chat/${user.id}`"
             class="flex items-center gap-4"
           >
             <img
@@ -167,6 +167,12 @@ async function getFollowing() {
     return;
   }
 
+  // Fetch logged in user's followers to filter mutual followers
+  let loggedInUserFollowers: string[] = [];
+  if (loggedInUser.value) {
+    loggedInUserFollowers = (loggedInUser.value.followers || []).map(String);
+  }
+
   const followerIds = user.value.following.map(String);
   const followingData: any[] = [];
 
@@ -175,22 +181,16 @@ async function getFollowing() {
       const followingRef = doc(db, "users", fid);
       const followingSnap = await getDoc(followingRef);
       if (followingSnap.exists()) {
-        followingData.push({ id: followingSnap.id, ...followingSnap.data() });
+        const userData = { id: followingSnap.id, ...followingSnap.data() };
+        // Only include if mutual: user follows them and they follow user
+        if (loggedInUserFollowers.includes(String(fid))) {
+          followingData.push(userData);
+        }
       } else {
-        followingData.push({
-          id: fid,
-          name: "Unknown",
-          avatar: "",
-          bio: "",
-        });
+        // If user does not exist, skip or add unknown? Since mutual, skip unknowns
       }
     } catch {
-      followingData.push({
-        id: fid,
-        name: "Unknown",
-        avatar: "",
-        bio: "",
-      });
+      // skip on error
     }
   }
 

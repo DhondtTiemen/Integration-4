@@ -1,4 +1,3 @@
-<!-- Chat page that dynamically reads the target userId from the URL -->
 <template>
   <div class="p-4">
     <div class="space-y-2 mb-4 max-h-[60vh] overflow-y-auto">
