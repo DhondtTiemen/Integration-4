@@ -143,7 +143,7 @@
                 My achievements
               </h2>
             </div>
-            <div class="flex justify-center items-center gap-8 ">
+            <div class="flex justify-center items-center mt-4 gap-8 ">
               <div class="flex flex-col items-center text-xs">
 
                 <svg width="52" height="52" viewBox="0 0 52 52" class="fill-alphaYellow mb-2"
