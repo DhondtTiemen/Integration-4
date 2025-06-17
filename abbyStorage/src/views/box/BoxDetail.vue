@@ -202,7 +202,7 @@
           </div>
            
           <div class="flex items-center gap-2">
-            <Eye class="h-6 w-auto fill-alphaDark"/>
+            <Eye class="h-6 w-auto"/>
             <p>{{ user?.box?.views }}</p>
           </div>
         </div>

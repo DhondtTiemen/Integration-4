@@ -26,7 +26,7 @@
 
     <!-- POST - CONTENT - ACTIONS - VIEWS -->
     <div class="flex items-center gap-2">
-      <Eye class="h-6 w-auto fill-alphaDark"/>
+      <Eye class="h-6 w-auto"/>
       <p>{{ views }}</p>
     </div>
   </div>
