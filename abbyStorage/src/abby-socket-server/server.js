@@ -3,7 +3,7 @@ import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
-import { getFirestore, collection, addDoc, Timestamp } from "../firebase/firestore";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import db from "../firebase/firebase.ts";
 
 const app = express();
