@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3001;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Socket.IO server listening on port ${PORT}`);
 });
