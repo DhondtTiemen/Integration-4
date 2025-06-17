@@ -31,7 +31,7 @@ import { defineProps, defineEmits } from 'vue';
 import PrimaryButton from './PrimaryButton.vue';
 import SecondaryButton from './SecondaryButton.vue';
 
-const props = defineProps({
+defineProps({
   visible: Boolean,
 });
 const emit = defineEmits(['close']);
