@@ -104,10 +104,7 @@ function handleAccountClick() {
   } else {
     if (route.path !== `/account/${userId.value}`) {
   router.push(`/account/${userId.value}`);
-} else {
-  // Force reload van de component
-  router.replace({ path: '/refresh', query: { redirect: `/account/${userId.value}` } });
-}
+} 
   }
 }
 
