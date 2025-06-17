@@ -10,32 +10,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-
 import Post from "./Post.vue";
 import type PostType from "../../interfaces/interface.post";
+import { ref } from "vue";
 
-import { fetchPosts } from "../../firebase/postService";
+// Props
+const props = defineProps<{
+  posts: PostType[];
+  showOptionsId?: string | null;
+}>();
 
-// STATE
-const posts = ref<PostType[]>([]);
-const showOptionsId = ref<string | null>(null);
+// Emits
+const emit = defineEmits(["toggle-options", "report-post"]);
 
-// FUNCTIONS
-const getPosts = async () => {
-  posts.value = await fetchPosts();
-};
+// Local state for options
+const showOptionsId = ref<string | null>(props.showOptionsId ?? null);
 
+// Methods
 const toggleOptions = (id: string) => {
   showOptionsId.value = showOptionsId.value === id ? null : id;
+  emit("toggle-options", id);
 };
 
 const reportPost = (id: string) => {
-  posts.value = posts.value.filter((post) => post.id !== id);
+  emit("report-post", id);
 };
-
-onMounted(getPosts);
-
-// EMITS
-const emit = defineEmits(["toggle-options", "report-post"]);
 </script>

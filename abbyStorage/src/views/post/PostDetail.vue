@@ -254,7 +254,6 @@ async function handleSubmitComment() {
     return;
   }
   if (!newCommentText.value.trim() || !user.value || !post.value) return;
-  // console.log("userid", user.value.id);
   const comment: Comment = {
     userId: String(storedIdRaw),
     text: newCommentText.value.trim(),

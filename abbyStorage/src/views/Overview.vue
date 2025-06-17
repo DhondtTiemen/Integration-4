@@ -1,4 +1,5 @@
 <template>
+  
   <section class="min-h-screen mb-16">
     <!-- HEADER -->
     <Header />
