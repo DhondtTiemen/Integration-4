@@ -11,10 +11,14 @@
       />
 
       <!-- POST - CONTENT -->
-      <div class="block">
+      <div>
         <!-- Description -->
         <p class="mb-4">{{ post?.content }}</p>
-        <PostImages v-if="post?.images?.length" :images="post.images" :postId="post.id" />
+        <PostImages
+          v-if="post?.images?.length"
+          :images="post.images"
+          :postId="post.id"
+        />
       </div>
 
       <!-- POST - CONTENT - IF EVENT -->

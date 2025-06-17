@@ -123,24 +123,14 @@
                 cursor: pointer;
               "
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="24"
-                viewBox="0 0 28 25"
-                fill="none"
+              <HeartOutline
                 :class="[
                   commentLiking[index] ? 'animate-like' : '',
                   hasLikedComment(comment)
                     ? 'text-alphaPurple fill-alphaPurple stroke-alphaPurple'
                     : 'text-gray-600 stroke-black',
                 ]"
-              >
-                <path
-                  d="M11.4436 23.9877L16.5567 24C19.5793 21.4085 21.967 18.968 23.4492 17.3631C25.1715 15.4981 26.3404 13.1944 26.7822 10.708C27.1995 8.36087 27.0717 5.90859 25.9183 4.12869C23.1341 -0.168074 16.9841 0.0585967 14.3474 4.3125C14.2944 4.39823 14.2338 4.48162 14.1922 4.57499C14.147 4.67658 14.0126 5.02892 14.0001 5.0618C14.0001 5.0618 13.8557 4.66777 13.8081 4.56266C13.7695 4.47751 13.7148 4.40117 13.6666 4.32248C11.037 0.0474394 4.87039 -0.18804 2.08141 4.11636C1.18365 5.50164 0.907191 7.29504 1.0261 9.12896C1.22765 12.2466 2.57428 15.1839 4.75862 17.443C6.31691 19.0543 8.70577 21.4585 11.4436 23.9877Z"
-                  stroke-width="2"
-                />
-              </svg>
+              />
               <p>{{ comment.likes ? comment.likes.length : 0 }}</p>
             </button>
           </div>
@@ -168,6 +158,7 @@ import {
 } from "../../firebase/postService";
 import { getUserById } from "../../firebase/userService";
 import { formatTimeAgo } from "../../utils/date";
+import HeartOutline from "../../assets/icons/HeartOutline.vue";
 
 const route = useRoute();
 const currentUserId = String(route.params.id);
@@ -249,9 +240,9 @@ type Comment = {
 
 async function handleSubmitComment() {
   if (!newCommentText.value.trim() || !user.value || !post.value) return;
-
+  // console.log("userid", user.value.id);
   const comment: Comment = {
-    userId: String(user.value.id),
+    userId: String(storedIdRaw),
     text: newCommentText.value.trim(),
     timestamp: new Date().toISOString(),
     likes: [],

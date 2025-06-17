@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
@@ -101,12 +101,29 @@ const routes = [
         path: "messages",
         component: () => import("../components/Messages.vue"),
       },
+      {
+        path: "/:pathMatch(.*)*",
+        name: "NotFound",
+        component: () => import("../views/NotFound.vue"),
+      },
+      {
+        path: "onboarding/1",
+        component: () => import("../views/onboarding/ExploreShelves.vue"),
+      },
+      {
+        path: "onboarding/2",
+        component: () => import("../views/onboarding/ExpressYourself.vue"),
+      },
+      {
+        path: "onboarding/3",
+        component: () => import("../views/onboarding/Connect.vue"),
+      }
     ],
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory('/Integration-4/'),
+  history: createWebHashHistory('/Integration-4/'),
   routes,
 });
 

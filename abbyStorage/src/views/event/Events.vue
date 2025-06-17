@@ -16,7 +16,7 @@
       Loading events...
     </div>
 
-    <div v-else class="space-y-4" v-for="event in events">
+    <div v-else class="px-4 py-2" v-for="event in events">
       <Event v-if="event" :event="event" />
     </div>
   </section>

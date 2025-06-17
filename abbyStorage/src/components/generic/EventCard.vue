@@ -9,7 +9,6 @@
     <!-- POST - CONTENT - EVENT -->
     <div class="bg-alphaPurple p-4">
       <p class="font-bold mb-1">{{ event.title }}</p>
-
       <div class="py-2 mb-4">
         <p class="flex items-center gap-2 mb-2">
           <svg
@@ -25,7 +24,7 @@
           </svg>
           {{ formatDateTime(event.date) }}
         </p>
-        <p class="flex items-center gap-2">
+        <p class="flex items-center gap-2 mb-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="fill-alphaDark h-4 w-auto"
@@ -39,6 +38,21 @@
           </svg>
           {{ event.place }}
         </p>
+        <p v-if="hasJoinedEvent()" class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-check-icon stroke-alphaGreen lucide-check h-4 w-auto"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          {{ hasJoinedEvent() ? "Joined" : "Join this event" }}        </p>
       </div>
 
       <!-- POST - CONTENT - EVENT - BUTTON -->
@@ -52,8 +66,10 @@
 <script setup lang="ts">
 import { formatDateTime } from "../../utils/date.ts";
 import ImageTemplate from "../../components/images/ImageTemplate.vue";
-
-defineProps<{
+import { ref } from "vue";
+const storedId = localStorage.getItem("userId");
+// function to check if the user has joined the event
+const props=defineProps<{
   event: {
     id: number | string;
     title: string;
@@ -61,6 +77,17 @@ defineProps<{
     time: string;
     place: string;
     image: string;
+    participants: string[];
   };
 }>();
+function hasJoinedEvent() {
+  // This function should check if the user has joined the event
+  for (const participant of props.event.participants) {
+    if (participant === storedId) {
+      return true;
+    }
+  }
+  // For now, it returns a static value
+  return false;
+}
 </script>
