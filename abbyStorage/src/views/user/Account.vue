@@ -4,7 +4,7 @@
     <header class="flex items-center justify-between h-16 bg-alphaYellow">
       <h1 class="text-xl font-bold h-6 px-6">Profile</h1>
       <div class="flex items-center px-6 gap-6">
-        <IconButton label="Scanner" :to="`/scanner/${userId}`">
+        <IconButton label="Scanner" :to="`/scanner/${user?.id}`">
         <!-- TODO: Change SVG -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
