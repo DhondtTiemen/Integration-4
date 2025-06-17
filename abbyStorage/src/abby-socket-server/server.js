@@ -10,7 +10,9 @@ app.use(cors())
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: ['http://localhost:5173', 'https://dhondttiemen.github.io/'], // voeg jouw uiteindelijke GitHub Pages link toe
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 })
 
