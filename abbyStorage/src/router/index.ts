@@ -98,8 +98,8 @@ const routes = [
 
       // --- SKIP ---
       {
-        path: "messages",
-        component: () => import("../components/Messages.vue"),
+        path: "chat",
+        component: () => import("../views/Chat.vue"),
       },
       {
         path: "/:pathMatch(.*)*",

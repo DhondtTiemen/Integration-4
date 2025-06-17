@@ -1,11 +1,15 @@
 <template>
-        <Popup :visible="showPopup" @close="showPopup = false" />
+  <Popup :visible="showPopup" @close="showPopup = false" />
 
   <ul
     class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
   >
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/" aria-label="View homepage">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/"
+        aria-label="View homepage"
+      >
         <component
           :is="isActive('/') ? HomeFilled : HomeOutline"
           class="h-6 w-auto mx-auto"
@@ -13,7 +17,11 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/search" aria-label="View searchpage">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/search"
+        aria-label="View searchpage"
+      >
         <component
           :is="isActive('/search') ? SearchFilled : SearchOutline"
           class="h-6 w-auto mx-auto"
@@ -21,7 +29,11 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/post/create" aria-label="Add post">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/post/create"
+        aria-label="Add post"
+      >
         <component
           :is="isActive('/post/create') ? AddFilled : AddOutline"
           class="h-6 w-auto mx-auto"
@@ -29,34 +41,35 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/events" aria-label="View eventspage">
+      <router-link
+        class="inline-block px-3 outline-none"
+        to="/chat"
+        aria-label="View messages"
+      >
         <component
-          :is="isActive('/events') ? EventFilled : EventOutline"
+          :is="isActive('/chat') ? TextBalloonFilled : TextBalloonOutline"
           class="h-6 w-auto mx-auto"
         />
       </router-link>
     </li>
     <li>
+      <a
+        class="inline-block px-3 outline-none cursor-pointer"
+        @click="handleAccountClick"
         aria-label="View account"
-  <a
-    class="inline-block px-3 outline-none cursor-pointer"
-    @click="handleAccountClick"
-  >
-    <div
-      :class="[
-        'h-8 w-8 mx-auto rounded-full overflow-hidden border-2',
-        isActive(`/account/${userId}`)
-          ? 'border-alphaDark'
-          : 'border-transparent',
-      ]"
-    >
-      <ImageTemplate
-        :path="user?.avatar"
-        :screen="'nav'"
-      />
-    </div>
-  </a>
-</li>
+      >
+        <div
+          :class="[
+            'h-8 w-8 mx-auto rounded-full overflow-hidden border-2',
+            isActive(`/account/${userId}`)
+              ? 'border-alphaDark'
+              : 'border-transparent',
+          ]"
+        >
+          <ImageTemplate :path="user?.avatar" :screen="'nav'" />
+        </div>
+      </a>
+    </li>
   </ul>
 </template>
 
@@ -75,9 +88,9 @@ import SearchFilled from "../../assets/icons/SearchFilled.vue";
 import SearchOutline from "../../assets/icons/SearchOutline.vue";
 import AddFilled from "../../assets/icons/AddFilled.vue";
 import AddOutline from "../../assets/icons/AddOutline.vue";
-import EventFilled from "../../assets/icons/EventFilled.vue";
-import EventOutline from "../../assets/icons/EventOutline.vue";
 import Popup from "../generic/popUp.vue";
+import TextBalloonFilled from "../../assets/icons/TextBalloonFilled.vue";
+import TextBalloonOutline from "../../assets/icons/TextBalloonOutline.vue";
 
 const user = ref<User | null>(null);
 const userId = ref<string | null>(null);
