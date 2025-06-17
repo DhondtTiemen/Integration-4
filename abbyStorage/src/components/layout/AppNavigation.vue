@@ -99,13 +99,18 @@ const route = useRoute();
 const storedId = ref<string | null>(null);
 const showPopup = ref(false);
 function handleAccountClick() {
-  if (route.path !== `/account/${userId.value}`) {
+  if (!userId.value) {
+    showPopup.value = true;
+  } else {
+    if (route.path !== `/account/${userId.value}`) {
   router.push(`/account/${userId.value}`);
 } else {
   // Force reload van de component
   router.replace({ path: '/refresh', query: { redirect: `/account/${userId.value}` } });
 }
+  }
 }
+
 const isActive = (path: string) => route.path === path;
 
 async function refreshUser() {
