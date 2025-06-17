@@ -309,7 +309,6 @@ import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Popup from "../../components/generic/popUp.vue";
 import {
-  Image,
   CalendarDays,
   MapPin,
   Share,
