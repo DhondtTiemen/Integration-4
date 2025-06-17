@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { CircleUserRound } from "lucide-vue-next";
 import db from "../firebase/firebase.ts";
 import {
@@ -77,10 +77,7 @@ import {
 } from "firebase/firestore";
 import type User from "../interfaces/interface.user";
 
-import { getUserById } from "../firebase/userService";
 const router = useRouter();
-
-const route = useRoute();
 const loading = ref(true);
 const followingList = ref<any[]>([]);
 function goBack() {
@@ -162,7 +159,7 @@ async function getFollowing() {
 
   const mutualIds = myUser.following
     .map(String)
-    .filter((id) => myUser.followers.map(String).includes(id));
+    .filter((id) => (myUser.followers ?? []).map(String).includes(id));
 
   const mutualUsers: any[] = [];
 
