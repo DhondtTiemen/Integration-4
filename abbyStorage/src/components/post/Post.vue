@@ -6,7 +6,7 @@
         @toggle-options="$emit('toggle-options', $event)" @report-post="$emit('report-post', $event)" />
 
       <!-- POST - CONTENT -->
-      <div>
+      <div class="mb-4">
         <!-- Description -->
         <router-link v-if="post?.id" :to="`/post/${post.id}`">
           <p class="mb-4">{{ post?.content }}</p>

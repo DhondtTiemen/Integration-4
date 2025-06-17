@@ -61,30 +61,31 @@
           v-for="(,idx) in images"
           :key="'dot' + idx"
           class="inline-block w-2 h-2"
-          :class="currentImage === Number(idx) ? 'bg-alphaGreen' : 'bg-gray-300'"
+          :class="
+            currentImage === Number(idx) ? 'bg-alphaGreen' : 'bg-gray-300'
+          "
         ></span>
       </div>
     </div>
-    <div
+    <router-link :to="`/post/${postId ?? ''}`"
       v-else
-      class=" bg-gray-300 flex justify-center items-center rounded-lg shadow-sm relative aspect-[4/3] w-full"
+      class="bg-gray-300 flex justify-center items-center rounded-lg shadow-sm relative aspect-[4/3] w-full"
     >
-      <img
-        v-if="images && images.length"
-        :src="Array.isArray(images) ? images[0] : images"
-        alt="Post image"
-        class="w-full h-full object-cover"
-        fetchpriority="high"
-        width="600"
-        height="450"
-      />
-      <Image v-else class="w-24 h-24 text-gray-400" />
-    </div>
+        <img
+          v-if="images && images.length"
+          :src="Array.isArray(images) ? images[0] : images"
+          alt="Post image"
+          class="w-full h-full object-cover"
+          fetchpriority="high"
+          width="600"
+          height="450"
+        />
+        <Image v-else class="w-24 h-24 text-gray-400" />
+    </router-link>
   </div>
 </template>
 
 <script setup lang="ts">
-
 import { ref, watch } from "vue";
 const props = defineProps<{
   images: string[];

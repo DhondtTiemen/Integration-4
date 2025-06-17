@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen">
-    <nav class="relative flex items-center bg-white shadow-md p-4 mb-4 h-12">
+    <nav class="relative flex items-center bg-alphaYellow p-4 mb-4 h-12">
       <svg
         @click="goBack"
         xmlns="http://www.w3.org/2000/svg"
@@ -99,17 +99,29 @@
 
       <!-- Save Button -->
       <div class="flex gap-4">
-        <button type="button" @click="changeCancel()"
+        <!-- <button type="button" @click="changeCancel()"
           class="w-full bg-primary-600 border text-gray-600 bg-white py-2 rounded-full hover:bg-primary-700 transition-colors duration-200"
         >
           Cancel
-        </button>
-        <button
+        </button> -->
+        <SecondaryButton
+          type="button"
+          @click="changeCancel()"
+          defaultText="Cancel"
+          class="w-full"
+        />
+        <!-- <button
           type="submit"
           class="w-full bg-gray-600 text-white py-2 rounded-full hover:bg-primary-700 transition-colors duration-200"
         >
           Save Changes
-        </button>
+        </button> -->
+        <PrimaryButton
+          type="submit"
+          defaultText="Save"
+          class="w-full"
+          @click="handleSave()"
+        />
       </div>
     </form>
   </div>
@@ -118,15 +130,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-import {
-  Pencil,
-} from "lucide-vue-next";
+import PrimaryButton from "../../components/generic/PrimaryButton.vue";
+import SecondaryButton from "../../components/generic/SecondaryButton.vue";
+import { Pencil } from "lucide-vue-next";
 import type User from "../../interfaces/interface.user";
-import {
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import ImageTemplate from "/src/components/images/ImageTemplate.vue";
 
 import db from "../../firebase/firebase.ts";
@@ -152,7 +160,7 @@ function changeCancel() {
     avatarFile.value = null;
     avatarPreview.value = null;
   }
-  router.back()
+  router.back();
 }
 async function handleSave() {
   if (!userId || !user.value) return;

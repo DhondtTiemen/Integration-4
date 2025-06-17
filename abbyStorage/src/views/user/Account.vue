@@ -24,7 +24,7 @@
               fill="#21272A" />
           </svg>
         </IconButton>
-        <LogOut @click="logOut" />
+        <LogOut v-if="storedId == user?.id" @click="logOut" />
       </div>
     </header>
 
@@ -434,8 +434,8 @@ async function getEventsById(userId: string) {
 
 
 const loggedInUser = ref<User | null>(null);
+const storedId = localStorage.getItem("userId");
 async function getLoggedInUser() {
-  const storedId = localStorage.getItem("userId");
   if (!storedId) return;
   const userRef = doc(db, "users", storedId);
   const docSnap = await getDoc(userRef);

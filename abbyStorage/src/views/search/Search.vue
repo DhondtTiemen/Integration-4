@@ -6,7 +6,7 @@
         v-model="input"
         type="text"
         placeholder="Search for people or events..."
-        class="flex-1 px-3 py-2 border border-alphaDark text-gray-600 text-sm block w-full p-2.5 focus:ring-alphaDark focus:border-alphaDark"
+        class="flex-1 px-3 py-2 border bg-alphaLight border-alphaDark text-gray-600 text-sm block w-full p-2.5 focus:ring-alphaDark focus:border-alphaDark"
       />
     </div>
     <!-- Zet de filters in een eigen container met vaste achtergrond -->
