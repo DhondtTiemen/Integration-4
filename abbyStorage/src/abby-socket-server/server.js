@@ -1,23 +1,31 @@
 // server.js
+import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 
 const app = express();
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://dhondttiemen.github.io");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
+const corsOptions = {
+  origin: "https://dhondttiemen.github.io",
+  methods: ["GET", "POST"],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
+const server = http.createServer(app)
 
 const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: corsOptions,
 });
 
 const connectedUsers = {};
@@ -52,7 +60,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = 3001;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Socket.IO server listening on port ${PORT}`);
 });
