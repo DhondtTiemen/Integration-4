@@ -23,15 +23,28 @@
       <!-- POST - CONTENT - ACTIONS - COMMENTS -->
       <router-link
         :to="`/post/${postId}`"
-        class="flex items-center gap-2 "
+        class="flex items-center gap-2"
         aria-label="View comments"
       >
         <TextBalloon class="h-6 w-auto stroke-alphaDark align-middle" />
         <span class="leading-none">{{ commentsCount }}</span>
       </router-link>
 
-      <button @click="shareEvent" class="flex items-center">
-        <Share class="z-10 stroke-3 h-6 w-auto align-middle" />
+      <button @click="shareEvent" class="flex items-center pb-1">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 28 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M25 14.3308L24.0557 15.2331L19.4372 19.6465L14.189 24.6616V18.1791C14.0809 18.1757 13.9723 18.1742 13.8634 18.1742C8.41632 18.1742 3.91046 22.0102 3.16178 27C2.41667 25.4981 2 23.8197 2 22.0488C2 15.6384 7.45726 10.4419 14.189 10.4419V4L25 14.3308Z"
+            stroke="black"
+            stroke-width="3"
+            stroke-miterlimit="10"
+          />
+        </svg>
       </button>
     </div>
 
