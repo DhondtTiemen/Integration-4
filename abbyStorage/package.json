@@ -30,6 +30,7 @@
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-svg-loader": "^5.1.0",
