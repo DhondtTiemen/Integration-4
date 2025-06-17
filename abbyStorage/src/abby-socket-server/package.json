@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite preview --port 3000"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
@@ -31,5 +32,10 @@
     "vite": "^6.3.5",
     "vite-svg-loader": "^5.1.0",
     "vue-tsc": "^2.2.8"
-  }
+  },
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

@@ -37,7 +37,10 @@ import { ref, onMounted } from 'vue'
 import { io } from 'socket.io-client'
 import { useRoute } from 'vue-router'
 
-const socket = io('https://abby-socket.onrender.com') // of productie-URL
+const socket = io('https://abby-socket.onrender.com', {
+  transports: ['websocket'],
+  withCredentials: true
+}) // of productie-URL
 
 // Replace this with logic to get the currently authenticated user
 const currentUserId = localStorage.getItem("userId") ?? "";

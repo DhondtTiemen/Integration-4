@@ -6,10 +6,18 @@ import cors from "cors";
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://dhondttiemen.github.io");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
+  origin: "https://dhondttiemen.github.io",
   methods: ["GET", "POST"],
-  credentials: true,
+  credentials: true
 };
 
 app.use(cors(corsOptions));
