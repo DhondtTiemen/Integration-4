@@ -1,10 +1,10 @@
-// server.js
+// server.ts
 import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import db from "../firebase/firebase.ts";
+import db from "../firebase/firebase";
 
 const app = express();
 
@@ -30,15 +30,15 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
-const connectedUsers = {};
+const connectedUsers: { [userId: string]: string } = {};
 
-io.on("connection", (socket) => {
-  socket.on("join", (userId) => {
+io.on("connection", (socket: import("socket.io").Socket) => {
+  socket.on("join", (userId: string) => {
     connectedUsers[userId] = socket.id;
     console.log(`User ${userId} connected.`);
   });
 
-  socket.on("private-message", async ({ to, from, message }) => {
+  socket.on("private-message", async ({ to, from, message }: { to: string; from: string; message: string }) => {
     const recipientSocketId = connectedUsers[to];
 
     // Sla op in Firestore
@@ -51,7 +51,11 @@ io.on("connection", (socket) => {
     });
     console.log("Message saved with ID:", docRef.id);
   } catch (err) {
-    console.error("🔥 Failed to save message to Firestore:", err.message);
+    if (err instanceof Error) {
+      console.error("🔥 Failed to save message to Firestore:", err.message);
+    } else {
+      console.error("🔥 Failed to save message to Firestore:", err);
+    }
   }
 
     // Emit naar ontvanger indien online
@@ -62,7 +66,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("user-list", (list) => {
+  socket.on("user-list", (list: string[]) => {
     console.log("Connected users:", list);
   });
 
@@ -77,7 +81,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, '0.0.0.0', () => {
+const PORT = Number(process.env.PORT) || 3001;
+server.listen(PORT, '0.0.0.0', (): void => {
   console.log(`Socket.IO server listening on port ${PORT}`);
 });
