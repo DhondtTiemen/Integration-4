@@ -120,7 +120,7 @@ import {
 import db from "../../firebase/firebase.ts";
 import type User from "../../interfaces/interface.user";
 import type Event from "../../interfaces/interface.event";
-import Popup from "../../components/generic/Popup.vue";
+
 const filter = ref("all");
 const input = ref("");
 const users = ref<User[]>([]);
