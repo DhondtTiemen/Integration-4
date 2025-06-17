@@ -98,12 +98,13 @@ const sendMessage = async () => {
 
   // Opslaan in Firestore
   try {
-    await addDoc(collection(db, "messages"), {
-      from: currentUserId,
-      to: targetUserId,
-      message: message.value,
-      timestamp: Timestamp.now(),
-    });
+await addDoc(collection(db, "messages"), {
+  from: currentUserId,
+  to: targetUserId,
+  message: message.value,
+  participants: [currentUserId, targetUserId].sort((a, b) => a.localeCompare(b)), // gesorteerd voor consistente queries
+  timestamp: Timestamp.now(),
+});
   } catch (err) {
     console.error("🔥 Failed to save message:", err);
   }
@@ -119,10 +120,7 @@ onMounted(async () => {
   const messagesRef = collection(db, "messages");
   const q = query(
     messagesRef,
-    where("participants", "in", [
-      [currentUserId, targetUserId],
-      [targetUserId, currentUserId],
-    ]),
+    where("participants", "==", [currentUserId, targetUserId].sort((a, b) => a.localeCompare(b))),
     orderBy("timestamp")
   );
   const querySnapshot = await getDocs(q);
