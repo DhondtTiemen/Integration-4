@@ -197,8 +197,8 @@ async function getFollowing() {
   followingList.value = followingData;
   loading.value = false;
 }
-onMounted(() => {
-  getFollowing();
-  getLoggedInUser();
+onMounted(async () => {
+  await getLoggedInUser();
+  await getFollowing();
 });
 </script>

@@ -24,7 +24,7 @@
       />
       <button
         @click="sendMessage"
-        class="bg-purple-600 text-white px-4 py-2 rounded"
+        class="bg-alphaGreen text-white px-4 py-2 rounded"
       >
         Send
       </button>
