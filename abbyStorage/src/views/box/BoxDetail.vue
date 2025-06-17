@@ -143,9 +143,6 @@
               <div>
                 <img :src="item.image" :alt="item.name" class="w-60 h-60 object-cover" />
               </div>
-              <div class="p-4 bg-alphaBlue font-medium">
-                <p>{{ item.name }}</p>
-              </div>
             </div>
           </div>
 
