@@ -41,8 +41,8 @@
               Remember me
             </label>
             <!-- TODO: Forget password link -->
-            <a href="#" class="text-sm font-medium text-alphaGreen underline"
-              >Forgot password?</a
+            <p class="text-sm font-medium text-alphaGreen underline"
+              >Forgot password?</p
             >
           </div>
           <div class="w-full">

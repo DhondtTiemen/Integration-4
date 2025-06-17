@@ -24,7 +24,7 @@
     <div class="p-4 border-b border-gray-300">
       <p class="pb-2">{{ post?.content }}</p>
       <p>Created in {{ post?.location }}</p>
-      <p class="text-gray-400 mt-2">
+      <p class="text-gray-600 mt-2">
         {{ formatTimeAgo(post?.timestamp ?? "") }}
       </p>
     </div>
@@ -41,7 +41,7 @@
       class="p-4 border-b-2 border-gray-200 bg-white"
       v-if="post && !loading"
     >
-      <div v-if="comments.length === 0" class="text-gray-400 py-2">
+      <div v-if="comments.length === 0" class="text-gray-600 py-2">
         No comments yet.
       </div>
       <div class="flex justify-between items-center">

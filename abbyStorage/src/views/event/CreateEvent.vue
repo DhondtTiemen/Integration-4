@@ -34,7 +34,7 @@
               class="w-full h-full object-cover aspect-square"
               alt="Event image"
             />
-            <Image v-else class="w-16 h-16 text-gray-400" />
+            <Image v-else class="w-16 h-16 text-gray-600" />
           </div>
           <div
             class="flex flex-col aspect-square bg-gray-300 w-full h-full justify-center items-center cursor-pointer"

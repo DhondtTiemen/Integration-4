@@ -3,7 +3,7 @@
     class="fixed bottom-0 grid grid-cols-5 w-full items-center text-center h-16 bg-alphaYellow"
   >
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/">
+      <router-link class="inline-block px-3 outline-none" to="/" aria-label="View homepage">
         <component
           :is="isActive('/') ? HomeFilled : HomeOutline"
           class="h-6 w-auto mx-auto"
@@ -11,7 +11,7 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/search">
+      <router-link class="inline-block px-3 outline-none" to="/search" aria-label="View searchpage">
         <component
           :is="isActive('/search') ? SearchFilled : SearchOutline"
           class="h-6 w-auto mx-auto"
@@ -19,7 +19,7 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/post/create">
+      <router-link class="inline-block px-3 outline-none" to="/post/create" aria-label="Add post">
         <component
           :is="isActive('/post/create') ? AddFilled : AddOutline"
           class="h-6 w-auto mx-auto"
@@ -27,7 +27,7 @@
       </router-link>
     </li>
     <li>
-      <router-link class="inline-block px-3 outline-none" to="/events">
+      <router-link class="inline-block px-3 outline-none" to="/events" aria-label="View eventspage">
         <component
           :is="isActive('/events') ? EventFilled : EventOutline"
           class="h-6 w-auto mx-auto"
@@ -38,6 +38,7 @@
       <router-link
         class="inline-block px-3 outline-none"
         :to="`/account/${userId}`"
+        aria-label="View account"
       >
         <div
           :class="[
