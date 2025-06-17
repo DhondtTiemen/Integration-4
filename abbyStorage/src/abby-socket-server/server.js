@@ -1,25 +1,23 @@
 // server.js
+import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 
 const app = express();
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
+  methods: ["GET", "POST"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 const server = http.createServer(app)
 
 const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:5173", "https://dhondttiemen.github.io"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: corsOptions,
 });
 
 const connectedUsers = {};
